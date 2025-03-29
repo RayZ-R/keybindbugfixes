@@ -17,7 +17,7 @@ public abstract class KeyboardMixin {
                     shift = At.Shift.AFTER))
     private void preventControlStickyKeysResetOnNarratorHotkey(CallbackInfo callbackInfo, @Local Screen screen) {
         if (screen == null) {
-            KeybindBugFixes.toggleLeftControlStickyKeys();
+            KeybindBugFixes.revertStickyKeyBindings();
         }
     }
 }
