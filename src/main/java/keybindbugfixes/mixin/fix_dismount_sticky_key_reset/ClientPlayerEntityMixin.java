@@ -1,0 +1,42 @@
+package keybindbugfixes.mixin.fix_dismount_sticky_key_reset;
+
+import com.mojang.authlib.GameProfile;
+import keybindbugfixes.config.Config;
+import keybindbugfixes.mixin.StickyKeyBindingAccessor;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.world.ClientWorld;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(ClientPlayerEntity.class)
+public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
+    @Shadow @Final private MinecraftClient client;
+
+    public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
+        super(world, profile);
+    }
+
+    @Inject(method = "tick",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;" +
+                            "sendPacket(Lnet/minecraft/network/packet/Packet;)V",
+                    shift = At.Shift.AFTER,
+                    ordinal = 0))
+    private void untoggleSneakKeyOnDismount(CallbackInfo callbackInfo) {
+        if (Config.BugFixes.FIX_DISMOUNT_STICKY_KEY_RESET && this.hasVehicle() && this.isSneaking()) {
+            KeyBinding sneakKeyBinding = this.client.options.sneakKey;
+            StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
+
+            if (accessor.getToggleGetter().getAsBoolean()) {
+                sneakKeyBinding.setPressed(true);
+            }
+        }
+    }
+}
