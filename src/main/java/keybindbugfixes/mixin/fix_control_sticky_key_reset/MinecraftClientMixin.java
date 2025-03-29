@@ -18,12 +18,16 @@ public abstract class MinecraftClientMixin {
     @Inject(method = "handleInputEvents",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;hasControlDown()Z"))
     private void preventControlStickyKeysResetOnDropStack(CallbackInfo callbackInfo) {
-        KeybindBugFixes.toggleLeftControlStickyKeys();
+        if (Screen.hasControlDown()) {
+            KeybindBugFixes.revertStickyKeyBindings();
+        }
     }
 
     @Inject(method = "doItemPick",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;hasControlDown()Z"))
     private void preventControlStickyKeysResetOnPickBlockWithNbt(CallbackInfo callbackInfo) {
-        KeybindBugFixes.toggleLeftControlStickyKeys();
+        if (Screen.hasControlDown()) {
+            KeybindBugFixes.revertStickyKeyBindings();
+        }
     }
 }
