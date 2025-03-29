@@ -6,12 +6,14 @@
   "keybindbugfixes.config.bugfix.fix_last_game_mode_reset": "Fix last game mode reset on death",
   "keybindbugfixes.config.bugfix.fix_sticky_key_reset": "Fix sticky key reset on death",
   "keybindbugfixes.config.bugfix.fix_pick_block_dragging": "Fix pick block dragging",
+  "keybindbugfixes.config.bugfix.fix_dismount_sticky_key_reset": "Fix dismount sticky key reset",
   "keybindbugfixes.config.bugfix.fix_control_sticky_key_reset": "Fix control sticky key reset",
 
   "keybindbugfixes.config.bugfix.fix_pressing_f3_twice.tooltip": "After switching game modes using F3 + F4, you need to press F3 twice to toggle the debug screen",
   "keybindbugfixes.config.bugfix.fix_last_game_mode_reset.tooltip": "Last player game mode not saved after player dies",
   "keybindbugfixes.config.bugfix.fix_sticky_key_reset.tooltip": "Dying causes toggle sprint and toggle sneak to untoggle",
   "keybindbugfixes.config.bugfix.fix_pick_block_dragging.tooltip": "Pick block changed to a keyboard key doesn't fill inventory slots when dragged",
+  "keybindbugfixes.config.bugfix.fix_dismount_sticky_key_reset.tooltip": "Player starts sneaking when dismounting if \"Sneak\" is set to \"Toggle\" in accessibility settings",
   "keybindbugfixes.config.bugfix.fix_control_sticky_key_reset.tooltip": "Dropping stack or picking block with nbt switches toggle sprint or toggle sneak, bound to left control",
 
   "keybindbugfixes.config.category.tweaks": "Tweaks",
