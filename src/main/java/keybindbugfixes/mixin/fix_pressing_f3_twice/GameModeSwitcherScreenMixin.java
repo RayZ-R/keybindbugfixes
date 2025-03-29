@@ -2,7 +2,7 @@ package keybindbugfixes.mixin.fix_pressing_f3_twice;
 
 import keybindbugfixes.config.Config;
 import keybindbugfixes.mixin.KeyboardAccessor;
-import net.minecraft.client.gui.screen.GameModeSelectionScreen;
+import net.minecraft.client.gui.screen.GameModeSwitcherScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(GameModeSelectionScreen.class)
-public abstract class GameModeSelectionScreenMixin extends Screen {
-	protected GameModeSelectionScreenMixin(Text title) {
+@Mixin(GameModeSwitcherScreen.class)
+public abstract class GameModeSwitcherScreenMixin extends Screen {
+	protected GameModeSwitcherScreenMixin(Text title) {
 		super(title);
 	}
 

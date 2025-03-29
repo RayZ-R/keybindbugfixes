@@ -25,7 +25,7 @@ public abstract class KeyboardMixin {
 
 		if (screen instanceof HandledScreen<?> handledScreen && Config.BugFixes.FIX_PICK_BLOCK_DRAGGING && !processed) {
 			MinecraftClient client = MinecraftClient.getInstance();
-			boolean inCreative = client.interactionManager.hasCreativeInventory();
+			boolean inCreative = client.player.isInCreativeMode();
 
 			if (client.options.pickItemKey.matchesKey(keyCode, scanCode) && action == GLFW.GLFW_PRESS && inCreative) {
 				HandledScreenAccessor screenAccessor = ((HandledScreenAccessor) handledScreen);
