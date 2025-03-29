@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "keybindbugfixes",
+	"version": "${version}",
+	"name": "Keybind Bug Fixes",
+	"description": "Fixes keybind-related bugs, adds keybind-related tweaks and new keybinds.",
+	"authors": ["RayZ_R"],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/keybindbugfixes",
+		"sources": "https://github.com/RayZ-R/keybindbugfixes",
+		"issues": "https://github.com/RayZ-R/keybindbugfixes/issues"
+	},
+	"license": "LGPL-3.0-only",
+	"icon": "assets/keybindbugfixes/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["keybindbugfixes.KeybindBugFixes"],
+		"modmenu": ["keybindbugfixes.config.ModMenuApiImpl"]
+	},
+	"mixins": ["keybindbugfixes.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.20.6",
+		"java": ">=21"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}

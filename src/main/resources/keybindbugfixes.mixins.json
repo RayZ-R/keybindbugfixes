@@ -1,0 +1,26 @@
+{
+	"required": true,
+	"package": "keybindbugfixes.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"plugin": "keybindbugfixes.MixinPlugin",
+	"mixins": [
+		"fix_control_sticky_key_reset.KeyBindingMixin",
+		"fix_control_sticky_key_reset.MinecraftClientMixin",
+		"fix_last_game_mode_reset.ClientPlayNetworkHandlerMixin",
+		"fix_pick_block_dragging.ElementMixin",
+		"fix_pick_block_dragging.HandledScreenMixin",
+		"fix_pick_block_dragging.KeyboardMixin",
+		"fix_pressing_f3_twice.GameModeSelectionScreenMixin",
+		"fix_sticky_key_reset.ClientPlayerEntityMixin",
+		"rebind_debug_keys.GameModeSelectionScreenMixin",
+		"rebind_debug_keys.KeyBindingEntryMixin",
+		"rebind_debug_keys.KeyboardMixin",
+		"remove_keybind_conflicts.KeyBindingMixin",
+		"HandledScreenAccessor",
+		"KeyBindingAccessor",
+		"KeyboardAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

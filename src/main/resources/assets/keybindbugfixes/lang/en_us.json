@@ -1,0 +1,26 @@
+{
+  "keybindbugfixes.config.title": "Keybind Bug Fixes Config",
+  "keybindbugfixes.config.category.bugfixes": "Bug Fixes",
+
+  "keybindbugfixes.config.bugfix.fix_pressing_f3_twice": "Fix pressing f3 twice to open the debug screen",
+  "keybindbugfixes.config.bugfix.fix_last_game_mode_reset": "Fix last game mode reset on death",
+  "keybindbugfixes.config.bugfix.fix_sticky_key_reset": "Fix sticky key reset on death",
+  "keybindbugfixes.config.bugfix.fix_pick_block_dragging": "Fix pick block dragging",
+  "keybindbugfixes.config.bugfix.fix_control_sticky_key_reset": "Fix control sticky key reset",
+
+  "keybindbugfixes.config.bugfix.fix_pressing_f3_twice.tooltip": "After switching game modes using F3 + F4, you need to press F3 twice to toggle the debug screen",
+  "keybindbugfixes.config.bugfix.fix_last_game_mode_reset.tooltip": "Last player game mode not saved after player dies",
+  "keybindbugfixes.config.bugfix.fix_sticky_key_reset.tooltip": "Dying causes toggle sprint and toggle sneak to untoggle",
+  "keybindbugfixes.config.bugfix.fix_pick_block_dragging.tooltip": "Pick block changed to a keyboard key doesn't fill inventory slots when dragged",
+  "keybindbugfixes.config.bugfix.fix_control_sticky_key_reset.tooltip": "Dropping stack or picking block with nbt switches toggle sprint or toggle sneak, bound to left control",
+
+  "keybindbugfixes.config.category.tweaks": "Tweaks",
+  "keybindbugfixes.config.tweak.remove_keybind_conflicts": "Remove keybind conflicts",
+  "keybindbugfixes.config.tweak.remove_keybind_conflicts.tooltip": "Removes keybind conflicts, so multiple keybinds can be bounded to the same key",
+
+  "keybindbugfixes.config.category.keybinds": "Keybinds",
+  "keybindbugfixes.config.keybinds.unknownModifier": "This key has unassigned modifier:\n%s",
+  "keybindbugfixes.config.keybinds.sameModifier": "This key is same as it's modifier:\n%s",
+  "keybindbugfixes.config.key.debug": "Debug Screen",
+  "keybindbugfixes.config.key.game_mode_cycle": "Game Mode Switcher"
+}
