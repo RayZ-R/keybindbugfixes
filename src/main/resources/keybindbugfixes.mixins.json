@@ -5,6 +5,7 @@
 	"plugin": "keybindbugfixes.MixinPlugin",
 	"mixins": [
 		"fix_control_sticky_key_reset.KeyBindingMixin",
+		"fix_control_sticky_key_reset.KeyboardMixin",
 		"fix_control_sticky_key_reset.MinecraftClientMixin",
 		"fix_last_game_mode_reset.ClientPlayNetworkHandlerMixin",
 		"fix_pick_block_dragging.ElementMixin",
