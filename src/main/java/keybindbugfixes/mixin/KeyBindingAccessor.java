@@ -14,4 +14,6 @@ public interface KeyBindingAccessor {
 
     @Accessor("timesPressed")
     void setTimesPressed(int timesPressed);
+    @Accessor("pressed")
+    void setPressedState(boolean pressed);
 }
