@@ -15,26 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
-    @Unique
-    private static void keybindbugfixes$toggleLeftControlStickyKeys() {
-        if (Config.BugFixes.FIX_CONTROL_STICKY_KEY_RESET && Screen.hasControlDown()) {
-            for (StickyKeyBinding stickyKeyBinding : KeybindBugFixes.STICKY_KEY_BINDINGS) {
-                if (((KeyBindingAccessor) stickyKeyBinding).getBoundKey().getCode() == GLFW.GLFW_KEY_LEFT_CONTROL) {
-                    stickyKeyBinding.setPressed(true);
-                }
-            }
-        }
-    }
-
     @Inject(method = "handleInputEvents",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;hasControlDown()Z"))
     private void preventControlStickyKeysResetOnDropStack(CallbackInfo callbackInfo) {
-        keybindbugfixes$toggleLeftControlStickyKeys();
+        KeybindBugFixes.toggleLeftControlStickyKeys();
     }
 
     @Inject(method = "doItemPick",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;hasControlDown()Z"))
     private void preventControlStickyKeysResetOnPickBlockWithNbt(CallbackInfo callbackInfo) {
-        keybindbugfixes$toggleLeftControlStickyKeys();
+        KeybindBugFixes.toggleLeftControlStickyKeys();
     }
 }
