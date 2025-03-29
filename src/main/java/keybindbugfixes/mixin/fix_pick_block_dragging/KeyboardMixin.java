@@ -18,9 +18,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Keyboard.class)
 public abstract class KeyboardMixin {
-	@Redirect(method = "method_1454",
+	@Redirect(method = "onKey",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(III)Z"))
-	private static boolean startPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers, @Local(ordinal = 0) int action) {
+	private static boolean startPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers, @Local(ordinal = 2) int action) {
 		boolean processed = screen.keyPressed(keyCode, scanCode, modifiers);
 
 		if (screen instanceof HandledScreen<?> handledScreen && Config.BugFixes.FIX_PICK_BLOCK_DRAGGING && !processed) {
@@ -54,7 +54,7 @@ public abstract class KeyboardMixin {
 		return processed;
 	}
 
-	@Redirect(method = "method_1454",
+	@Redirect(method = "onKey",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyReleased(III)Z"))
 	private static boolean stopPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers) {
 		boolean processed = screen.keyReleased(keyCode, scanCode, modifiers);
