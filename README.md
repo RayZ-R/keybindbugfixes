@@ -10,6 +10,7 @@ Keybind Bug Fixes is a **100% client side** Minecraft mod, that fixes keybind-re
 - Fix last game mode reset on death [[MC-259571]](https://bugs.mojang.com/browse/MC-259571)
 - Fix sticky key reset on death [[MC-263293]](https://bugs.mojang.com/browse/MC-263293)
 - Fix pick block dragging [[MC-117771]](https://bugs.mojang.com/browse/MC-117771)
+- Fix dismount sticky key reset [[MC-169163]](https://bugs.mojang.com/browse/MC-169163)
 - Fix control sticky key reset
 ### Tweaks:
 - Remove keybind conflicts

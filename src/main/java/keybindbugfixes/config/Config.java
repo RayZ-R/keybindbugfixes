@@ -22,6 +22,9 @@ public class Config {
         @BugInfo(id = 117771)
         public static boolean FIX_PICK_BLOCK_DRAGGING = true;
 
+        @BugInfo(id = 169163)
+        public static boolean FIX_DISMOUNT_STICKY_KEY_RESET = true;
+
         @BugInfo
         public static boolean FIX_CONTROL_STICKY_KEY_RESET = true;
     }
