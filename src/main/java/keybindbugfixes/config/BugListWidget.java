@@ -138,7 +138,7 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
             this.linkButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY,
                             button -> this.option.openLink(screen), true)
                     .width(BUTTON_WIDTH)
-                    .texture(new Identifier(KeybindBugFixes.MOD_ID +  ":icon/link"), 16, 16)
+                    .texture(Identifier.of(KeybindBugFixes.MOD_ID +  ":icon/link"), 16, 16)
                     .build();
 
             this.optionButton = ButtonWidget.builder(this.option.buttonText(), button -> {
@@ -154,7 +154,7 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
                 this.updateButtonState();
             }, true)
                     .width(BUTTON_WIDTH)
-                    .texture(new Identifier(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
+                    .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
                     .build();
 
             this.resetButton.active = !this.option.isDefault();
@@ -218,7 +218,7 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
                         this.updateButtonState();
                     }, true)
                     .width(BUTTON_WIDTH)
-                    .texture(new Identifier(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
+                    .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
                     .build();
 
             this.resetButton.active = !this.option.isDefault();
@@ -379,7 +379,7 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
                 this.option.resetValue();
                 this.updateButtonState();
             }, true)
-                    .texture(new Identifier(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
+                    .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
                     .width(20)
                     .build();
 
