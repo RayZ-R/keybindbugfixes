@@ -1,7 +1,6 @@
 package keybindbugfixes.mixin.rebind_debug_keys;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import keybindbugfixes.MixinPlugin;
 import keybindbugfixes.config.ConfigManager;
 import keybindbugfixes.mixin.KeyBindingAccessor;
 import net.minecraft.client.gui.screen.option.ControlsListWidget;
@@ -25,7 +24,7 @@ public abstract class KeyBindingEntryMixin {
                     target = "Lnet/minecraft/client/gui/screen/option/ControlsListWidget$KeyBindingEntry;duplicate:Z",
                     opcode = Opcodes.GETFIELD, ordinal = 1))
     private boolean addModdedDuplicateKeys(ControlsListWidget.KeyBindingEntry keyBindingEntry, @Local MutableText duplicateText) {
-        if (MixinPlugin.KEYBINDS_ENABLED && !this.binding.isUnbound()) {
+        if (!this.binding.isUnbound()) {
             for (ConfigManager.KeybindOption option : ConfigManager.KEYBIND_OPTIONS) {
                 if (option.modifier() == null && option.value().equals(((KeyBindingAccessor) this.binding).getBoundKey())) {
                     if (this.duplicate) {
