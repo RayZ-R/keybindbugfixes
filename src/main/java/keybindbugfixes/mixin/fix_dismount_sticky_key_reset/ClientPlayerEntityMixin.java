@@ -8,16 +8,17 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.world.ClientWorld;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
     @Shadow @Final private MinecraftClient client;
+
+    @Unique private boolean keybindbugfixes$overrideSneakingPacket = false;
 
     public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
@@ -35,8 +36,20 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
 
             if (accessor.getToggleGetter().getAsBoolean()) {
+                keybindbugfixes$overrideSneakingPacket = true;
                 sneakKeyBinding.setPressed(true);
             }
         }
+    }
+
+    @Inject(method = "dismountVehicle", at = @At("HEAD"))
+    private void dismountVehicle(CallbackInfo callbackInfo) {
+        keybindbugfixes$overrideSneakingPacket = false;
+    }
+
+    @Redirect(method = "sendSneakingPacket",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSneaking()Z"))
+    private boolean overrideSneakingPacket(ClientPlayerEntity clientPlayerEntity) {
+        return keybindbugfixes$overrideSneakingPacket ? true : this.isSneaking();
     }
 }
