@@ -1,5 +1,6 @@
 package keybindbugfixes;
 
+import com.google.common.collect.Sets;
 import keybindbugfixes.config.ConfigManager;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
@@ -10,26 +11,40 @@ import java.util.List;
 import java.util.Set;
 
 public class MixinPlugin implements IMixinConfigPlugin {
-    public static final boolean KEYBINDS_ENABLED = !FabricLoader.getInstance().isModLoaded("rebind_all_the_keys");
+    public static final Set<String> DISABLED_MIXIN_NAMES = Sets.newHashSet();
+    public static final Set<String> DISABLED_OPTION_NAMES = Sets.newHashSet();
+
+    static {
+        FabricLoader fabricLoader = FabricLoader.getInstance();
+        boolean isRebindAllTheKeysLoaded = fabricLoader.isModLoaded("rebind_all_the_keys");
+        boolean isAmecsApiLoaded = fabricLoader.isModLoaded("amecsapi");
+        boolean isNmukLoaded = fabricLoader.isModLoaded("nmuk");
+
+        if (isRebindAllTheKeysLoaded || isAmecsApiLoaded || isNmukLoaded) {
+            DISABLED_MIXIN_NAMES.add("remove_keybind_conflicts");
+            DISABLED_OPTION_NAMES.add("tweak.remove_keybind_conflicts");
+        }
+
+        if (isRebindAllTheKeysLoaded) {
+            DISABLED_MIXIN_NAMES.add("rebind_debug_keys");
+            DISABLED_OPTION_NAMES.add("key.debug");
+            DISABLED_OPTION_NAMES.add("key.game_mode_cycle");
+        }
+    }
 
     public static boolean shouldAddOption(ConfigManager.Option<?> option) {
-        if (!KEYBINDS_ENABLED && (option.name().equals("key.debug")
-                || option.name().equals("key.game_mode_cycle")
-                || option.name().equals("tweak.remove_keybind_conflicts"))) {
-            return false;
-        } else {
-            return true;
-        }
+        return !DISABLED_OPTION_NAMES.contains(option.name());
     }
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!KEYBINDS_ENABLED && (mixinClassName.startsWith("keybindbugfixes.mixin.rebind_debug_keys")
-                || mixinClassName.startsWith("keybindbugfixes.mixin.remove_keybind_conflicts"))) {
-            return false;
-        } else {
-            return true;
+        for (String mixinName : DISABLED_MIXIN_NAMES) {
+            if (mixinClassName.startsWith("keybindbugfixes.mixin." + mixinName)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     @Override
