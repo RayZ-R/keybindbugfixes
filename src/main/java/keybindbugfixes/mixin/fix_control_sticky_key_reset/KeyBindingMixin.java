@@ -28,7 +28,7 @@ public abstract class KeyBindingMixin {
         }
     }
 
-    @Inject(method = "setKeyPressed", at = @At("HEAD"))
+    @Inject(method = "setKeyPressed", at = @At("HEAD"), order = 900)
     private static void addControlStickyKeyBindingRevertValues(InputUtil.Key key, boolean pressed, CallbackInfo callbackInfo) {
         if (Config.BugFixes.FIX_CONTROL_STICKY_KEY_RESET && key.getCode() == GLFW.GLFW_KEY_LEFT_CONTROL && pressed) {
             KeybindBugFixes.stickyKeyBindingRevertMap.clear();
