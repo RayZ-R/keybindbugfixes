@@ -2,7 +2,6 @@ package keybindbugfixes.config;
 
 import com.google.common.collect.Sets;
 import keybindbugfixes.KeybindBugFixes;
-import keybindbugfixes.MixinPlugin;
 import keybindbugfixes.mixin.KeyBindingAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -75,7 +74,7 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
             boolean titleAdded = false;
 
             for (ConfigManager.Option<?> option : category.options()) {
-                if (MixinPlugin.shouldAddOption(option)) {
+                if (KeybindBugFixes.shouldAddOption(option)) {
                     if (!titleAdded) {
                         this.addTitle(category.translationKey());
                         titleAdded = true;
