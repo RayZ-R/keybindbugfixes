@@ -31,13 +31,13 @@ public abstract class KeyBindingMixin {
     @Inject(method = "setKeyPressed", at = @At("HEAD"), order = 900)
     private static void addControlStickyKeyBindingRevertValues(InputUtil.Key key, boolean pressed, CallbackInfo callbackInfo) {
         if (Config.BugFixes.FIX_CONTROL_STICKY_KEY_RESET && key.getCode() == GLFW.GLFW_KEY_LEFT_CONTROL && pressed) {
-            KeybindBugFixes.stickyKeyBindingRevertMap.clear();
+            KeybindBugFixes.STICKY_KEY_REVERT_MAP.clear();
 
             for (StickyKeyBinding stickyKeyBinding : keybindbugfixes$STICKY_KEY_BINDINGS) {
                 KeyBindingAccessor accessor = (KeyBindingAccessor) stickyKeyBinding;
 
                 if (accessor.getBoundKey().getCode() == GLFW.GLFW_KEY_LEFT_CONTROL) {
-                    KeybindBugFixes.stickyKeyBindingRevertMap.put(stickyKeyBinding, stickyKeyBinding.isPressed());
+                    KeybindBugFixes.STICKY_KEY_REVERT_MAP.put(stickyKeyBinding, stickyKeyBinding.isPressed());
                 }
             }
         }
