@@ -1,29 +1,29 @@
 {
-	"required": true,
-	"package": "keybindbugfixes.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"plugin": "keybindbugfixes.MixinPlugin",
-	"mixins": [
-		"fix_control_sticky_key_reset.KeyBindingMixin",
-		"fix_control_sticky_key_reset.KeyboardMixin",
-		"fix_control_sticky_key_reset.MinecraftClientMixin",
-		"fix_dismount_sticky_key_reset.ClientPlayerEntityMixin",
-		"fix_last_game_mode_reset.ClientPlayNetworkHandlerMixin",
-		"fix_pick_block_dragging.ElementMixin",
-		"fix_pick_block_dragging.HandledScreenMixin",
-		"fix_pick_block_dragging.KeyboardMixin",
-		"fix_pressing_f3_twice.GameModeSwitcherScreenMixin",
-		"fix_sticky_key_reset.ClientPlayerEntityMixin",
-		"rebind_debug_keys.GameModeSwitcherScreenMixin",
-		"rebind_debug_keys.KeyBindingEntryMixin",
-		"rebind_debug_keys.KeyboardMixin",
-		"remove_keybind_conflicts.KeyBindingMixin",
-		"HandledScreenAccessor",
-		"KeyBindingAccessor",
-		"KeyboardAccessor",
-		"StickyKeyBindingAccessor"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "package": "keybindbugfixes.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "keybindbugfixes.MixinPlugin",
+  "mixins": [
+    "fix_control_sticky_key_reset.KeyBindingMixin",
+    "fix_control_sticky_key_reset.KeyboardMixin",
+    "fix_control_sticky_key_reset.MinecraftClientMixin",
+    "fix_dismount_sticky_key_reset.ClientPlayerEntityMixin",
+    "fix_last_game_mode_reset.ClientPlayNetworkHandlerMixin",
+    "fix_pick_block_dragging.ElementMixin",
+    "fix_pick_block_dragging.HandledScreenMixin",
+    "fix_pick_block_dragging.KeyboardMixin",
+    "fix_pressing_f3_twice.GameModeSwitcherScreenMixin",
+    "fix_sticky_key_reset.ClientPlayerEntityMixin",
+    "rebind_debug_keys.GameModeSwitcherScreenMixin",
+    "rebind_debug_keys.KeyBindingEntryMixin",
+    "rebind_debug_keys.KeyboardMixin",
+    "remove_keybind_conflicts.KeyBindingMixin",
+    "HandledScreenAccessor",
+    "KeyBindingAccessor",
+    "KeyboardAccessor",
+    "StickyKeyBindingAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

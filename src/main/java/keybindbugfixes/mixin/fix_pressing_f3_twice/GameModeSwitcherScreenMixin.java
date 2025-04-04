@@ -12,17 +12,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GameModeSwitcherScreen.class)
 public abstract class GameModeSwitcherScreenMixin extends Screen {
-	protected GameModeSwitcherScreenMixin(Text title) {
-		super(title);
-	}
+    protected GameModeSwitcherScreenMixin(Text title) {
+        super(title);
+    }
 
-	@Inject(method = "checkForClose",
-			at = @At(value = "INVOKE",
-					target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V",
-					shift = At.Shift.AFTER))
-	private void fixF3State(CallbackInfoReturnable<Boolean> callbackInfo) {
-		if (Config.BugFixes.FIX_PRESSING_F3_TWICE) {
-			((KeyboardAccessor) this.client.keyboard).setSwitchF3State(false);
-		}
+    @Inject(method = "checkForClose",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V",
+                    shift = At.Shift.AFTER))
+    private void fixF3State(CallbackInfoReturnable<Boolean> callbackInfo) {
+        if (Config.BugFixes.FIX_PRESSING_F3_TWICE) {
+            ((KeyboardAccessor) this.client.keyboard).setSwitchF3State(false);
+        }
     }
 }
