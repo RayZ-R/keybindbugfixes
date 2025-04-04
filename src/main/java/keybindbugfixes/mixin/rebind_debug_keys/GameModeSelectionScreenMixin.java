@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(GameModeSelectionScreen.class)
 public abstract class GameModeSelectionScreenMixin {
-	@ModifyConstant(method = "checkForClose", constant = @Constant(intValue = GLFW.GLFW_KEY_F3))
-	private int remapCloseKey(int value) {
-		return Config.Keybinds.DEBUG.getCode();
-	}
+    @ModifyConstant(method = "checkForClose", constant = @Constant(intValue = GLFW.GLFW_KEY_F3))
+    private int remapCloseKey(int value) {
+        return Config.Keybinds.DEBUG.getCode();
+    }
 
-	@ModifyConstant(method = "keyPressed", constant = @Constant(intValue = GLFW.GLFW_KEY_F4))
-	private int remapCycleKey(int value) {
-		return Config.Keybinds.GAME_MODE_CYCLE.getCode();
-	}
+    @ModifyConstant(method = "keyPressed", constant = @Constant(intValue = GLFW.GLFW_KEY_F4))
+    private int remapCycleKey(int value) {
+        return Config.Keybinds.GAME_MODE_CYCLE.getCode();
+    }
 }
