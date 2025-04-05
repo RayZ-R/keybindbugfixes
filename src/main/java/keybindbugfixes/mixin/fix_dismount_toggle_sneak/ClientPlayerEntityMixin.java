@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.fix_dismount_sticky_key_reset;
+package keybindbugfixes.mixin.fix_dismount_toggle_sneak;
 
 import com.mojang.authlib.GameProfile;
 import keybindbugfixes.config.Config;
@@ -31,7 +31,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
                     shift = At.Shift.AFTER,
                     ordinal = 0))
     private void untoggleSneakKeyOnDismount(CallbackInfo callbackInfo) {
-        if (Config.BugFixes.FIX_DISMOUNT_STICKY_KEY_RESET && this.hasVehicle() && this.isSneaking()) {
+        if (Config.BugFixes.FIX_DISMOUNT_TOGGLE_SNEAK && this.hasVehicle() && this.isSneaking()) {
             KeyBinding sneakKeyBinding = this.client.options.sneakKey;
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
 
