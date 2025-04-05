@@ -14,19 +14,19 @@ public class Config {
         public static boolean FIX_PRESSING_F3_TWICE = true;
 
         @BugInfo(id = 259571)
-        public static boolean FIX_LAST_GAME_MODE_RESET = true;
+        public static boolean FIX_GAME_MODE_SWITCHER_RESET = true;
 
         @BugInfo(id = 263293)
         public static boolean FIX_STICKY_KEY_RESET = true;
 
         @BugInfo(id = 117771)
-        public static boolean FIX_PICK_BLOCK_DRAGGING = true;
+        public static boolean FIX_PICK_KEY_DRAGGING = true;
 
         @BugInfo(id = 169163)
-        public static boolean FIX_DISMOUNT_STICKY_KEY_RESET = true;
+        public static boolean FIX_DISMOUNT_TOGGLE_SNEAK = true;
 
         @BugInfo
-        public static boolean FIX_CONTROL_STICKY_KEY_RESET = true;
+        public static boolean FIX_MODIFIER_TOGGLE_CONTROL = true;
     }
 
     @CategoryInfo(entryName = "tweak")

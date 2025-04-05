@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.fix_pick_block_dragging;
+package keybindbugfixes.mixin.fix_pick_key_dragging;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import keybindbugfixes.config.Config;
@@ -13,12 +13,12 @@ public abstract class HandledScreenMixin {
     @ModifyExpressionValue(method = "keyPressed",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;matchesKey(II)Z", ordinal = 1))
     private boolean disablePickItemKeyInInventory(boolean original) {
-        return Config.BugFixes.FIX_PICK_BLOCK_DRAGGING ? false : original;
+        return Config.BugFixes.FIX_PICK_KEY_DRAGGING ? false : original;
     }
 
     @Inject(method = "keyPressed", at = @At("TAIL"), cancellable = true)
     private void disablePickKeyDraggingInSearch(CallbackInfoReturnable<Boolean> callbackInfo) {
-        if (Config.BugFixes.FIX_PICK_BLOCK_DRAGGING) {
+        if (Config.BugFixes.FIX_PICK_KEY_DRAGGING) {
             callbackInfo.setReturnValue(false);
         }
     }

@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.fix_pick_block_dragging;
+package keybindbugfixes.mixin.fix_pick_key_dragging;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import keybindbugfixes.KeybindBugFixes;
@@ -23,7 +23,7 @@ public abstract class KeyboardMixin {
     private static boolean startPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers, @Local(ordinal = 2) int action) {
         boolean processed = screen.keyPressed(keyCode, scanCode, modifiers);
 
-        if (screen instanceof HandledScreen<?> handledScreen && Config.BugFixes.FIX_PICK_BLOCK_DRAGGING && !processed) {
+        if (screen instanceof HandledScreen<?> handledScreen && Config.BugFixes.FIX_PICK_KEY_DRAGGING && !processed) {
             MinecraftClient client = MinecraftClient.getInstance();
             boolean inCreative = client.interactionManager.hasCreativeInventory();
 
@@ -59,7 +59,7 @@ public abstract class KeyboardMixin {
     private static boolean stopPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers) {
         boolean processed = screen.keyReleased(keyCode, scanCode, modifiers);
 
-        if (screen instanceof HandledScreen<?> handledScreen && Config.BugFixes.FIX_PICK_BLOCK_DRAGGING) {
+        if (screen instanceof HandledScreen<?> handledScreen && Config.BugFixes.FIX_PICK_KEY_DRAGGING) {
             MinecraftClient client = MinecraftClient.getInstance();
 
             if (client.options.pickItemKey.matchesKey(keyCode, scanCode)) {
