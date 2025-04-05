@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.fix_last_game_mode_reset;
+package keybindbugfixes.mixin.fix_game_mode_switcher_reset;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import keybindbugfixes.config.Config;
@@ -14,8 +14,8 @@ public abstract class ClientPlayNetworkHandlerMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;" +
                             "setGameModes(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V"))
-    private boolean preventLastGameModeResetOnDeath(ClientPlayerInteractionManager interactionManager,
-                                                 GameMode gameMode, GameMode previousGameMode) {
-        return !Config.BugFixes.FIX_LAST_GAME_MODE_RESET;
+    private boolean preventGameModeSwitcherResetOnDeath(ClientPlayerInteractionManager interactionManager,
+                                                        GameMode gameMode, GameMode previousGameMode) {
+        return !Config.BugFixes.FIX_GAME_MODE_SWITCHER_RESET;
     }
 }

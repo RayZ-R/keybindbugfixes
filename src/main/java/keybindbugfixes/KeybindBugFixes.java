@@ -58,7 +58,7 @@ public class KeybindBugFixes implements ClientModInitializer {
     }
 
     public static void revertStickyKeyBindings() {
-        if (Config.BugFixes.FIX_CONTROL_STICKY_KEY_RESET) {
+        if (Config.BugFixes.FIX_MODIFIER_TOGGLE_CONTROL) {
             for (Map.Entry<StickyKeyBinding, Boolean> entry : STICKY_KEY_REVERT_MAP.entrySet()) {
                 KeyBinding keyBinding = entry.getKey();
                 boolean resetValue = entry.getValue();

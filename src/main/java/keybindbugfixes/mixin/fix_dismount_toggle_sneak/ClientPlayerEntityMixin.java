@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.fix_dismount_sticky_key_reset;
+package keybindbugfixes.mixin.fix_dismount_toggle_sneak;
 
 import keybindbugfixes.config.Config;
 import keybindbugfixes.mixin.StickyKeyBindingAccessor;
@@ -23,7 +23,7 @@ public abstract class ClientPlayerEntityMixin {
                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;" +
                             "getRootVehicle()Lnet/minecraft/entity/Entity;"))
     private void untoggleSneakKeyOnDismount(CallbackInfo callbackInfo) {
-        if (Config.BugFixes.FIX_DISMOUNT_STICKY_KEY_RESET && this.isSneaking()) {
+        if (Config.BugFixes.FIX_DISMOUNT_TOGGLE_SNEAK && this.isSneaking()) {
             KeyBinding sneakKeyBinding = this.client.options.sneakKey;
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
 
