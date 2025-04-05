@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.fix_control_sticky_key_reset;
+package keybindbugfixes.mixin.fix_modifier_toggle_control;
 
 import com.google.common.collect.Lists;
 import keybindbugfixes.KeybindBugFixes;
@@ -30,7 +30,7 @@ public abstract class KeyBindingMixin {
 
     @Inject(method = "setKeyPressed", at = @At("HEAD"), order = 900)
     private static void addControlStickyKeyBindingRevertValues(InputUtil.Key key, boolean pressed, CallbackInfo callbackInfo) {
-        if (Config.BugFixes.FIX_CONTROL_STICKY_KEY_RESET && key.getCode() == GLFW.GLFW_KEY_LEFT_CONTROL && pressed) {
+        if (Config.BugFixes.FIX_MODIFIER_TOGGLE_CONTROL && key.getCode() == GLFW.GLFW_KEY_LEFT_CONTROL && pressed) {
             KeybindBugFixes.STICKY_KEY_REVERT_MAP.clear();
 
             for (StickyKeyBinding stickyKeyBinding : keybindbugfixes$STICKY_KEY_BINDINGS) {
