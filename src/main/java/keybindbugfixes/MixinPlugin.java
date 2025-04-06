@@ -11,7 +11,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         for (String disabledMixinName : KeybindBugFixes.DISABLED_MIXIN_NAMES) {
-            if (mixinClassName.startsWith("keybindbugfixes.mixin." + disabledMixinName)) {
+            if (mixinClassName.startsWith(KeybindBugFixes.MOD_ID + ".mixin." + disabledMixinName)) {
                 return false;
             }
         }
@@ -20,7 +20,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    public void onLoad(String mixinPackage) {}
+    public void onLoad(String mixinPackage) {
+        KeybindBugFixes.disableMixins();
+    }
 
     @Override
     public String getRefMapperConfig() {

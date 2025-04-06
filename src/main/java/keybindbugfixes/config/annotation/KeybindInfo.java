@@ -9,4 +9,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KeybindInfo {
     String modifier() default "";
+    String mixin();
 }

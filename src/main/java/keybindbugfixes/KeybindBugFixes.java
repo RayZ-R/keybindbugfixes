@@ -35,21 +35,32 @@ public class KeybindBugFixes implements ClientModInitializer {
 
     static {
         GsonBuilder builder = new GsonBuilder();
-        GSON = builder.setPrettyPrinting().create();
+        GSON = builder.serializeNulls().setPrettyPrinting().create();
+    }
+
+    public static void disableMixins() {
+        ConfigManager.preInit();
 
         boolean isRebindAllTheKeysModLoaded = FABRIC_LOADER.isModLoaded("rebind_all_the_keys");
         boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
         boolean isNmukModLoaded = FABRIC_LOADER.isModLoaded("nmuk");
 
         if (isRebindAllTheKeysModLoaded || isAmecsApiModLoaded || isNmukModLoaded) {
-            DISABLED_MIXIN_NAMES.add("remove_keybind_conflicts");
-            DISABLED_OPTION_NAMES.add("tweak.remove_keybind_conflicts");
+            disableMixin("remove_keybind_conflicts");
         }
 
         if (isRebindAllTheKeysModLoaded) {
-            DISABLED_MIXIN_NAMES.add("rebind_debug_keys");
-            DISABLED_OPTION_NAMES.add("key.debug");
-            DISABLED_OPTION_NAMES.add("key.game_mode_cycle");
+            disableMixin("rebind_debug_keys");
+        }
+    }
+
+    private static void disableMixin(String name) {
+        DISABLED_MIXIN_NAMES.add(name);
+
+        for (ConfigManager.OptionInfo optionInfo : ConfigManager.OPTION_INFOS) {
+            if (optionInfo.mixinName().equals(name)) {
+                DISABLED_OPTION_NAMES.add(optionInfo.name());
+            }
         }
     }
 
