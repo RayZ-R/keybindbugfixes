@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.minenash.rebind_all_the_keys.RebindAllTheKeys;
 import keybindbugfixes.config.Config;
 import keybindbugfixes.config.ConfigManager;
 import keybindbugfixes.mixin.KeyBindingAccessor;
@@ -12,6 +13,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.StickyKeyBinding;
+import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +28,8 @@ public class KeybindBugFixes implements ClientModInitializer {
     public static final Set<String> DISABLED_MIXIN_NAMES = Sets.newHashSet();
     public static final Set<String> DISABLED_OPTION_NAMES = Sets.newHashSet();
 
+    private static final boolean IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
+
     public static MinecraftClient client;
     public static final FabricLoader FABRIC_LOADER = FabricLoader.getInstance();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
@@ -36,14 +41,17 @@ public class KeybindBugFixes implements ClientModInitializer {
     static {
         GsonBuilder builder = new GsonBuilder();
         GSON = builder.serializeNulls().setPrettyPrinting().create();
+
+        IS_REBIND_ALL_THE_KEYS_MOD_LOADED = FABRIC_LOADER.isModLoaded("rebind_all_the_keys");
     }
 
     public static void disableMixins() {
         ConfigManager.preInit();
 
-        boolean isRebindAllTheKeysModLoaded = FABRIC_LOADER.isModLoaded("rebind_all_the_keys");
+        boolean isRebindAllTheKeysModLoaded = IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
         boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
         boolean isNmukModLoaded = FABRIC_LOADER.isModLoaded("nmuk");
+        boolean isRrlsLoaded = FABRIC_LOADER.isModLoaded("rrls");
 
         if (isRebindAllTheKeysModLoaded || isAmecsApiModLoaded || isNmukModLoaded) {
             disableMixin("remove_keybind_conflicts");
@@ -51,6 +59,10 @@ public class KeybindBugFixes implements ClientModInitializer {
 
         if (isRebindAllTheKeysModLoaded) {
             disableMixin("rebind_debug_keys");
+        }
+
+        if (isRrlsLoaded) {
+            DISABLED_MIXIN_NAMES.add("reload_resources_anywhere.MinecraftClientMixin");
         }
     }
 
@@ -61,6 +73,14 @@ public class KeybindBugFixes implements ClientModInitializer {
             if (optionInfo.mixinName().equals(name)) {
                 DISABLED_OPTION_NAMES.add(optionInfo.name());
             }
+        }
+    }
+
+    public static InputUtil.Key getReloadResourcesKey() {
+        if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
+            return ((KeyBindingAccessor) RebindAllTheKeys.RELOAD_RESOURCES).getBoundKey();
+        } else {
+            return InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_T);
         }
     }
 
