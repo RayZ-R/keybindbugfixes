@@ -14,6 +14,7 @@ Keybind Bug Fixes is a **100% client side** Minecraft mod, that fixes keybind-re
 - Fix toggle control as modifier
 ### Tweaks:
 - Remove keybind conflicts
+- Reload resources anywhere [[MC-269020]](https://bugs.mojang.com/browse/MC-269020)
 ### Keybinds:
 - `F3` Debug Screen
 - `F4` Game Mode Switcher

@@ -33,6 +33,9 @@ public class Config {
     public static class Tweaks {
         @TweakInfo
         public static boolean REMOVE_KEYBIND_CONFLICTS = true;
+
+        @BugInfo(id = 269020)
+        public static boolean RELOAD_RESOURCES_ANYWHERE = true;
     }
 
     @CategoryInfo(entryName = "key")
