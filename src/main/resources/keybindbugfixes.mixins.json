@@ -17,6 +17,8 @@
     "rebind_debug_keys.GameModeSwitcherScreenMixin",
     "rebind_debug_keys.KeyBindingEntryMixin",
     "rebind_debug_keys.KeyboardMixin",
+    "reload_resources_anywhere.KeyboardMixin",
+    "reload_resources_anywhere.MinecraftClientMixin",
     "remove_keybind_conflicts.KeyBindingMixin",
     "HandledScreenAccessor",
     "KeyBindingAccessor",
