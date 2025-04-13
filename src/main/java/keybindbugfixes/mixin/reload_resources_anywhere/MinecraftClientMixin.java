@@ -1,6 +1,7 @@
 package keybindbugfixes.mixin.reload_resources_anywhere;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import keybindbugfixes.config.Config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Overlay;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +14,6 @@ public abstract class MinecraftClientMixin {
                     target = "Lnet/minecraft/client/MinecraftClient;" +
                             "overlay:Lnet/minecraft/client/gui/screen/Overlay;"))
     public Overlay preventInfiniteLoading(Overlay original) {
-        return null;
+        return Config.Tweaks.RELOAD_RESOURCES_ANYWHERE ? null : original;
     }
 }
