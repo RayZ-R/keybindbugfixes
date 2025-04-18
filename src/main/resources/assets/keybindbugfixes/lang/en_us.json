@@ -4,10 +4,10 @@
 
   "keybindbugfixes.config.bugfix.fix_pressing_f3_twice": "Fix pressing F3 twice to open the debug screen",
   "keybindbugfixes.config.bugfix.fix_game_mode_switcher_reset": "Fix game mode switcher reset on death",
-  "keybindbugfixes.config.bugfix.fix_sticky_key_reset": "Fix toggle key state reset on death",
+  "keybindbugfixes.config.bugfix.fix_sticky_key_reset": "Fix toggle key reset on death",
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging": "Fix pick key dragging in inventory",
-  "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak": "Fix toggle sneak on dismount",
-  "keybindbugfixes.config.bugfix.fix_modifier_toggle_control": "Fix toggle control as modifier",
+  "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak": "Fix toggle sneak state on dismount",
+  "keybindbugfixes.config.bugfix.fix_modifier_toggle_control": "Fix toggle control state when used as modifier",
 
   "keybindbugfixes.config.bugfix.fix_pressing_f3_twice.tooltip": "After switching game modes using F3 + F4, you need to press F3 twice to toggle the debug screen",
   "keybindbugfixes.config.bugfix.fix_game_mode_switcher_reset.tooltip": "Last player game mode not saved after player dies",
