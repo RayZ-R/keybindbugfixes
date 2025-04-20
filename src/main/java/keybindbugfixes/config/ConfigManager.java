@@ -41,6 +41,7 @@ public class ConfigManager {
         protected final String translationKey;
         protected final String mixinName;
         protected final String entryName;
+        protected final Integer bugId;
 
         protected boolean isDisabled;
 
@@ -56,6 +57,24 @@ public class ConfigManager {
 
             OPTION_MIXIN_MAP.put(this.mixinName, this);
             OPTION_INFOS.add(this);
+
+            this.bugId = -1;
+        }
+
+        public OptionInfo(Field field, String entryName, String mixinName, int bugId) {
+            this.field = field;
+            this.type = field.getAnnotations()[0];
+
+            String fieldName = field.getName().toLowerCase(Locale.ROOT);
+            this.name = entryName + "." + fieldName;
+            this.translationKey = KeybindBugFixes.MOD_ID + ".config." + this.name;
+            this.mixinName = mixinName.isEmpty() ? fieldName : mixinName;
+            this.entryName = entryName;
+
+            OPTION_MIXIN_MAP.put(this.mixinName, this);
+            OPTION_INFOS.add(this);
+
+            this.bugId = bugId;
         }
 
         public Annotation type() {
@@ -68,6 +87,10 @@ public class ConfigManager {
 
         public String mixinName() {
             return this.mixinName;
+        }
+
+        public int bugId() {
+            return this.bugId;
         }
 
         public boolean isDisabled() {
@@ -394,7 +417,7 @@ public class ConfigManager {
                 for (Field field : categoryClass.getFields()) {
                     if (field.isAnnotationPresent(BugInfo.class)) {
                         BugInfo bugInfo = field.getAnnotation(BugInfo.class);
-                        options.add(new OptionInfo(field, entryName, bugInfo.mixin()));
+                        options.add(new OptionInfo(field, entryName, bugInfo.mixin(), bugInfo.id()));
 
                     } else if (field.isAnnotationPresent(TweakInfo.class)) {
                         TweakInfo tweakInfo = field.getAnnotation(TweakInfo.class);
