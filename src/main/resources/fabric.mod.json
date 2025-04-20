@@ -15,7 +15,8 @@
   "environment": "client",
   "entrypoints": {
     "client": ["keybindbugfixes.KeybindBugFixes"],
-    "modmenu": ["keybindbugfixes.config.ModMenuApiImpl"]
+    "modmenu": ["keybindbugfixes.config.ModMenuApiImpl"],
+    "debugify": ["keybindbugfixes.config.DebugifyApiImpl"]
   },
   "mixins": ["keybindbugfixes.mixins.json"],
   "depends": {
