@@ -29,6 +29,7 @@ public class KeybindBugFixes implements ClientModInitializer {
     public static final Set<String> DISABLED_OPTION_NAMES = Sets.newHashSet();
 
     private static final boolean IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
+    private static boolean disabledMixins = false;
 
     public static MinecraftClient client;
     public static final FabricLoader FABRIC_LOADER = FabricLoader.getInstance();
@@ -46,23 +47,27 @@ public class KeybindBugFixes implements ClientModInitializer {
     }
 
     public static void disableMixins() {
-        ConfigManager.preInit();
+        if (!disabledMixins) {
+            disabledMixins = true;
 
-        boolean isRebindAllTheKeysModLoaded = IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
-        boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
-        boolean isNmukModLoaded = FABRIC_LOADER.isModLoaded("nmuk");
-        boolean isRrlsLoaded = FABRIC_LOADER.isModLoaded("rrls");
+            ConfigManager.preInit();
 
-        if (isRebindAllTheKeysModLoaded || isAmecsApiModLoaded || isNmukModLoaded) {
-            disableMixin("remove_keybind_conflicts");
-        }
+            boolean isRebindAllTheKeysModLoaded = IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
+            boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
+            boolean isNmukModLoaded = FABRIC_LOADER.isModLoaded("nmuk");
+            boolean isRrlsLoaded = FABRIC_LOADER.isModLoaded("rrls");
 
-        if (isRebindAllTheKeysModLoaded) {
-            disableMixin("rebind_debug_keys");
-        }
+            if (isRebindAllTheKeysModLoaded || isAmecsApiModLoaded || isNmukModLoaded) {
+                disableMixin("remove_keybind_conflicts");
+            }
 
-        if (isRrlsLoaded) {
-            DISABLED_MIXIN_NAMES.add("reload_resources_anywhere.MinecraftClientMixin");
+            if (isRebindAllTheKeysModLoaded) {
+                disableMixin("rebind_debug_keys");
+            }
+
+            if (isRrlsLoaded) {
+                DISABLED_MIXIN_NAMES.add("reload_resources_anywhere.MinecraftClientMixin");
+            }
         }
     }
 
