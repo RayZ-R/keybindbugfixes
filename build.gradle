@@ -59,6 +59,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 	modCompileOnly "maven.modrinth:rebind-all-the-keys:${project.rebind_all_the_keys_version}"
+	modCompileOnly "maven.modrinth:debugify:${project.debugify_version}"
 }
 
 processResources {
