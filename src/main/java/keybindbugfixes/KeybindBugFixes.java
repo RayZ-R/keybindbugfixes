@@ -29,7 +29,6 @@ public class KeybindBugFixes implements ClientModInitializer {
     public static final Set<String> DISABLED_OPTION_NAMES = Sets.newHashSet();
 
     private static final boolean IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
-    private static boolean disabledMixins = false;
 
     public static MinecraftClient client;
     public static final FabricLoader FABRIC_LOADER = FabricLoader.getInstance();
@@ -44,39 +43,37 @@ public class KeybindBugFixes implements ClientModInitializer {
         GSON = builder.serializeNulls().setPrettyPrinting().create();
 
         IS_REBIND_ALL_THE_KEYS_MOD_LOADED = FABRIC_LOADER.isModLoaded("rebind_all_the_keys");
+        
+        disableMixins();
     }
 
     public static void disableMixins() {
-        if (!disabledMixins) {
-            disabledMixins = true;
+        ConfigManager.preInit();
 
-            ConfigManager.preInit();
+        boolean isRebindAllTheKeysModLoaded = IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
+        boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
+        boolean isNmukModLoaded = FABRIC_LOADER.isModLoaded("nmuk");
+        boolean isRrlsLoaded = FABRIC_LOADER.isModLoaded("rrls");
 
-            boolean isRebindAllTheKeysModLoaded = IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
-            boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
-            boolean isNmukModLoaded = FABRIC_LOADER.isModLoaded("nmuk");
-            boolean isRrlsLoaded = FABRIC_LOADER.isModLoaded("rrls");
+        if (isRebindAllTheKeysModLoaded || isAmecsApiModLoaded || isNmukModLoaded) {
+            disableMixin("remove_keybind_conflicts");
+        }
 
-            if (isRebindAllTheKeysModLoaded || isAmecsApiModLoaded || isNmukModLoaded) {
-                disableMixin("remove_keybind_conflicts");
-            }
+        if (isRebindAllTheKeysModLoaded) {
+            disableMixin("rebind_debug_keys");
+        }
 
-            if (isRebindAllTheKeysModLoaded) {
-                disableMixin("rebind_debug_keys");
-            }
-
-            if (isRrlsLoaded) {
-                DISABLED_MIXIN_NAMES.add("reload_resources_anywhere.MinecraftClientMixin");
-            }
+        if (isRrlsLoaded) {
+            DISABLED_MIXIN_NAMES.add("reload_resources_anywhere.MinecraftClientMixin");
         }
     }
 
     private static void disableMixin(String name) {
         DISABLED_MIXIN_NAMES.add(name);
 
-        for (ConfigManager.OptionInfo optionInfo : ConfigManager.OPTION_INFOS) {
-            if (optionInfo.mixinName().equals(name)) {
-                DISABLED_OPTION_NAMES.add(optionInfo.name());
+        for (ConfigManager.Option<?> option : ConfigManager.OPTIONS) {
+            if (option.mixinName().equals(name)) {
+                DISABLED_OPTION_NAMES.add(option.name());
             }
         }
     }
@@ -97,11 +94,11 @@ public class KeybindBugFixes implements ClientModInitializer {
         if (Config.BugFixes.FIX_MODIFIER_TOGGLE_CONTROL) {
             for (Map.Entry<StickyKeyBinding, Boolean> entry : STICKY_KEY_REVERT_MAP.entrySet()) {
                 KeyBinding keyBinding = entry.getKey();
-                boolean resetValue = entry.getValue();
+                boolean initialValue = entry.getValue();
 
-                ((KeyBindingAccessor) keyBinding).setPressedState(resetValue);
+                ((KeyBindingAccessor) keyBinding).setPressedState(initialValue);
 
-                if (keyBinding.equals(client.options.sprintKey) && !resetValue) {
+                if (keyBinding.equals(client.options.sprintKey) && !initialValue) {
                     client.player.setSprinting(false);
                 }
             }

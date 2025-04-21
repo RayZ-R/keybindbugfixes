@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,22 +31,22 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ConfigManager {
-    public static class OptionInfo {
+    public abstract static class Option<T> {
         protected final Field field;
-        protected final Annotation type;
         protected JsonElement jsonElement;
 
         protected final String name;
         protected final String translationKey;
         protected final String mixinName;
         protected final String entryName;
-        protected final Integer bugId;
 
         protected boolean isDisabled;
+        protected Consumer<T> changeCallback;
+        protected T defaultValue;
+        protected T value;
 
-        public OptionInfo(Field field, String entryName, String mixinName) {
+        public Option(Field field, String entryName, String mixinName) {
             this.field = field;
-            this.type = field.getAnnotations()[0];
 
             String fieldName = field.getName().toLowerCase(Locale.ROOT);
             this.name = entryName + "." + fieldName;
@@ -56,142 +55,57 @@ public class ConfigManager {
             this.entryName = entryName;
 
             OPTION_MIXIN_MAP.put(this.mixinName, this);
-            OPTION_INFOS.add(this);
-
-            this.bugId = -1;
-        }
-
-        public OptionInfo(Field field, String entryName, String mixinName, int bugId) {
-            this.field = field;
-            this.type = field.getAnnotations()[0];
-
-            String fieldName = field.getName().toLowerCase(Locale.ROOT);
-            this.name = entryName + "." + fieldName;
-            this.translationKey = KeybindBugFixes.MOD_ID + ".config." + this.name;
-            this.mixinName = mixinName.isEmpty() ? fieldName : mixinName;
-            this.entryName = entryName;
-
-            OPTION_MIXIN_MAP.put(this.mixinName, this);
-            OPTION_INFOS.add(this);
-
-            this.bugId = bugId;
-        }
-
-        public Annotation type() {
-            return this.type;
+            OPTIONS.add(this);
         }
 
         public String name() {
             return this.name;
         }
 
-        public String mixinName() {
-            return this.mixinName;
+        public String translationKey() {
+            return this.translationKey;
         }
 
-        public int bugId() {
-            return this.bugId;
+        public String mixinName() {
+            return this.mixinName;
         }
 
         public boolean isDisabled() {
             return this.isDisabled;
         }
 
-        protected boolean writeDisabledState(JsonObject json) {
-            if (this.isDisabled) {
-                json.add(this.name, null);
-                return true;
-            } else {
-                return false;
-            }
-        }
 
-        protected void loadFromJson(JsonElement jsonElement) {
-            if (jsonElement != null) {
-                this.isDisabled = jsonElement.isJsonNull();
-            }
+        protected abstract Class<T> valueType();
 
-            this.jsonElement = jsonElement;
-        }
-    }
-
-    public abstract static class Option<T> {
-        protected final OptionInfo optionInfo;
-
-        protected final Consumer<T> changeCallback;
-        protected final T defaultValue;
-        protected T value;
-
-        private Consumer<T> getChangeCallback(Field field) {
-            return value -> {
+        public void initValue() {
+            this.changeCallback = value -> {
                 try {
-                    field.set(null, value);
+                    this.field.set(null, value);
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
             };
-        }
-
-        private T getDefaultValue(Field field, Class<T> valueType) {
-            T defaultValue;
 
             try {
-                defaultValue = valueType.cast(field.get(valueType));
+                Class<T> valueType = this.valueType();
+                this.defaultValue = valueType.cast(this.field.get(valueType));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
-
-            return defaultValue;
         }
 
-        public Option(OptionInfo optionInfo, Class<T> valueType) {
-            this.optionInfo = optionInfo;
-
-            this.changeCallback = getChangeCallback(this.field());
-            this.defaultValue = getDefaultValue(this.field(), valueType);
+        public boolean loadValue() {
             this.value = this.defaultValue;
-
-            OPTIONS.add(this);
-        }
-
-        public Field field() {
-            return this.optionInfo.field;
-        }
-
-        public JsonElement jsonElement() {
-            return this.optionInfo.jsonElement;
-        }
-
-        public String name() {
-            return this.optionInfo.name;
-        }
-
-        public String translationKey() {
-            return this.optionInfo.translationKey;
-        }
-
-        public String entryName() {
-            return this.optionInfo.entryName;
-        }
-
-        public boolean isDisabled() {
-            return this.optionInfo.isDisabled;
-        }
-
-        protected boolean writeDisabledState(JsonObject json) {
-            return this.optionInfo.writeDisabledState(json);
-        }
-
-
-        public void setValue(T value) {
-            if (this.value != value) {
-                this.value = value;
-                changeCallback.accept(this.value);
+            
+            if (this.isDisabled) {
+                return true;
             }
-        }
 
-        public void resetValue() {
-            this.setValue(this.defaultValue);
+            if (this.jsonElement != null) {
+                return this.loadFromJson(this.jsonElement);
+            } else {
+                return false;
+            }
         }
 
         public T value() {
@@ -206,28 +120,59 @@ public class ConfigManager {
             return this.value.equals(this.defaultValue);
         }
 
-        public abstract void writeToJson(JsonObject json);
+        public void setValue(T value) {
+            if (this.value != value) {
+                this.value = value;
+                this.changeCallback.accept(this.value);
+            }
+        }
 
-        public abstract boolean loadFromJson(JsonElement jsonPrimitive);
+        public void resetValue() {
+            this.setValue(this.defaultValue);
+        }
+
+
+        public void write(JsonObject json) {
+            if (this.isDisabled) {
+                json.add(this.name, null);
+            } else {
+                this.writeToJson(json);
+            }
+        }
+
+        public void load(JsonElement jsonElement) {
+            this.isDisabled = jsonElement.isJsonNull();
+            this.jsonElement = jsonElement;
+        }
+
+        protected abstract void writeToJson(JsonObject json);
+
+        protected abstract boolean loadFromJson(JsonElement jsonPrimitive);
     }
 
     public static class BugOption extends TweakOption {
         @Nullable private final String link;
+        private final int id;
 
-        public BugOption(OptionInfo optionInfo) {
-            super(optionInfo);
+        public BugOption(Field field, String entryName, String mixinName, int id) {
+            super(field, entryName, mixinName);
+            this.id = id;
 
-            if (this.field().isAnnotationPresent(BugInfo.class)) {
-                int bugId = this.field().getAnnotation(BugInfo.class).id();
-
-                if (bugId != -1) {
-                    this.link = "https://bugs.mojang.com/browse/MC-" + bugId;
-                } else {
-                    this.link = null;
-                }
+            if (id != -1) {
+                this.link = "https://bugs.mojang.com/browse/MC-" + id;
             } else {
                 this.link = null;
             }
+
+            BUG_OPTIONS.add(this);
+        }
+
+        public int id() {
+            return this.id;
+        }
+
+        public @Nullable String link() {
+            return this.link;
         }
 
         public void openLink(Screen parent) {
@@ -235,38 +180,35 @@ public class ConfigManager {
                 ConfirmLinkScreen.open(parent, this.link);
             }
         }
-
-        public @Nullable String link() {
-            return this.link;
-        }
     }
 
     public static class TweakOption extends Option<Boolean> {
         private final Function<Boolean, Text> buttonTextFactory;
         private final Function<Boolean, Tooltip> tooltipFactory;
 
-        public TweakOption(OptionInfo optionInfo) {
-            super(optionInfo, Boolean.class);
+        public TweakOption(Field field, String entryName, String mixinName) {
+            super(field, entryName, mixinName);
 
             this.buttonTextFactory = value -> Text.translatable(value ? "gui.yes" : "gui.no")
                     .formatted(value ? Formatting.GREEN : Formatting.RED);
 
-            this.tooltipFactory =value -> Tooltip.of(Text.translatable(
-                    this.translationKey() + ".tooltip"));
+            this.tooltipFactory =value -> Tooltip.of(
+                    Text.translatable(this.translationKey + ".tooltip"));
+        }
+
+        @Override
+        protected Class<Boolean> valueType() {
+            return Boolean.class;
         }
 
         @Override
         public void writeToJson(JsonObject json) {
-            if (!this.writeDisabledState(json)) {
-                json.addProperty(this.name(), this.value);
-            }
+            json.addProperty(this.name, this.value);
         }
 
         @Override
         public boolean loadFromJson(JsonElement jsonElement) {
-            if (this.isDisabled()) {
-                return true;
-            } else if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isBoolean()) {
+            if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isBoolean()) {
                 this.setValue(jsonElement.getAsBoolean());
                 return true;
             } else {
@@ -290,14 +232,13 @@ public class ConfigManager {
     public static class KeybindOption extends Option<InputUtil.Key> {
         @Nullable private KeybindOption modifier;
 
-        public KeybindOption(OptionInfo optionInfo) {
-            super(optionInfo, InputUtil.Key.class);
+        public KeybindOption(Field field, String entryName, String mixinName, String modifier) {
+            super(field, entryName, mixinName);
 
-            String modifierString = this.field().getAnnotation(KeybindInfo.class).modifier();
             boolean processed = false;
 
-            if (!modifierString.isEmpty()) {
-                String modifierName = this.entryName() + "." + modifierString.toLowerCase(Locale.ROOT);
+            if (!modifier.isEmpty()) {
+                String modifierName = this.entryName + "." + modifier.toLowerCase(Locale.ROOT);
 
                 for (KeybindOption option : KEYBIND_OPTIONS) {
                     if (option.name().equals(modifierName)) {
@@ -316,17 +257,18 @@ public class ConfigManager {
         }
 
         @Override
+        protected Class<InputUtil.Key> valueType() {
+            return InputUtil.Key.class;
+        }
+
+        @Override
         public void writeToJson(JsonObject json) {
-            if (!this.writeDisabledState(json)) {
-                json.addProperty(this.name(), this.value.getTranslationKey());
-            }
+            json.addProperty(this.name, this.value.getTranslationKey());
         }
 
         @Override
         public boolean loadFromJson(JsonElement jsonElement) {
-            if (this.isDisabled()) {
-                return true;
-            } else if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString()) {
+            if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString()) {
                 try {
                     this.setValue(InputUtil.fromTranslationKey(jsonElement.getAsString()));
                     return true;
@@ -347,11 +289,11 @@ public class ConfigManager {
         }
     }
 
-    public static class InfoCategory {
+    public static class Category {
         private final String translationKey;
-        private final List<OptionInfo> options;
+        private final List<Option<?>> options;
 
-        public InfoCategory(String categoryName, OptionInfo[] options) {
+        public Category(String categoryName, Option<?>[] options) {
             this.translationKey = KeybindBugFixes.MOD_ID + ".config.category." + categoryName;
             this.options = Lists.newArrayList(options);
         }
@@ -360,48 +302,35 @@ public class ConfigManager {
             return this.translationKey;
         }
 
-        public List<OptionInfo> options() {
-            return this.options;
-        }
-    }
-
-    public static class Category {
-        private final InfoCategory infoCategory;
-        private final List<Option<?>> options;
-
-        public Category(InfoCategory infoCategory, Option<?>[] options) {
-            this.infoCategory = infoCategory;
-            this.options = Lists.newArrayList(options);
-        }
-
-        public String translationKey() {
-            return this.infoCategory.translationKey();
-        }
-
         public List<Option<?>> options() {
             return this.options;
         }
     }
 
     public static class MixinMap {
-        public final Map<String, Set<OptionInfo>> map = Maps.newHashMap();
+        public final Map<String, Set<Option<?>>> map = Maps.newHashMap();
 
-        public void put(String key, OptionInfo optionInfo) {
+        public void put(String key, Option<?> option) {
             this.map.putIfAbsent(key, Sets.newHashSet());
-            this.map.get(key).add(optionInfo);
+            this.map.get(key).add(option);
+        }
+
+        public Set<Map.Entry<String, Set<Option<?>>>> entrySet() {
+            return this.map.entrySet();
         }
     }
 
-    public static final List<InfoCategory> INFO_CATEGORIES = Lists.newArrayList();
     public static final List<Category> CATEGORIES = Lists.newArrayList();
-
-    public static final List<OptionInfo> OPTION_INFOS = Lists.newArrayList();
     public static final List<Option<?>> OPTIONS = Lists.newArrayList();
-
+    public static final List<BugOption> BUG_OPTIONS = Lists.newArrayList();
     public static final List<KeybindOption> KEYBIND_OPTIONS = Lists.newArrayList();
     public static final MixinMap OPTION_MIXIN_MAP = new MixinMap();
 
-    public static void initOptionInfos() {
+    private static Path getConfigPath() {
+        return FabricLoader.getInstance().getConfigDir().resolve(KeybindBugFixes.MOD_ID + ".json");
+    }
+
+    public static void initOptions() {
         Class<?>[] classes = Config.class.getClasses();
         List<Class<?>> classList = Arrays.asList(classes);
         Collections.reverse(classList);
@@ -412,70 +341,43 @@ public class ConfigManager {
                 String categoryName = categoryClass.getSimpleName().toLowerCase(Locale.ROOT);
                 String entryName = categoryInfo.entryName();
 
-                List<OptionInfo> options = Lists.newArrayList();
+                List<Option<?>> options = Lists.newArrayList();
 
                 for (Field field : categoryClass.getFields()) {
                     if (field.isAnnotationPresent(BugInfo.class)) {
                         BugInfo bugInfo = field.getAnnotation(BugInfo.class);
-                        options.add(new OptionInfo(field, entryName, bugInfo.mixin(), bugInfo.id()));
+                        options.add(new BugOption(field, entryName, bugInfo.mixin(), bugInfo.id()));
 
                     } else if (field.isAnnotationPresent(TweakInfo.class)) {
                         TweakInfo tweakInfo = field.getAnnotation(TweakInfo.class);
-                        options.add(new OptionInfo(field, entryName, tweakInfo.mixin()));
+                        options.add(new TweakOption(field, entryName, tweakInfo.mixin()));
 
                     } else if (field.isAnnotationPresent(KeybindInfo.class)) {
                         KeybindInfo keybindInfo = field.getAnnotation(KeybindInfo.class);
-                        options.add(new OptionInfo(field, entryName, keybindInfo.mixin()));
+                        options.add(new KeybindOption(field, entryName, keybindInfo.mixin(), keybindInfo.modifier()));
                     }
                 }
 
-                INFO_CATEGORIES.add(new InfoCategory(categoryName, options.toArray(OptionInfo[]::new)));
+                CATEGORIES.add(new Category(categoryName, options.toArray(Option[]::new)));
             }
         }
     }
 
-    public static void initOptions() {
-        for (InfoCategory infoCategory : INFO_CATEGORIES) {
-            List<Option<?>> options = Lists.newArrayList();
-
-            for (OptionInfo option : infoCategory.options()) {
-                if (option.type() instanceof BugInfo) {
-                    options.add(new BugOption(option));
-                } else if (option.type() instanceof TweakInfo) {
-                    options.add(new TweakOption(option));
-                } else if (option.type() instanceof KeybindInfo) {
-                    options.add(new KeybindOption(option));
-                }
-            }
-
-            CATEGORIES.add(new Category(infoCategory, options.toArray(Option[]::new)));
-        }
-    }
-
-    private static Path getConfigPath() {
-        return FabricLoader.getInstance().getConfigDir().resolve(KeybindBugFixes.MOD_ID + ".json");
-    }
-
-    private static void loadEntryError(String entryName) {
-        KeybindBugFixes.LOGGER.error(
-                "Couldn't load " + KeybindBugFixes.MOD_NAME + " configuration entry \"{}\", resetting", entryName);
-    }
-
-    public static void loadOptionInfos() {
+    public static void loadOptions() {
         Path configPath = getConfigPath();
 
         try {
             if (!Files.exists(configPath)) {
-                saveOptions();
+                saveOptionValues();
             }
 
             if (Files.exists(configPath)) {
                 BufferedReader reader = Files.newBufferedReader(configPath);
                 JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
 
-                for (OptionInfo optionInfo : OPTION_INFOS) {
-                    JsonElement jsonElement = json.get(optionInfo.name());
-                    optionInfo.loadFromJson(jsonElement);
+                for (Option<?> option : OPTIONS) {
+                    JsonElement jsonElement = json.get(option.name());
+                    option.load(jsonElement);
                 }
             }
         } catch (Throwable e) {
@@ -483,26 +385,30 @@ public class ConfigManager {
         }
     }
 
-    public static void loadOptions() {
+    public static void initOptionValues() {
         for (Option<?> option : OPTIONS) {
-            JsonElement jsonElement = option.jsonElement();
+            option.initValue();
+        }
+    }
 
-            if (jsonElement != null) {
-                if (!option.loadFromJson(jsonElement)) {
-                    loadEntryError(option.name());
-                }
-            } else {
-                loadEntryError(option.name());
+    public static void loadOptionValues() {
+        for (Option<?> option : OPTIONS) {
+            if (!option.loadValue()) {
+                KeybindBugFixes.LOGGER.error("Couldn't load "
+                        + KeybindBugFixes.MOD_NAME
+                        + " configuration entry "
+                        + '"' + option.name() + '"'
+                        + ", resetting");
             }
         }
     }
 
-    public static void saveOptions() {
+    public static void saveOptionValues() {
         Path configPath = getConfigPath();
         JsonObject json = new JsonObject();
 
         for (Option<?> option : OPTIONS) {
-            option.writeToJson(json);
+            option.write(json);
         }
 
         String jsonString = KeybindBugFixes.GSON.toJson(json);
@@ -515,16 +421,16 @@ public class ConfigManager {
     }
 
     public static void preInit() {
-        initOptionInfos();
-        loadOptionInfos();
+        initOptions();
+        loadOptions();
 
-        for (Map.Entry<String, Set<ConfigManager.OptionInfo>> entry : OPTION_MIXIN_MAP.map.entrySet()) {
+        for (Map.Entry<String, Set<Option<?>>> entry : OPTION_MIXIN_MAP.entrySet()) {
             String mixinName = entry.getKey();
 
             boolean allOptionsDisabled = true;
-            for (ConfigManager.OptionInfo optionInfo : entry.getValue()) {
-                if (optionInfo.isDisabled()) {
-                    KeybindBugFixes.DISABLED_OPTION_NAMES.add(optionInfo.name());
+            for (Option<?> option : entry.getValue()) {
+                if (option.isDisabled()) {
+                    KeybindBugFixes.DISABLED_OPTION_NAMES.add(option.name());
                 } else {
                     allOptionsDisabled = false;
                 }
@@ -537,8 +443,8 @@ public class ConfigManager {
     }
 
     public static void init() {
-        initOptions();
-        loadOptions();
-        saveOptions();
+        initOptionValues();
+        loadOptionValues();
+        saveOptionValues();
     }
 }
