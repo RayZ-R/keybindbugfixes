@@ -99,8 +99,8 @@ public class ReadMeGenerator {
     private static final JsonObject MOD_JSON;
 
     static {
-        ConfigManager.initOptionInfos();
         ConfigManager.initOptions();
+        ConfigManager.initOptionValues();
 
         try {
             TEMPLATE_STRING = getReadMeTemplateString();
