@@ -41,9 +41,9 @@ public class Config {
     @CategoryInfo(entryName = "key")
     public static class Keybinds {
         @KeybindInfo(mixin = "rebind_debug_keys")
-        public static InputUtil.Key DEBUG = InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_F3);
+        public static Object DEBUG = InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_F3);
 
         @KeybindInfo(modifier = "DEBUG", mixin = "rebind_debug_keys")
-        public static InputUtil.Key GAME_MODE_CYCLE = InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_F4);
+        public static Object GAME_MODE_CYCLE = InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_F4);
     }
 }
