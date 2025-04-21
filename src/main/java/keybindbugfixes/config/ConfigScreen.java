@@ -82,7 +82,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void removed() {
-        ConfigManager.saveOptions();
+        ConfigManager.saveOptionValues();
     }
 
     @Override
