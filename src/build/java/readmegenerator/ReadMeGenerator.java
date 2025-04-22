@@ -259,7 +259,7 @@ public class ReadMeGenerator {
         this.commonString = TEMPLATE_STRING;
 
         String blockRegex = "\\\\\\{([a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)*)}";
-        pasteCommonBlocks(blockRegex, (builder, content) -> {
+        this.pasteCommonBlocks(blockRegex, (builder, content) -> {
             switch (content) {
                 case "features" -> {
                     builder.append(getFeaturesString());
@@ -293,13 +293,13 @@ public class ReadMeGenerator {
         });
 
         String destinationRegex = "\\r\\n\\\\\\[([a-zA-Z0-9_-]+)]|\\\\\\[([a-zA-Z0-9_-]+)]";
-        separateCommonString(destinationRegex, content -> switch (content) {
+        this.separateCommonString(destinationRegex, content -> switch (content) {
             case "github-only" -> ToggleWriterAction.ToggleModrinthWriter;
             case "modrinth-only" -> ToggleWriterAction.ToggleGitHubWriter;
             default -> ToggleWriterAction.NotProcessed;
         });
 
-        writeReadMe();
+        this.writeReadMe();
     }
 
     public static void main(String[] args) throws IOException {
