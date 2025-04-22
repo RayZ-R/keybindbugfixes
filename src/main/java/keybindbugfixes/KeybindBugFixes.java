@@ -1,6 +1,5 @@
 package keybindbugfixes;
 
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,11 +13,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.StickyKeyBinding;
 import net.minecraft.client.util.InputUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.Set;
 
 public class KeybindBugFixes implements ClientModInitializer {
@@ -30,12 +29,13 @@ public class KeybindBugFixes implements ClientModInitializer {
 
     private static final boolean IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
 
+    private static boolean loaded = false;
     public static MinecraftClient client;
     public static final FabricLoader FABRIC_LOADER = FabricLoader.getInstance();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     public static final Gson GSON;
 
-    public static final Map<StickyKeyBinding, Boolean> STICKY_KEY_REVERT_MAP = Maps.newHashMap();
+    public static Pair<StickyKeyBinding, Boolean> stickyKeyRevertState = null;
     public static boolean draggingPickKey = false;
 
     static {
@@ -44,10 +44,16 @@ public class KeybindBugFixes implements ClientModInitializer {
 
         IS_REBIND_ALL_THE_KEYS_MOD_LOADED = FABRIC_LOADER.isModLoaded("rebind_all_the_keys");
         
-        disableMixins();
+        preLoad();
     }
 
-    public static void disableMixins() {
+    public static void preLoad() {
+        if (loaded) {
+            return;
+        } else {
+            loaded = true;
+        }
+
         ConfigManager.preInit();
 
         boolean isRebindAllTheKeysModLoaded = IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
@@ -68,7 +74,7 @@ public class KeybindBugFixes implements ClientModInitializer {
         }
     }
 
-    private static void disableMixin(String name) {
+    public static void disableMixin(String name) {
         DISABLED_MIXIN_NAMES.add(name);
 
         for (ConfigManager.Option<?> option : ConfigManager.OPTIONS) {
@@ -92,9 +98,9 @@ public class KeybindBugFixes implements ClientModInitializer {
 
     public static void revertStickyKeyBindings() {
         if (Config.BugFixes.FIX_MODIFIER_TOGGLE_CONTROL) {
-            for (Map.Entry<StickyKeyBinding, Boolean> entry : STICKY_KEY_REVERT_MAP.entrySet()) {
-                KeyBinding keyBinding = entry.getKey();
-                boolean initialValue = entry.getValue();
+            if (stickyKeyRevertState != null) {
+                KeyBinding keyBinding = stickyKeyRevertState.getLeft();
+                boolean initialValue = stickyKeyRevertState.getRight();
 
                 ((KeyBindingAccessor) keyBinding).setPressedState(initialValue);
 

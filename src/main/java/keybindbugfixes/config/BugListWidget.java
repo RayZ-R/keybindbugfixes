@@ -57,11 +57,11 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
 
     private void addOption(ConfigManager.Option<?> option) {
         if (option instanceof ConfigManager.BugOption bugOption) {
-            addBugOption(bugOption);
+            this.addBugOption(bugOption);
         } else if (option instanceof ConfigManager.TweakOption tweakOption) {
-            addTweakOption(tweakOption);
+            this.addTweakOption(tweakOption);
         } else if (option instanceof ConfigManager.KeybindOption keybindOption) {
-            addKeybindOption(keybindOption);
+            this.addKeybindOption(keybindOption);
         }
     }
 
@@ -87,7 +87,7 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
     }
 
     private void updateKeybindWidgets() {
-        for (KeybindWidgetEntry widget : keybindWidgets) {
+        for (KeybindWidgetEntry widget : this.keybindWidgets) {
             widget.updateButtonText();
         }
     }
@@ -329,12 +329,12 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
             ConfigManager.KeybindOption modifier = this.option.modifier();
 
             if (this.isDuplicate) {
-                return Tooltip.of(Text.translatable("controls.keybinds.duplicateKeybinds", duplicateText));
+                return Tooltip.of(Text.translatable("controls.keybinds.duplicateKeybinds", this.duplicateText));
             } else if (this.unknownModifier) {
-                return Tooltip.of(Text.translatable("keybindbugfixes.config.keybinds.unknownModifier",
+                return Tooltip.of(Text.translatable(KeybindBugFixes.MOD_ID + ".config.keybinds.unknownModifier",
                         Text.translatable(modifier.translationKey())));
             } else if (this.sameModifier) {
-                return Tooltip.of(Text.translatable("keybindbugfixes.config.keybinds.sameModifier",
+                return Tooltip.of(Text.translatable(KeybindBugFixes.MOD_ID + ".config.keybinds.sameModifier",
                         Text.translatable(modifier.translationKey())));
             } else {
                 return null;
