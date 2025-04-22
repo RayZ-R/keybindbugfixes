@@ -36,7 +36,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
 
             if (accessor.getToggleGetter().getAsBoolean()) {
-                keybindbugfixes$overrideSneakingPacket = true;
+                this.keybindbugfixes$overrideSneakingPacket = true;
                 sneakKeyBinding.setPressed(true);
             }
         }
@@ -44,12 +44,12 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
 
     @Inject(method = "dismountVehicle", at = @At("HEAD"))
     private void dismountVehicle(CallbackInfo callbackInfo) {
-        keybindbugfixes$overrideSneakingPacket = false;
+        this.keybindbugfixes$overrideSneakingPacket = false;
     }
 
     @Redirect(method = "sendSneakingPacket",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSneaking()Z"))
     private boolean overrideSneakingPacket(ClientPlayerEntity clientPlayerEntity) {
-        return keybindbugfixes$overrideSneakingPacket ? true : this.isSneaking();
+        return this.keybindbugfixes$overrideSneakingPacket ? true : this.isSneaking();
     }
 }
