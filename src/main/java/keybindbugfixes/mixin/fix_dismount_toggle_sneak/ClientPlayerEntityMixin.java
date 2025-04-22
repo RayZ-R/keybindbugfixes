@@ -28,7 +28,7 @@ public abstract class ClientPlayerEntityMixin {
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
 
             if (accessor.getToggleGetter().getAsBoolean()) {
-                keybindbugfixes$overrideSneakingPacket = true;
+                this.keybindbugfixes$overrideSneakingPacket = true;
                 sneakKeyBinding.setPressed(true);
             }
         }
@@ -36,7 +36,7 @@ public abstract class ClientPlayerEntityMixin {
 
     @Inject(method = "dismountVehicle", at = @At("HEAD"))
     private void dismountVehicle(CallbackInfo callbackInfo) {
-        keybindbugfixes$overrideSneakingPacket = false;
+        this.keybindbugfixes$overrideSneakingPacket = false;
     }
 
     @ModifyArg(method = "tick",
@@ -44,6 +44,6 @@ public abstract class ClientPlayerEntityMixin {
                     target = "Lnet/minecraft/network/packet/c2s/play/PlayerInputC2SPacket;<init>(FFZZ)V"),
             index = 3)
     private boolean overrideSneakingPacket(boolean original) {
-        return keybindbugfixes$overrideSneakingPacket ? true : original;
+        return this.keybindbugfixes$overrideSneakingPacket ? true : original;
     }
 }
