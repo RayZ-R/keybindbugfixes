@@ -141,7 +141,12 @@ public class ConfigManager {
         }
 
         public void load(JsonElement jsonElement) {
-            this.isDisabled = jsonElement.isJsonNull();
+            if (jsonElement == null) {
+                this.isDisabled = false;
+            } else {
+                this.isDisabled = jsonElement.isJsonNull();
+            }
+
             this.jsonElement = jsonElement;
         }
 
