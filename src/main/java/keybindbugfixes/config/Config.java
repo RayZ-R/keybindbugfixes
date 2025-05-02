@@ -26,7 +26,7 @@ public class Config {
         public static boolean FIX_DISMOUNT_TOGGLE_SNEAK = true;
 
         @BugInfo
-        public static boolean FIX_MODIFIER_TOGGLE_CONTROL = true;
+        public static boolean FIX_MODIFIER_STICKY_KEY = true;
     }
 
     @CategoryInfo(entryName = "tweak")
