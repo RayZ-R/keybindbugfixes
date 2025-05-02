@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.fix_modifier_toggle_control;
+package keybindbugfixes.mixin.fix_modifier_sticky_key;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import keybindbugfixes.KeybindBugFixes;
@@ -15,9 +15,9 @@ public abstract class KeyboardMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/option/GameOptions;write()V",
                     shift = At.Shift.AFTER))
-    private void preventToggleControlOnNarratorHotkey(CallbackInfo callbackInfo, @Local Screen screen) {
+    private void revertNarratorModifier(CallbackInfo callbackInfo, @Local Screen screen) {
         if (screen == null) {
-            KeybindBugFixes.revertStickyKeyBindings();
+            KeybindBugFixes.revertNarratorModifier();
         }
     }
 }
