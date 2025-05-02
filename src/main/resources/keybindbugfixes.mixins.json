@@ -6,9 +6,9 @@
   "mixins": [
     "fix_dismount_toggle_sneak.ClientPlayerEntityMixin",
     "fix_game_mode_switcher_reset.ClientPlayNetworkHandlerMixin",
-    "fix_modifier_toggle_control.KeyboardMixin",
-    "fix_modifier_toggle_control.MinecraftClientMixin",
-    "fix_modifier_toggle_control.StickyKeyBindingMixin",
+    "fix_modifier_sticky_key.KeyboardMixin",
+    "fix_modifier_sticky_key.MinecraftClientMixin",
+    "fix_modifier_sticky_key.StickyKeyBindingMixin",
     "fix_pick_key_dragging.ElementMixin",
     "fix_pick_key_dragging.HandledScreenMixin",
     "fix_pick_key_dragging.KeyboardMixin",

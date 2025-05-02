@@ -7,14 +7,14 @@
   "keybindbugfixes.config.bugfix.fix_sticky_key_reset": "Fix toggle key reset on death",
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging": "Fix pick key dragging in inventory",
   "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak": "Fix toggle sneak state on dismount",
-  "keybindbugfixes.config.bugfix.fix_modifier_toggle_control": "Fix toggle control state when used as modifier",
+  "keybindbugfixes.config.bugfix.fix_modifier_sticky_key": "Fix toggle key state when used as modifier",
 
   "keybindbugfixes.config.bugfix.fix_pressing_f3_twice.tooltip": "After switching game modes using F3 + F4, you need to press F3 twice to toggle the debug screen",
   "keybindbugfixes.config.bugfix.fix_game_mode_switcher_reset.tooltip": "Last player game mode not saved after player dies",
   "keybindbugfixes.config.bugfix.fix_sticky_key_reset.tooltip": "Dying causes toggle sprint and toggle sneak to untoggle",
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging.tooltip": "Pick block changed to a keyboard key doesn't fill inventory slots when dragged",
   "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak.tooltip": "Player starts sneaking when dismounting if \"Sneak\" is set to \"Toggle\" in accessibility settings",
-  "keybindbugfixes.config.bugfix.fix_modifier_toggle_control.tooltip": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles sticky keys bound to left control",
+  "keybindbugfixes.config.bugfix.fix_modifier_sticky_key.tooltip": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles key bindings bound to Left Control",
 
   "keybindbugfixes.config.category.tweaks": "Tweaks",
   "keybindbugfixes.config.tweak.reload_resources_anywhere": "Reload resources anywhere",

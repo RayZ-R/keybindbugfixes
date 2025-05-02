@@ -1,5 +1,6 @@
 package keybindbugfixes;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,17 +11,41 @@ import keybindbugfixes.mixin.KeyBindingAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.StickyKeyBinding;
 import net.minecraft.client.util.InputUtil;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Set;
 
 public class KeybindBugFixes implements ClientModInitializer {
+    public static class StickyKeyRevertMap {
+        public final Map<StickyKeyBinding, Boolean> map = Maps.newHashMap();
+
+        public void put(StickyKeyBinding keyBinding, Boolean value) {
+            this.map.put(keyBinding, value);
+        }
+
+        public void remove(StickyKeyBinding keyBinding) {
+            this.map.remove(keyBinding);
+        }
+
+        public Map<StickyKeyBinding, Boolean> filter(int keycode) {
+            Map<StickyKeyBinding, Boolean> result = Maps.newHashMap();
+
+            for (Map.Entry<StickyKeyBinding, Boolean> entry : this.map.entrySet()) {
+                if (((KeyBindingAccessor) entry.getKey()).getBoundKey().getCode() == keycode) {
+                    result.put(entry.getKey(), entry.getValue());
+                }
+            }
+
+            return result;
+        }
+    }
+
     public static final String MOD_NAME = "KeybindBugFixes";
     public static final String MOD_ID = "keybindbugfixes";
 
@@ -35,7 +60,7 @@ public class KeybindBugFixes implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     public static final Gson GSON;
 
-    public static Pair<StickyKeyBinding, Boolean> stickyKeyRevertState = null;
+    public static final StickyKeyRevertMap STICKY_KEY_REVERT_MAP = new StickyKeyRevertMap();
     public static boolean draggingPickKey = false;
 
     static {
@@ -84,6 +109,10 @@ public class KeybindBugFixes implements ClientModInitializer {
         }
     }
 
+    public static boolean shouldAddOption(ConfigManager.Option<?> option) {
+        return !DISABLED_OPTION_NAMES.contains(option.name());
+    }
+
     public static InputUtil.Key getReloadResourcesKey() {
         if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
             return ((KeyBindingAccessor) RebindAllTheKeys.RELOAD_RESOURCES).getBoundKey();
@@ -92,23 +121,56 @@ public class KeybindBugFixes implements ClientModInitializer {
         }
     }
 
-    public static boolean shouldAddOption(ConfigManager.Option<?> option) {
-        return !DISABLED_OPTION_NAMES.contains(option.name());
-    }
+    public static void revertStickyKeyBinding(int keycode) {
+        if (Config.BugFixes.FIX_MODIFIER_STICKY_KEY) {
+            Map<StickyKeyBinding, Boolean> submap = STICKY_KEY_REVERT_MAP.filter(keycode);
 
-    public static void revertStickyKeyBindings() {
-        if (Config.BugFixes.FIX_MODIFIER_TOGGLE_CONTROL) {
-            if (stickyKeyRevertState != null) {
-                KeyBinding keyBinding = stickyKeyRevertState.getLeft();
-                boolean initialValue = stickyKeyRevertState.getRight();
+            for (Map.Entry<StickyKeyBinding, Boolean> entry : submap.entrySet()) {
+                StickyKeyBinding keyBinding = entry.getKey();
+                boolean initialValue = entry.getValue();
+                KeyBindingAccessor accessor = (KeyBindingAccessor) keyBinding;
 
-                ((KeyBindingAccessor) keyBinding).setPressedState(initialValue);
+                accessor.setPressedState(initialValue);
 
                 if (keyBinding.equals(client.options.sprintKey) && !initialValue) {
                     client.player.setSprinting(false);
                 }
+
+                STICKY_KEY_REVERT_MAP.remove(keyBinding);
             }
         }
+    }
+
+    public static void revertDropStackModifier() {
+        boolean isModifierPressed;
+
+        if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
+            isModifierPressed = RebindAllTheKeys.DROP_STACK_MODIFIER.isPressed();
+        } else {
+            isModifierPressed = Screen.hasControlDown();
+        }
+
+        if (isModifierPressed) {
+            int keycode;
+
+            if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
+                keycode = ((KeyBindingAccessor) RebindAllTheKeys.DROP_STACK_MODIFIER).getBoundKey().getCode();
+            } else {
+                keycode = GLFW.GLFW_KEY_LEFT_CONTROL;
+            }
+
+            revertStickyKeyBinding(keycode);
+        }
+    }
+
+    public static void revertPickBlockModifier() {
+        if (Screen.hasControlDown()) {
+            revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_CONTROL);
+        }
+    }
+
+    public static void revertNarratorModifier() {
+        revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_CONTROL);
     }
 
     @Override
