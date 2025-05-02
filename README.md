@@ -11,7 +11,7 @@ Keybind Bug Fixes is a **100% client side** Minecraft mod, that fixes keybind-re
 - Fix toggle key reset on death [[MC-263293]](https://bugs.mojang.com/browse/MC-263293)
 - Fix pick key dragging in inventory [[MC-117771]](https://bugs.mojang.com/browse/MC-117771)
 - Fix toggle sneak state on dismount [[MC-169163]](https://bugs.mojang.com/browse/MC-169163)
-- Fix toggle control state when used as modifier
+- Fix toggle key state when used as modifier
 ### Tweaks:
 - Remove keybind conflicts
 - Reload resources anywhere [[MC-269020]](https://bugs.mojang.com/browse/MC-269020)
