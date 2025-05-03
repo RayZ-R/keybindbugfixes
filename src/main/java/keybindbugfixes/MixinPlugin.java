@@ -20,7 +20,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    public void onLoad(String mixinPackage) {}
+    public void onLoad(String mixinPackage) {
+        KeybindBugFixes.preLoad();
+    }
 
     @Override
     public String getRefMapperConfig() {
