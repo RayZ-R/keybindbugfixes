@@ -1,5 +1,6 @@
 package keybindbugfixes.config;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.mixin.KeyBindingAccessor;
@@ -26,50 +27,43 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 import java.util.Set;
 
-public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> {
+public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetEntry> {
     private final Set<KeybindWidgetEntry> keybindWidgets = Sets.newHashSet();
     private final ConfigScreen configScreen;
 
-    private static final int OPTION_WIDTH = 150;
+    private static final int OPTION_WIDTH = 174;
     private static final int BUTTON_WIDTH = 20;
     private static final int PADDING = 7;
     private static final int GAP = 4;
 
-    public BugListWidget(MinecraftClient client, ConfigScreen screen) {
+    public OptionListWidget(MinecraftClient client, ConfigScreen screen) {
         super(client, screen.width, screen.layout.getContentHeight(), screen.layout.getHeaderHeight(), 25);
         this.centerListVertically = false;
         this.configScreen = screen;
     }
 
-    private void addBugOption(ConfigManager.BugOption option) {
-        this.addEntry(new BugWidgetEntry(this.client, this.configScreen, option));
-    }
-
-    private void addTweakOption(ConfigManager.TweakOption option) {
-        this.addEntry(new TweakWidgetEntry(this.client, this.configScreen, option));
-    }
-
-    private void addKeybindOption(ConfigManager.KeybindOption option) {
-        KeybindWidgetEntry widget = new KeybindWidgetEntry(this.client, this.configScreen, option);
-        this.keybindWidgets.add(widget);
+    private void addTitle(String key) {
+        TitleWidgetEntry widget = new TitleWidgetEntry(this.client, this.configScreen, key);
         this.addEntry(widget);
     }
 
     private void addOption(ConfigManager.Option<?> option) {
         if (option instanceof ConfigManager.BugOption bugOption) {
-            this.addBugOption(bugOption);
+            BugWidgetEntry widget = new BugWidgetEntry(this.client, this.configScreen, bugOption);
+            this.addEntry(widget);
+
         } else if (option instanceof ConfigManager.TweakOption tweakOption) {
-            this.addTweakOption(tweakOption);
+            TweakWidgetEntry widget = new TweakWidgetEntry(this.client, this.configScreen, tweakOption);
+            this.addEntry(widget);
+
         } else if (option instanceof ConfigManager.KeybindOption keybindOption) {
-            this.addKeybindOption(keybindOption);
+            KeybindWidgetEntry widget = new KeybindWidgetEntry(this.client, this.configScreen, keybindOption);
+            this.keybindWidgets.add(widget);
+            this.addEntry(widget);
         }
     }
 
-    private void addTitle(String key) {
-        this.addEntry(new TitleWidgetEntry(this.client, this.configScreen, key));
-    }
-
-    public void addCategories(List<ConfigManager.Category> categories) {
+    public void init(List<ConfigManager.Category> categories) {
         for (ConfigManager.Category category : categories) {
             boolean titleAdded = false;
 
@@ -102,27 +96,116 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
         return this.width - 7;
     }
 
-    private static void drawText(TextRenderer textRenderer, DrawContext context, Text text, int wrapX, int y) {
-        int textX = PADDING + GAP;
-        int textY = y + 6;
+    public static class OptionWidget {
+        private final MinecraftClient client;
+        private final ConfigScreen configScreen;
+        private final ConfigManager.Option<?> option;
+        private final List<ButtonWidget> widgets;
+        private final List<Integer> offsets;
 
-        int textWidth = wrapX - textX - GAP;
+        public OptionWidget(MinecraftClient client,
+                            ConfigScreen configScreen,
+                            ConfigManager.Option<?> option,
+                            List<ButtonWidget> widgets,
+                            List<Integer> offsets) {
+            this.client = client;
+            this.configScreen = configScreen;
+            this.option = option;
+            this.widgets = widgets;
+            this.offsets = offsets;
+        }
 
-        for (OrderedText orderedText : textRenderer.wrapLines(text, textWidth)) {
-            context.drawText(textRenderer, orderedText, textX, textY, Colors.WHITE, true);
-            textY += 9;
+        private static void drawText(TextRenderer textRenderer, DrawContext context, Text text, int wrapX, int y) {
+            int textX = PADDING + GAP;
+            int textY = y + 6;
+
+            int textWidth = wrapX - textX;
+
+            for (OrderedText orderedText : textRenderer.wrapLines(text, textWidth)) {
+                context.drawText(textRenderer, orderedText, textX, textY, Colors.WHITE, true);
+                textY += 9;
+            }
+        }
+
+        public void render(DrawContext context, int y, int mouseX, int mouseY, float tickDelta) {
+            for (int i = 0; i < this.widgets.size(); i++) {
+                ButtonWidget widget = this.widgets.get(i);
+                int offset = this.offsets.get(i);
+
+                widget.setPosition(this.configScreen.width - offset, y);
+                widget.render(context, mouseX, mouseY, tickDelta);
+            }
+
+            int wrapX = this.configScreen.width - PADDING - GAP - OPTION_WIDTH - GAP;
+            Text text = Text.translatable(this.option.translationKey());
+            drawText(this.client.textRenderer, context, text, wrapX, y);
+        }
+
+        public List<ButtonWidget> widgets() {
+            return this.widgets;
+        }
+    }
+
+    public static class OptionWidgetBuilder {
+        private final MinecraftClient client;
+        private final ConfigScreen configScreen;
+        private final ConfigManager.Option<?> option;
+
+        private final ButtonWidget centerWidget;
+        private final List<ButtonWidget> leftWidgets = Lists.newArrayList();
+        private final List<ButtonWidget> rightWidgets = Lists.newArrayList();
+
+        public OptionWidgetBuilder(MinecraftClient client,
+                                   ConfigScreen configScreen,
+                                   ConfigManager.Option<?> option,
+                                   ButtonWidget centerWidget) {
+            this.client = client;
+            this.configScreen = configScreen;
+            this.option = option;
+
+            this.centerWidget = centerWidget;
+        }
+
+        public OptionWidgetBuilder addLeft(ButtonWidget widget) {
+            this.leftWidgets.addFirst(widget);
+            return this;
+        }
+
+        public OptionWidgetBuilder addRight(ButtonWidget widget) {
+            this.rightWidgets.addLast(widget);
+            return this;
+        }
+
+        public OptionWidget build() {
+            List<ButtonWidget> widgets = Lists.newArrayList();
+            List<Integer> offsets = Lists.newArrayList();
+
+            widgets.addAll(this.rightWidgets);
+            widgets.add(this.centerWidget);
+            widgets.addAll(this.leftWidgets);
+
+            int centerWidgetWidth = OPTION_WIDTH;
+            for (ButtonWidget widget : this.leftWidgets) centerWidgetWidth -= widget.getWidth() + GAP;
+            for (ButtonWidget widget : this.rightWidgets) centerWidgetWidth -= widget.getWidth() + GAP;
+            this.centerWidget.setWidth(centerWidgetWidth);
+
+            int lastOffset = PADDING;
+
+            for (ButtonWidget widget : widgets) {
+                lastOffset += widget.getWidth() + GAP;
+                offsets.add(lastOffset);
+            }
+
+            return new OptionWidget(this.client, this.configScreen, this.option, widgets, offsets);
         }
     }
 
     public static class BugWidgetEntry extends WidgetEntry {
-        private final MinecraftClient client;
-        private final ConfigScreen configScreen;
+        private final ConfigManager.BugOption option;
         private final ButtonWidget optionButton;
         private final ButtonWidget resetButton;
         private final ButtonWidget linkButton;
-        private final ConfigManager.BugOption option;
-
-        private static final int BUG_OPTION_WIDTH = OPTION_WIDTH - BUTTON_WIDTH - GAP;
+        private final OptionWidget optionWidget;
 
         public void updateButtonState() {
             this.optionButton.setMessage(this.option.buttonText());
@@ -131,8 +214,6 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
 
         public BugWidgetEntry(MinecraftClient client, ConfigScreen screen, ConfigManager.BugOption option) {
             this.option = option;
-            this.configScreen = screen;
-            this.client = client;
 
             this.linkButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY,
                             button -> this.option.openLink(screen), true)
@@ -141,75 +222,10 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
                     .build();
 
             this.optionButton = ButtonWidget.builder(this.option.buttonText(), button -> {
-                this.option.toggleValue();
-                this.updateButtonState();
-            })
-                    .tooltip(this.option.tooltip())
-                    .width(BUG_OPTION_WIDTH)
-                    .build();
-
-            this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> {
-                this.option.resetValue();
-                this.updateButtonState();
-            }, true)
-                    .width(BUTTON_WIDTH)
-                    .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
-                    .build();
-
-            this.resetButton.active = !this.option.isDefault();
-            this.linkButton.active = this.option.link() != null;
-        }
-
-        @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight,
-                           int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.linkButton.setPosition(this.configScreen.width - PADDING - GAP - BUTTON_WIDTH, y);
-            this.linkButton.render(context, mouseX, mouseY, tickDelta);
-
-            this.optionButton.setPosition(this.linkButton.getX() - GAP - BUG_OPTION_WIDTH, y);
-            this.optionButton.render(context, mouseX, mouseY, tickDelta);
-
-            this.resetButton.setPosition(this.optionButton.getX() - GAP - BUTTON_WIDTH, y);
-            this.resetButton.render(context, mouseX, mouseY, tickDelta);
-
-            Text text = Text.translatable(this.option.translationKey());
-            drawText(this.client.textRenderer, context, text, this.resetButton.getX(), y);
-        }
-
-        @Override
-        public List<? extends Selectable> selectableChildren() {
-            return List.of(this.resetButton, this.optionButton, this.linkButton);
-        }
-
-        @Override
-        public List<? extends Element> children() {
-            return List.of(this.resetButton, this.optionButton, this.linkButton);
-        }
-    }
-
-    public static class TweakWidgetEntry extends WidgetEntry {
-        private final MinecraftClient client;
-        private final ConfigScreen configScreen;
-        private final ButtonWidget optionButton;
-        private final ButtonWidget resetButton;
-        private final ConfigManager.TweakOption option;
-
-        public void updateButtonState() {
-            this.optionButton.setMessage(this.option.buttonText());
-            this.resetButton.active = !this.option.isDefault();
-        }
-
-        public TweakWidgetEntry(MinecraftClient client, ConfigScreen screen, ConfigManager.TweakOption option) {
-            this.option = option;
-            this.configScreen = screen;
-            this.client = client;
-
-            this.optionButton = ButtonWidget.builder(this.option.buttonText(), button -> {
                         this.option.toggleValue();
                         this.updateButtonState();
                     })
                     .tooltip(this.option.tooltip())
-                    .width(OPTION_WIDTH)
                     .build();
 
             this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> {
@@ -221,38 +237,92 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
                     .build();
 
             this.resetButton.active = !this.option.isDefault();
+            this.linkButton.active = this.option.link() != null;
+
+            this.optionWidget = new OptionWidgetBuilder(client, screen, option, this.optionButton)
+                    .addLeft(this.resetButton)
+                    .addRight(this.linkButton)
+                    .build();
         }
 
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight,
                            int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.optionButton.setPosition(this.configScreen.width - PADDING - GAP - OPTION_WIDTH, y);
-            this.optionButton.render(context, mouseX, mouseY, tickDelta);
-
-            this.resetButton.setPosition(this.optionButton.getX() - GAP - BUTTON_WIDTH, y);
-            this.resetButton.render(context, mouseX, mouseY, tickDelta);
-
-            Text text = Text.translatable(this.option.translationKey());
-            drawText(this.client.textRenderer, context, text, this.resetButton.getX(), y);
+            this.optionWidget.render(context, y, mouseX, mouseY, tickDelta);
         }
 
         @Override
         public List<? extends Selectable> selectableChildren() {
-            return List.of(this.resetButton, this.optionButton);
+            return this.optionWidget.widgets();
         }
 
         @Override
         public List<? extends Element> children() {
-            return List.of(this.resetButton, this.optionButton);
+            return this.optionWidget.widgets();
+        }
+    }
+
+    public static class TweakWidgetEntry extends WidgetEntry {
+        private final ConfigManager.TweakOption option;
+        private final ButtonWidget optionButton;
+        private final ButtonWidget resetButton;
+        private final OptionWidget optionWidget;
+
+        public void updateButtonState() {
+            this.optionButton.setMessage(this.option.buttonText());
+            this.resetButton.active = !this.option.isDefault();
+        }
+
+        public TweakWidgetEntry(MinecraftClient client, ConfigScreen screen, ConfigManager.TweakOption option) {
+            this.option = option;
+
+            this.optionButton = ButtonWidget.builder(this.option.buttonText(), button -> {
+                        this.option.toggleValue();
+                        this.updateButtonState();
+                    })
+                    .tooltip(this.option.tooltip())
+                    .build();
+
+            this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> {
+                        this.option.resetValue();
+                        this.updateButtonState();
+                    }, true)
+                    .width(BUTTON_WIDTH)
+                    .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
+                    .build();
+
+            this.resetButton.active = !this.option.isDefault();
+
+            this.optionWidget = new OptionWidgetBuilder(client, screen, option, this.optionButton)
+                    .addLeft(this.resetButton)
+                    .build();
+        }
+
+        @Override
+        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight,
+                           int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            this.optionWidget.render(context, y, mouseX, mouseY, tickDelta);
+        }
+
+        @Override
+        public List<? extends Selectable> selectableChildren() {
+            return this.optionWidget.widgets();
+        }
+
+        @Override
+        public List<? extends Element> children() {
+            return this.optionWidget.widgets();
         }
     }
 
     public static class KeybindWidgetEntry extends WidgetEntry {
         private final MinecraftClient client;
         private final ConfigScreen configScreen;
+        private final ConfigManager.KeybindOption option;
         private final ButtonWidget optionButton;
         private final ButtonWidget resetButton;
-        public final ConfigManager.KeybindOption option;
+        private final OptionWidget optionWidget;
+
         private MutableText duplicateText;
         private boolean isDuplicate;
         private boolean unknownModifier;
@@ -362,50 +432,49 @@ public class BugListWidget extends ElementListWidget<BugListWidget.WidgetEntry> 
         }
 
         public KeybindWidgetEntry(MinecraftClient client, ConfigScreen screen, ConfigManager.KeybindOption option) {
-            this.option = option;
-            this.configScreen = screen;
             this.client = client;
+            this.configScreen = screen;
+            this.option = option;
 
             this.updateWarning();
 
-            this.optionButton = ButtonWidget.builder(this.getMessage(),
-                            button -> this.selectButton())
+            this.optionButton = ButtonWidget.builder(this.getMessage(), button -> this.selectButton())
                     .tooltip(this.getTooltip())
-                    .width(150)
                     .build();
 
             this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> {
-                this.option.resetValue();
-                this.updateButtonState();
-            }, true)
+                        this.option.resetValue();
+                        this.updateButtonState();
+                    }, true)
+                    .width(BUTTON_WIDTH)
                     .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
-                    .width(20)
                     .build();
 
             this.resetButton.active = !this.option.isDefault();
+
+            this.optionWidget = new OptionWidgetBuilder(client, screen, option, this.optionButton)
+                    .addLeft(this.resetButton)
+                    .build();
+        }
+
+        public ConfigManager.KeybindOption option() {
+            return this.option;
         }
 
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight,
                            int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.optionButton.setPosition(this.configScreen.width - PADDING - GAP - OPTION_WIDTH, y);
-            this.optionButton.render(context, mouseX, mouseY, tickDelta);
-
-            this.resetButton.setPosition(this.optionButton.getX() - GAP - BUTTON_WIDTH, y);
-            this.resetButton.render(context, mouseX, mouseY, tickDelta);
-
-            Text text = Text.translatable(this.option.translationKey());
-            drawText(this.client.textRenderer, context, text, this.resetButton.getX(), y);
+            this.optionWidget.render(context, y, mouseX, mouseY, tickDelta);
         }
 
         @Override
         public List<? extends Selectable> selectableChildren() {
-            return List.of(this.resetButton, this.optionButton);
+            return this.optionWidget.widgets();
         }
 
         @Override
         public List<? extends Element> children() {
-            return List.of(this.resetButton, this.optionButton);
+            return this.optionWidget.widgets();
         }
     }
 
