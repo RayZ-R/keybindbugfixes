@@ -3,15 +3,15 @@
   "keybindbugfixes.config.category.bugfixes": "Bug Fixes",
 
   "keybindbugfixes.config.bugfix.fix_pressing_f3_twice": "Fix pressing F3 twice to open the debug screen",
-  "keybindbugfixes.config.bugfix.fix_game_mode_switcher_reset": "Fix game mode switcher reset on death",
-  "keybindbugfixes.config.bugfix.fix_sticky_key_reset": "Fix toggle key reset on death",
+  "keybindbugfixes.config.bugfix.fix_game_mode_switcher_reset": "Fix game mode switcher resetting on death",
+  "keybindbugfixes.config.bugfix.fix_sticky_key_reset": "Fix toggle key resetting on death",
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging": "Fix pick key dragging in inventory",
   "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak": "Fix toggle sneak state on dismount",
-  "keybindbugfixes.config.bugfix.fix_modifier_sticky_key": "Fix toggle key state when used as modifier",
+  "keybindbugfixes.config.bugfix.fix_modifier_sticky_key": "Fix toggle key state when used as a modifier",
 
   "keybindbugfixes.config.bugfix.fix_pressing_f3_twice.tooltip": "After switching game modes using F3 + F4, you need to press F3 twice to toggle the debug screen",
-  "keybindbugfixes.config.bugfix.fix_game_mode_switcher_reset.tooltip": "Last player game mode not saved after player dies",
-  "keybindbugfixes.config.bugfix.fix_sticky_key_reset.tooltip": "Dying causes toggle sprint and toggle sneak to untoggle",
+  "keybindbugfixes.config.bugfix.fix_game_mode_switcher_reset.tooltip": "Last player game mode is not saved after the player dies",
+  "keybindbugfixes.config.bugfix.fix_sticky_key_reset.tooltip": "Dying causes toggle sprint and toggle sneak to reset",
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging.tooltip": "Pick block changed to a keyboard key doesn't fill inventory slots when dragged",
   "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak.tooltip": "Player starts sneaking when dismounting if \"Sneak\" is set to \"Toggle\" in accessibility settings",
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key.tooltip": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles key bindings bound to Left Control",
@@ -20,11 +20,11 @@
   "keybindbugfixes.config.tweak.reload_resources_anywhere": "Reload resources anywhere",
   "keybindbugfixes.config.tweak.remove_keybind_conflicts": "Remove keybind conflicts",
   "keybindbugfixes.config.tweak.reload_resources_anywhere.tooltip": "The F3 + T shortcut to reload resources does not work in the main menus",
-  "keybindbugfixes.config.tweak.remove_keybind_conflicts.tooltip": "Removes keybind conflicts, so multiple keybinds can be bounded to the same key",
+  "keybindbugfixes.config.tweak.remove_keybind_conflicts.tooltip": "Removes keybind conflicts so multiple keybinds can be bound to the same key",
 
   "keybindbugfixes.config.category.keybinds": "Keybinds",
   "keybindbugfixes.config.keybinds.unknownModifier": "This key has unassigned modifier:\n%s",
-  "keybindbugfixes.config.keybinds.sameModifier": "This key is same as it's modifier:\n%s",
+  "keybindbugfixes.config.keybinds.sameModifier": "This key is same as its modifier:\n%s",
   "keybindbugfixes.config.key.debug": "Debug Screen",
   "keybindbugfixes.config.key.game_mode_cycle": "Game Mode Switcher"
 }

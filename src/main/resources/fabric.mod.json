@@ -3,7 +3,7 @@
   "id": "keybindbugfixes",
   "version": "${version}",
   "name": "Keybind Bug Fixes",
-  "description": "Fixes keybind-related bugs, adds keybind-related tweaks and new keybinds.",
+  "description": "Fixes keybind-related bugs, adds keybind-related tweaks, and adds new keybinds.",
   "authors": ["RayZ_R"],
   "contact": {
     "homepage": "https://modrinth.com/mod/keybindbugfixes",
