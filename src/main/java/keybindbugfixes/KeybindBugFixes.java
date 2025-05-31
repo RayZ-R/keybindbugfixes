@@ -97,6 +97,10 @@ public class KeybindBugFixes implements ClientModInitializer {
         if (isRrlsLoaded) {
             DISABLED_MIXIN_NAMES.add("reload_resources_anywhere.MinecraftClientMixin");
         }
+
+        if (!isAmecsApiModLoaded) {
+            DISABLED_MIXIN_NAMES.add("fix_modifier_sticky_key.KeyBindingMixin");
+        }
     }
 
     public static void disableMixin(String name) {
@@ -122,22 +126,30 @@ public class KeybindBugFixes implements ClientModInitializer {
     }
 
     public static void revertStickyKeyBinding(int keycode) {
-        if (Config.BugFixes.FIX_MODIFIER_STICKY_KEY) {
-            Map<StickyKeyBinding, Boolean> submap = STICKY_KEY_REVERT_MAP.filter(keycode);
+        Map<StickyKeyBinding, Boolean> submap = STICKY_KEY_REVERT_MAP.filter(keycode);
 
-            for (Map.Entry<StickyKeyBinding, Boolean> entry : submap.entrySet()) {
-                StickyKeyBinding keyBinding = entry.getKey();
-                boolean initialValue = entry.getValue();
-                KeyBindingAccessor accessor = (KeyBindingAccessor) keyBinding;
+        for (Map.Entry<StickyKeyBinding, Boolean> entry : submap.entrySet()) {
+            StickyKeyBinding keyBinding = entry.getKey();
+            boolean initialValue = entry.getValue();
+            KeyBindingAccessor accessor = (KeyBindingAccessor) keyBinding;
 
-                accessor.setPressedState(initialValue);
+            accessor.setPressedState(initialValue);
 
-                if (keyBinding.equals(client.options.sprintKey) && !initialValue) {
-                    client.player.setSprinting(false);
-                }
-
-                STICKY_KEY_REVERT_MAP.remove(keyBinding);
+            if (keyBinding.equals(client.options.sprintKey) && !initialValue) {
+                client.player.setSprinting(false);
             }
+
+            STICKY_KEY_REVERT_MAP.remove(keyBinding);
+        }
+    }
+
+    public static void revertControlModifier() {
+        if (MinecraftClient.IS_SYSTEM_MAC) {
+            revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_SUPER);
+            revertStickyKeyBinding(GLFW.GLFW_KEY_RIGHT_SUPER);
+        } else {
+            revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_CONTROL);
+            revertStickyKeyBinding(GLFW.GLFW_KEY_RIGHT_CONTROL);
         }
     }
 
@@ -151,26 +163,23 @@ public class KeybindBugFixes implements ClientModInitializer {
         }
 
         if (isModifierPressed) {
-            int keycode;
-
             if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
-                keycode = ((KeyBindingAccessor) RebindAllTheKeys.DROP_STACK_MODIFIER).getBoundKey().getCode();
+                KeyBindingAccessor accessor = (KeyBindingAccessor) RebindAllTheKeys.DROP_STACK_MODIFIER;
+                revertStickyKeyBinding(accessor.getBoundKey().getCode());
             } else {
-                keycode = GLFW.GLFW_KEY_LEFT_CONTROL;
+                revertControlModifier();
             }
-
-            revertStickyKeyBinding(keycode);
         }
     }
 
     public static void revertPickBlockModifier() {
         if (Screen.hasControlDown()) {
-            revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_CONTROL);
+            revertControlModifier();
         }
     }
 
     public static void revertNarratorModifier() {
-        revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_CONTROL);
+        revertControlModifier();
     }
 
     @Override
