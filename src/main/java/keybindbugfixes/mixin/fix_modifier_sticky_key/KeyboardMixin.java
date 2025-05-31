@@ -2,6 +2,7 @@ package keybindbugfixes.mixin.fix_modifier_sticky_key;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import keybindbugfixes.KeybindBugFixes;
+import keybindbugfixes.config.Config;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +17,7 @@ public abstract class KeyboardMixin {
                     target = "Lnet/minecraft/client/option/GameOptions;write()V",
                     shift = At.Shift.AFTER))
     private void revertNarratorModifier(CallbackInfo callbackInfo, @Local Screen screen) {
-        if (screen == null) {
+        if (Config.BugFixes.FIX_MODIFIER_STICKY_KEY && screen == null) {
             KeybindBugFixes.revertNarratorModifier();
         }
     }
