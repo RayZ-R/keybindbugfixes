@@ -77,6 +77,8 @@ public class ConfigManager {
 
         protected abstract Class<T> valueType();
 
+        protected abstract T disabledValue();
+
         public void initValue() {
             this.changeCallback = value -> {
                 try {
@@ -94,17 +96,27 @@ public class ConfigManager {
             }
         }
 
-        public boolean loadValue() {
-            this.value = this.defaultValue;
-            
+        public void loadValue() {
             if (this.isDisabled) {
-                return true;
-            }
-
-            if (this.jsonElement != null) {
-                return this.loadFromJson(this.jsonElement);
+                this.setValue(this.disabledValue());
             } else {
-                return false;
+                boolean success;
+
+                if (this.jsonElement != null) {
+                    success = this.loadFromJson(this.jsonElement);
+                } else {
+                    success = false;
+                }
+
+                if (!success) {
+                    this.setValue(this.defaultValue);
+
+                    KeybindBugFixes.LOGGER.error("Couldn't load "
+                            + KeybindBugFixes.MOD_NAME
+                            + " configuration entry "
+                            + '"' + this.name + '"'
+                            + ", resetting");
+                }
             }
         }
 
@@ -152,7 +164,7 @@ public class ConfigManager {
 
         protected abstract void writeToJson(JsonObject json);
 
-        protected abstract boolean loadFromJson(JsonElement jsonPrimitive);
+        protected abstract boolean loadFromJson(JsonElement jsonElement);
     }
 
     public static class BugOption extends TweakOption {
@@ -204,6 +216,11 @@ public class ConfigManager {
         @Override
         protected Class<Boolean> valueType() {
             return Boolean.class;
+        }
+
+        @Override
+        protected Boolean disabledValue() {
+            return false;
         }
 
         @Override
@@ -264,6 +281,11 @@ public class ConfigManager {
         @Override
         protected Class<InputUtil.Key> valueType() {
             return InputUtil.Key.class;
+        }
+
+        @Override
+        protected InputUtil.Key disabledValue() {
+            return this.defaultValue;
         }
 
         @Override
@@ -398,13 +420,7 @@ public class ConfigManager {
 
     public static void loadOptionValues() {
         for (Option<?> option : OPTIONS) {
-            if (!option.loadValue()) {
-                KeybindBugFixes.LOGGER.error("Couldn't load "
-                        + KeybindBugFixes.MOD_NAME
-                        + " configuration entry "
-                        + '"' + option.name() + '"'
-                        + ", resetting");
-            }
+            option.loadValue();
         }
     }
 
