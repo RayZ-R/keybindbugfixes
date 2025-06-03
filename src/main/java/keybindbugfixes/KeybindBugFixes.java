@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minenash.rebind_all_the_keys.RebindAllTheKeys;
-import keybindbugfixes.config.Config;
 import keybindbugfixes.config.ConfigManager;
 import keybindbugfixes.mixin.KeyBindingAccessor;
 import net.fabricmc.api.ClientModInitializer;
@@ -68,7 +67,7 @@ public class KeybindBugFixes implements ClientModInitializer {
         GSON = builder.serializeNulls().setPrettyPrinting().create();
 
         IS_REBIND_ALL_THE_KEYS_MOD_LOADED = FABRIC_LOADER.isModLoaded("rebind_all_the_keys");
-        
+
         preLoad();
     }
 

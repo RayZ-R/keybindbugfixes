@@ -14,10 +14,7 @@ import keybindbugfixes.config.annotation.TweakInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -28,7 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ConfigManager {
     public abstract static class Option<T> {
@@ -200,17 +196,8 @@ public class ConfigManager {
     }
 
     public static class TweakOption extends Option<Boolean> {
-        private final Function<Boolean, Text> buttonTextFactory;
-        private final Function<Boolean, Tooltip> tooltipFactory;
-
         public TweakOption(Field field, String entryName, String mixinName) {
             super(field, entryName, mixinName);
-
-            this.buttonTextFactory = value -> Text.translatable(value ? "gui.yes" : "gui.no")
-                    .formatted(value ? Formatting.GREEN : Formatting.RED);
-
-            this.tooltipFactory =value -> Tooltip.of(
-                    Text.translatable(this.translationKey + ".tooltip"));
         }
 
         @Override
@@ -240,14 +227,6 @@ public class ConfigManager {
 
         public void toggleValue() {
             this.setValue(!this.value);
-        }
-
-        public Text buttonText() {
-            return this.buttonTextFactory.apply(this.value);
-        }
-
-        public Tooltip tooltip() {
-            return this.tooltipFactory.apply(this.value);
         }
     }
 
