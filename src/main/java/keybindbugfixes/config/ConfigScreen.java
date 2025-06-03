@@ -57,7 +57,7 @@ public class ConfigScreen extends Screen {
         if (this.selectedKeybindWidget != null) {
             ConfigManager.KeybindOption keybindOption = this.selectedKeybindWidget.option();
             keybindOption.setValue(InputUtil.Type.MOUSE.createFromCode(button));
-            this.selectedKeybindWidget.updateButtonState();
+            this.selectedKeybindWidget.updateButton();
             this.selectedKeybindWidget = null;
             return true;
         } else {
@@ -76,7 +76,7 @@ public class ConfigScreen extends Screen {
                 keybindOption.setValue(InputUtil.fromKeyCode(keyCode, scanCode));
             }
 
-            this.selectedKeybindWidget.updateButtonState();
+            this.selectedKeybindWidget.updateButton();
             this.selectedKeybindWidget = null;
             return true;
         } else {
