@@ -25,6 +25,7 @@ import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetEntry> {
@@ -80,9 +81,9 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         }
     }
 
-    private void updateKeybindWidgets() {
+    private void updateKeybindWarnings() {
         for (KeybindWidgetEntry widget : this.keybindWidgets) {
-            widget.updateButtonText();
+            widget.updateButtonWarning();
         }
     }
 
@@ -207,9 +208,31 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         private final ButtonWidget linkButton;
         private final OptionWidget optionWidget;
 
-        public void updateButtonState() {
-            this.optionButton.setMessage(this.option.buttonText());
+        private Text message() {
+            boolean value = this.option.value();
+
+            return Text.translatable(value ? "gui.yes" : "gui.no")
+                    .formatted(value ? Formatting.GREEN : Formatting.RED);
+        }
+
+        private Tooltip tooltip() {
+            return Tooltip.of(Text.translatable(
+                    this.option.translationKey() + ".tooltip"));
+        }
+
+        private void updateButton() {
+            this.optionButton.setMessage(this.message());
             this.resetButton.active = !this.option.isDefault();
+        }
+
+        public void toggleValue() {
+            this.option.toggleValue();
+            this.updateButton();
+        }
+
+        public void resetValue() {
+            this.option.resetValue();
+            this.updateButton();
         }
 
         public BugWidgetEntry(MinecraftClient client, ConfigScreen screen, ConfigManager.BugOption option) {
@@ -221,17 +244,12 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
                     .texture(Identifier.of(KeybindBugFixes.MOD_ID +  ":icon/link"), 16, 16)
                     .build();
 
-            this.optionButton = ButtonWidget.builder(this.option.buttonText(), button -> {
-                        this.option.toggleValue();
-                        this.updateButtonState();
-                    })
-                    .tooltip(this.option.tooltip())
+            this.optionButton = ButtonWidget.builder(this.message(), button -> this.toggleValue())
+                    .tooltip(this.tooltip())
                     .build();
 
-            this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> {
-                        this.option.resetValue();
-                        this.updateButtonState();
-                    }, true)
+            this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY,
+                            button -> this.resetValue(), true)
                     .width(BUTTON_WIDTH)
                     .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
                     .build();
@@ -268,25 +286,42 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         private final ButtonWidget resetButton;
         private final OptionWidget optionWidget;
 
-        public void updateButtonState() {
-            this.optionButton.setMessage(this.option.buttonText());
+        private Text message() {
+            boolean value = this.option.value();
+
+            return Text.translatable(value ? "gui.yes" : "gui.no")
+                    .formatted(value ? Formatting.GREEN : Formatting.RED);
+        }
+
+        private Tooltip tooltip() {
+            return Tooltip.of(Text.translatable(
+                    this.option.translationKey() + ".tooltip"));
+        }
+
+        private void updateButton() {
+            this.optionButton.setMessage(this.message());
             this.resetButton.active = !this.option.isDefault();
+        }
+
+        public void toggleValue() {
+            this.option.toggleValue();
+            this.updateButton();
+        }
+
+        public void resetValue() {
+            this.option.resetValue();
+            this.updateButton();
         }
 
         public TweakWidgetEntry(MinecraftClient client, ConfigScreen screen, ConfigManager.TweakOption option) {
             this.option = option;
 
-            this.optionButton = ButtonWidget.builder(this.option.buttonText(), button -> {
-                        this.option.toggleValue();
-                        this.updateButtonState();
-                    })
-                    .tooltip(this.option.tooltip())
+            this.optionButton = ButtonWidget.builder(this.message(), button -> this.toggleValue())
+                    .tooltip(this.tooltip())
                     .build();
 
-            this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> {
-                        this.option.resetValue();
-                        this.updateButtonState();
-                    }, true)
+            this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY,
+                            button -> this.resetValue(), true)
                     .width(BUTTON_WIDTH)
                     .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
                     .build();
@@ -323,71 +358,71 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         private final ButtonWidget resetButton;
         private final OptionWidget optionWidget;
 
+        public enum Warning {
+            DUPLICATE,
+            UNKNOWN_MODIFIER,
+            SAME_MODIFIER,
+            NONE;
+        }
+
         private MutableText duplicateText;
-        private boolean isDuplicate;
-        private boolean unknownModifier;
-        private boolean sameModifier;
+        private Warning warning;
 
         private void updateWarning() {
+            this.warning = Warning.NONE;
             this.duplicateText = Text.empty();
-            this.isDuplicate = false;
-            this.unknownModifier = false;
-            this.sameModifier = false;
 
-            if (!this.option.isUnbound()) {
-                ConfigManager.KeybindOption modifier = this.option.modifier();
-                InputUtil.Key key = this.option.value();
+            if (this.option.isUnbound()) return;
 
-                if (modifier != null) {
-                    if (modifier.value().getCode() == GLFW.GLFW_KEY_UNKNOWN) {
-                        this.unknownModifier = true;
-                    }
+            ConfigManager.KeybindOption modifier = this.option.modifier();
+            InputUtil.Key modifierKey = modifier != null ? modifier.value() : null;
+            InputUtil.Key key = this.option.value();
 
-                    if (modifier.value().equals(key)) {
-                        this.sameModifier = true;
-                    }
+            if (modifier != null) {
+                if (modifierKey.getCode() == GLFW.GLFW_KEY_UNKNOWN) {
+                    this.warning = Warning.UNKNOWN_MODIFIER;
+                    return;
+
+                } else if (modifierKey.equals(key)) {
+                    this.warning = Warning.SAME_MODIFIER;
+                    return;
                 }
-
-                if (modifier == null) {
-                    for (KeyBinding keyBinding : this.client.options.allKeys) {
-                        if (((KeyBindingAccessor) keyBinding).getBoundKey().equals(key)) {
-                            if (this.isDuplicate) {
-                                this.duplicateText.append(", ");
-                            }
-
-                            this.isDuplicate = true;
-                            this.duplicateText.append(Text.translatable(keyBinding.getTranslationKey()));
-                        }
-                    }
-                }
-
-                for (ConfigManager.KeybindOption option : ConfigManager.KEYBIND_OPTIONS) {
-                    ConfigManager.KeybindOption optionModifier = option.modifier();
-                    boolean sameModifiers;
-
-                    if (modifier != null && optionModifier != null) {
-                        sameModifiers = modifier.value() == optionModifier.value();
-                    } else {
-                        sameModifiers = modifier == null && optionModifier == null;
-                    }
-
-                    if (this.option != option && sameModifiers && key.equals(option.value())) {
-                        if (this.isDuplicate) {
+            } else {
+                for (KeyBinding keyBinding : this.client.options.allKeys) {
+                    if (((KeyBindingAccessor) keyBinding).getBoundKey().equals(key)) {
+                        if (this.warning != Warning.DUPLICATE) {
+                            this.warning = Warning.DUPLICATE;
+                        } else {
                             this.duplicateText.append(", ");
                         }
 
-                        this.isDuplicate = true;
-                        this.duplicateText.append(Text.translatable(option.translationKey()));
+                        this.duplicateText.append(Text.translatable(keyBinding.getTranslationKey()));
                     }
+                }
+            }
+
+            for (ConfigManager.KeybindOption option : ConfigManager.KEYBIND_OPTIONS) {
+                if (option == this.option) continue;
+
+                ConfigManager.KeybindOption optionModifier = option.modifier();
+                InputUtil.Key optionModifierKey = optionModifier != null ? optionModifier.value() : null;
+
+                if (key.equals(option.value()) && Objects.equals(modifierKey, optionModifierKey)) {
+                    if (this.warning != Warning.DUPLICATE) {
+                        this.warning = Warning.DUPLICATE;
+                    } else {
+                        this.duplicateText.append(", ");
+                    }
+
+                    this.duplicateText.append(Text.translatable(option.translationKey()));
                 }
             }
         }
 
-        private Text getMessage() {
-            if (this.isDuplicate || this.unknownModifier || this.sameModifier) {
+        private Text message() {
+            if (this.warning != Warning.NONE) {
                 return Text.literal("[ ")
-                        .append(this.option.value().getLocalizedText().copy()
-                                .formatted(Formatting.WHITE))
+                        .append(this.option.value().getLocalizedText().copy().formatted(Formatting.WHITE))
                         .append(" ]")
                         .formatted(Formatting.RED);
             } else {
@@ -395,40 +430,53 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
             }
         }
 
-        private Tooltip getTooltip() {
+        private Tooltip tooltip() {
             ConfigManager.KeybindOption modifier = this.option.modifier();
 
-            if (this.isDuplicate) {
-                return Tooltip.of(Text.translatable("controls.keybinds.duplicateKeybinds", this.duplicateText));
-            } else if (this.unknownModifier) {
-                return Tooltip.of(Text.translatable(KeybindBugFixes.MOD_ID + ".config.keybinds.unknownModifier",
-                        Text.translatable(modifier.translationKey())));
-            } else if (this.sameModifier) {
-                return Tooltip.of(Text.translatable(KeybindBugFixes.MOD_ID + ".config.keybinds.sameModifier",
-                        Text.translatable(modifier.translationKey())));
-            } else {
-                return null;
+            if (this.warning == Warning.DUPLICATE) {
+                return Tooltip.of(Text.translatable(
+                        "controls.keybinds.duplicateKeybinds",
+                        this.duplicateText));
+
+            } else if (modifier != null) {
+                if (this.warning == Warning.UNKNOWN_MODIFIER) {
+                    return Tooltip.of(Text.translatable(
+                            KeybindBugFixes.MOD_ID + ".config.keybinds.unknownModifier",
+                            Text.translatable(modifier.translationKey())));
+
+                } else if (this.warning == Warning.SAME_MODIFIER) {
+                    return Tooltip.of(Text.translatable(
+                            KeybindBugFixes.MOD_ID + ".config.keybinds.sameModifier",
+                            Text.translatable(modifier.translationKey())));
+
+                }
             }
+
+            return null;
         }
 
-        public void updateButtonText() {
-            this.updateWarning();
-            this.optionButton.setMessage(this.getMessage());
-            this.optionButton.setTooltip(this.getTooltip());
-        }
-
-        public void updateButtonState() {
-            this.configScreen.list.updateKeybindWidgets();
+        public void updateButton() {
+            this.configScreen.list.updateKeybindWarnings();
             this.resetButton.active = !this.option.isDefault();
         }
 
-        private void selectButton() {
+        public void updateButtonWarning() {
+            this.updateWarning();
+            this.optionButton.setMessage(this.message());
+            this.optionButton.setTooltip(this.tooltip());
+        }
+
+        public void selectButton() {
             this.configScreen.selectedKeybindWidget = this;
             this.optionButton.setMessage(Text.literal("> ")
-                    .append(this.optionButton.getMessage().copy()
-                            .formatted(Formatting.WHITE, Formatting.UNDERLINE))
+                    .append(this.optionButton.getMessage().copy().formatted(Formatting.WHITE, Formatting.UNDERLINE))
                     .append(" <")
                     .formatted(Formatting.YELLOW));
+        }
+
+        public void resetValue() {
+            this.option.resetValue();
+            this.updateButton();
         }
 
         public KeybindWidgetEntry(MinecraftClient client, ConfigScreen screen, ConfigManager.KeybindOption option) {
@@ -438,14 +486,12 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
 
             this.updateWarning();
 
-            this.optionButton = ButtonWidget.builder(this.getMessage(), button -> this.selectButton())
-                    .tooltip(this.getTooltip())
+            this.optionButton = ButtonWidget.builder(this.message(), button -> this.selectButton())
+                    .tooltip(this.tooltip())
                     .build();
 
-            this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY, button -> {
-                        this.option.resetValue();
-                        this.updateButtonState();
-                    }, true)
+            this.resetButton = TextIconButtonWidget.builder(ScreenTexts.EMPTY,
+                            button -> this.resetValue(), true)
                     .width(BUTTON_WIDTH)
                     .texture(Identifier.of(KeybindBugFixes.MOD_ID + ":icon/reset"), 16, 16)
                     .build();
