@@ -24,8 +24,7 @@ public abstract class KeyboardMixin {
     @Inject(method = "onKey",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/util/InputUtil;isKeyPressed(JI)Z",
-                    shift = At.Shift.BY,
-                    by = 2,
+                    shift = At.Shift.BY, by = 2,
                     ordinal = 0),
             cancellable = true)
     private void handleReloadResourcesKeybind(long window, int keycode, int scancode, int action, int modifiers,
