@@ -362,7 +362,7 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
             DUPLICATE,
             UNKNOWN_MODIFIER,
             SAME_MODIFIER,
-            NONE;
+            NONE
         }
 
         private MutableText duplicateText;
