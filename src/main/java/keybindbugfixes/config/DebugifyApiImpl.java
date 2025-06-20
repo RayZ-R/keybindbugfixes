@@ -16,7 +16,7 @@ public class DebugifyApiImpl implements DebugifyApi {
         for (ConfigManager.BugOption option : ConfigManager.BUG_OPTIONS) {
             int id = option.id();
 
-            if (id != -1) {
+            if (id != -1 && !option.isDisabled()) {
                 disabledFixes.add("MC-" + id);
             }
         }
