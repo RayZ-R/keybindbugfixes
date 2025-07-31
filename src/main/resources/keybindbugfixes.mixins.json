@@ -13,7 +13,7 @@
     "fix_pick_key_dragging.ElementMixin",
     "fix_pick_key_dragging.HandledScreenMixin",
     "fix_pick_key_dragging.KeyboardMixin",
-    "fix_pressing_f3_twice.GameModeSelectionScreenMixin",
+    "fix_pressing_f3_twice.KeyboardMixin",
     "fix_sticky_key_reset.ClientPlayerEntityMixin",
     "rebind_debug_keys.GameModeSelectionScreenMixin",
     "rebind_debug_keys.KeyBindingEntryMixin",
@@ -23,7 +23,6 @@
     "remove_keybind_conflicts.KeyBindingMixin",
     "HandledScreenAccessor",
     "KeyBindingAccessor",
-    "KeyboardAccessor",
     "StickyKeyBindingAccessor"
   ],
   "injectors": {
