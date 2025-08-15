@@ -27,6 +27,8 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class ConfigManager {
+    public static boolean displayMissingConfigEntryError;
+
     public abstract static class Option<T> {
         protected final Field field;
         protected JsonElement jsonElement;
@@ -107,11 +109,15 @@ public class ConfigManager {
                 if (!success) {
                     this.setValue(this.defaultValue);
 
-                    KeybindBugFixes.LOGGER.error("Couldn't load "
-                            + KeybindBugFixes.MOD_NAME
-                            + " configuration entry "
-                            + '"' + this.name + '"'
-                            + ", resetting");
+                    if (displayMissingConfigEntryError) {
+                        KeybindBugFixes.LOGGER.error(
+                                "Couldn't load "
+                                + KeybindBugFixes.MOD_NAME
+                                + " configuration entry "
+                                + '"' + this.name + '"'
+                                + ", resetting"
+                        );
+                    }
                 }
             }
         }
@@ -373,17 +379,20 @@ public class ConfigManager {
         Path configPath = getConfigPath();
 
         try {
-            if (!Files.exists(configPath)) {
-                saveOptionValues();
-            }
+            boolean configFileExists = Files.exists(configPath);
+            displayMissingConfigEntryError = configFileExists;
 
-            if (Files.exists(configPath)) {
+            if (configFileExists) {
                 BufferedReader reader = Files.newBufferedReader(configPath);
                 JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
 
                 for (Option<?> option : OPTIONS) {
                     JsonElement jsonElement = json.get(option.name());
                     option.load(jsonElement);
+                }
+            } else {
+                for (Option<?> option : OPTIONS) {
+                    option.load(null);
                 }
             }
         } catch (Throwable e) {
