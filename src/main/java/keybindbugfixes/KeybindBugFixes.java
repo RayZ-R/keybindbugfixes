@@ -12,7 +12,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.StickyKeyBinding;
-import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,21 +79,10 @@ public class KeybindBugFixes implements ClientModInitializer {
 
         ConfigManager.preInit();
 
-        boolean isRebindAllTheKeysModLoaded = IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
         boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
-        boolean isNmukModLoaded = FABRIC_LOADER.isModLoaded("nmuk");
-        boolean isRrlsLoaded = FABRIC_LOADER.isModLoaded("rrls");
 
-        if (isRebindAllTheKeysModLoaded || isAmecsApiModLoaded || isNmukModLoaded) {
-            disableMixin("remove_keybind_conflicts");
-        }
-
-        if (isRebindAllTheKeysModLoaded) {
+        if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
             disableMixin("rebind_debug_keys");
-        }
-
-        if (isRrlsLoaded) {
-            DISABLED_MIXIN_NAMES.add("reload_resources_anywhere.MinecraftClientMixin");
         }
 
         if (!isAmecsApiModLoaded) {
@@ -114,14 +102,6 @@ public class KeybindBugFixes implements ClientModInitializer {
 
     public static boolean shouldAddOption(ConfigManager.Option<?> option) {
         return !DISABLED_OPTION_NAMES.contains(option.name());
-    }
-
-    public static InputUtil.Key getReloadResourcesKey() {
-        if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
-            return ((KeyBindingAccessor) RebindAllTheKeys.RELOAD_RESOURCES).getBoundKey();
-        } else {
-            return InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_T);
-        }
     }
 
     public static void revertStickyKeyBinding(int keycode) {

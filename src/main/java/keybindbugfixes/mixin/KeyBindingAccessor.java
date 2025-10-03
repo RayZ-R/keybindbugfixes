@@ -9,11 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface KeyBindingAccessor {
     @Accessor("boundKey")
     InputUtil.Key getBoundKey();
-    @Accessor("timesPressed")
-    int getTimesPressed();
 
-    @Accessor("timesPressed")
-    void setTimesPressed(int timesPressed);
     @Accessor("pressed")
     void setPressedState(boolean pressed);
 }

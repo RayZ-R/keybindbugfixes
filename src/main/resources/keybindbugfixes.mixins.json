@@ -5,7 +5,6 @@
   "plugin": "keybindbugfixes.MixinPlugin",
   "mixins": [
     "fix_dismount_toggle_sneak.ClientPlayerEntityMixin",
-    "fix_game_mode_switcher_reset.ClientPlayNetworkHandlerMixin",
     "fix_modifier_sticky_key.KeyBindingMixin",
     "fix_modifier_sticky_key.KeyboardMixin",
     "fix_modifier_sticky_key.MinecraftClientMixin",
@@ -13,14 +12,9 @@
     "fix_pick_key_dragging.ElementMixin",
     "fix_pick_key_dragging.HandledScreenMixin",
     "fix_pick_key_dragging.KeyboardMixin",
-    "fix_pressing_f3_twice.KeyboardMixin",
-    "fix_sticky_key_reset.ClientPlayerEntityMixin",
     "rebind_debug_keys.GameModeSwitcherScreenMixin",
     "rebind_debug_keys.KeyBindingEntryMixin",
     "rebind_debug_keys.KeyboardMixin",
-    "reload_resources_anywhere.KeyboardMixin",
-    "reload_resources_anywhere.MinecraftClientMixin",
-    "remove_keybind_conflicts.KeyBindingMixin",
     "HandledScreenAccessor",
     "KeyBindingAccessor",
     "StickyKeyBindingAccessor"
