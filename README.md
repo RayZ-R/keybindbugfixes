@@ -9,12 +9,6 @@ Keybind Bug Fixes is a **100% client-side** Minecraft mod that fixes keybind-rel
 - Fix pick key dragging in inventory [[MC-117771]](https://bugs.mojang.com/browse/MC-117771)
 - Fix toggle sneak state on dismount [[MC-169163]](https://bugs.mojang.com/browse/MC-169163)
 - Fix toggle key state when used as a modifier
-- _Fix pressing F3 twice to open the debug screen [[MC-183776]](https://bugs.mojang.com/browse/MC-183776)_ `pre 1.21.9`
-- _Fix game mode switcher resetting on death [[MC-259571]](https://bugs.mojang.com/browse/MC-259571)_ `pre 1.21.9`
-- _Fix toggle key resetting on death [[MC-263293]](https://bugs.mojang.com/browse/MC-263293)_ `pre 1.21.9`
-### Tweaks:
-- _Remove keybind conflicts_ `pre 1.21.9`
-- _Reload resources anywhere [[MC-269020]](https://bugs.mojang.com/browse/MC-269020)_ `pre 1.21.9`
 ### Keybinds:
 - `F3` Debug Screen
 - `F4` Game Mode Switcher
