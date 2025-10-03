@@ -15,7 +15,8 @@ public abstract class KeyboardMixin {
     @Inject(method = "onKey",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/option/GameOptions;write()V",
-                    shift = At.Shift.AFTER))
+                    shift = At.Shift.AFTER,
+                    ordinal = 1))
     private void revertNarratorModifier(CallbackInfo callbackInfo, @Local Screen screen) {
         if (Config.BugFixes.FIX_MODIFIER_STICKY_KEY && screen == null) {
             KeybindBugFixes.revertNarratorModifier();

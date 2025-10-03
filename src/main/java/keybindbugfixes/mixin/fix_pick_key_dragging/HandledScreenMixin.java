@@ -11,7 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin {
     @ModifyExpressionValue(method = "keyPressed",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;matchesKey(II)Z", ordinal = 1))
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/client/option/KeyBinding;" +
+                            "matchesKey(Lnet/minecraft/client/input/KeyInput;)Z",
+                    ordinal = 1))
     private boolean disablePickItemKeyInInventory(boolean original) {
         return Config.BugFixes.FIX_PICK_KEY_DRAGGING ? false : original;
     }

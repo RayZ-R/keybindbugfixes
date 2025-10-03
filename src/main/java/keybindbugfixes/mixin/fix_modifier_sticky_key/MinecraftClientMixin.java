@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
     @Inject(method = "handleInputEvents",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;hasControlDown()Z"))
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;isCtrlPressed()Z"))
     private void revertDropStackModifier(CallbackInfo callbackInfo) {
         if (Config.BugFixes.FIX_MODIFIER_STICKY_KEY) {
             KeybindBugFixes.revertDropStackModifier();

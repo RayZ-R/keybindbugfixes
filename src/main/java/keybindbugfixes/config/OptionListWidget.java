@@ -264,9 +264,8 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight,
-                           int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.optionWidget.render(context, y, mouseX, mouseY, tickDelta);
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+            this.optionWidget.render(context, this.getY(), mouseX, mouseY, deltaTicks);
         }
 
         @Override
@@ -334,9 +333,8 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight,
-                           int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.optionWidget.render(context, y, mouseX, mouseY, tickDelta);
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            this.optionWidget.render(context, this.getY(), mouseX, mouseY, tickDelta);
         }
 
         @Override
@@ -396,7 +394,7 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
                             this.duplicateText.append(", ");
                         }
 
-                        this.duplicateText.append(Text.translatable(keyBinding.getTranslationKey()));
+                        this.duplicateText.append(Text.translatable(keyBinding.getId()));
                     }
                 }
             }
@@ -420,11 +418,14 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         }
 
         private Text message() {
-            if (this.warning != Warning.NONE) {
-                return Text.literal("[ ")
-                        .append(this.option.value().getLocalizedText().copy().formatted(Formatting.WHITE))
-                        .append(" ]")
-                        .formatted(Formatting.RED);
+            MutableText text = Text.literal("[ ")
+                    .append(this.option.value().getLocalizedText().copy().formatted(Formatting.WHITE))
+                    .append(" ]");
+
+            if (this.warning == Warning.DUPLICATE) {
+                return text.formatted(Formatting.YELLOW);
+            } else if (this.warning != Warning.NONE) {
+                return text.formatted(Formatting.RED);
             } else {
                 return this.option.value().getLocalizedText();
             }
@@ -508,9 +509,8 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight,
-                           int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.optionWidget.render(context, y, mouseX, mouseY, tickDelta);
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            this.optionWidget.render(context, this.getY(), mouseX, mouseY, tickDelta);
         }
 
         @Override
@@ -536,12 +536,11 @@ public class OptionListWidget extends ElementListWidget<OptionListWidget.WidgetE
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight,
-                           int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             Text text = Text.translatable(this.translationKey);
             int centerX = this.configScreen.width / 2;
 
-            context.drawCenteredTextWithShadow(this.client.textRenderer, text, centerX, y + 5, Colors.WHITE);
+            context.drawCenteredTextWithShadow(this.client.textRenderer, text, centerX, this.getY() + 5, Colors.WHITE);
         }
 
         @Override

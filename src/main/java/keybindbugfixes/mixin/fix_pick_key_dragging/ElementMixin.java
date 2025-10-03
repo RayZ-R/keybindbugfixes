@@ -2,8 +2,10 @@ package keybindbugfixes.mixin.fix_pick_key_dragging;
 
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.Config;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.input.MouseInput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,7 +18,7 @@ public interface ElementMixin {
         if (this instanceof HandledScreen<?> handledScreen
                 && Config.BugFixes.FIX_PICK_KEY_DRAGGING
                 && KeybindBugFixes.draggingPickKey) {
-            handledScreen.mouseDragged(mouseX, mouseY, 2, 0, 0);
+            handledScreen.mouseDragged(new Click(mouseX, mouseY, new MouseInput(-1, 0)), 0, 0);
         }
     }
 }

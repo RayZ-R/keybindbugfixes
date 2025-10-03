@@ -10,9 +10,8 @@ import keybindbugfixes.mixin.KeyBindingAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.SystemKeycodes;
 import net.minecraft.client.option.StickyKeyBinding;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,13 +122,8 @@ public class KeybindBugFixes implements ClientModInitializer {
     }
 
     public static void revertControlModifier() {
-        if (MinecraftClient.IS_SYSTEM_MAC) {
-            revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_SUPER);
-            revertStickyKeyBinding(GLFW.GLFW_KEY_RIGHT_SUPER);
-        } else {
-            revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_CONTROL);
-            revertStickyKeyBinding(GLFW.GLFW_KEY_RIGHT_CONTROL);
-        }
+        revertStickyKeyBinding(SystemKeycodes.LEFT_CTRL);
+        revertStickyKeyBinding(SystemKeycodes.RIGHT_CTRL);
     }
 
     public static void revertDropStackModifier() {
@@ -138,7 +132,7 @@ public class KeybindBugFixes implements ClientModInitializer {
         if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
             isModifierPressed = RebindAllTheKeys.DROP_STACK_MODIFIER.isPressed();
         } else {
-            isModifierPressed = Screen.hasControlDown();
+            isModifierPressed = client.isCtrlPressed();
         }
 
         if (isModifierPressed) {
@@ -152,7 +146,7 @@ public class KeybindBugFixes implements ClientModInitializer {
     }
 
     public static void revertPickBlockModifier() {
-        if (Screen.hasControlDown()) {
+        if (client.isCtrlPressed()) {
             revertControlModifier();
         }
     }
