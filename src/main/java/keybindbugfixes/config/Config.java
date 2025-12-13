@@ -15,6 +15,9 @@ public class Config {
 
         @BugInfo
         public static boolean FIX_MODIFIER_STICKY_KEY = true;
+
+        @BugInfo
+        public static boolean FIX_REBIND_TO_F3 = true;
     }
 
     @CategoryInfo(entryName = "tweak")

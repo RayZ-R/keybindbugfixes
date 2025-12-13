@@ -14,6 +14,7 @@
     "fix_pick_key_dragging.ElementMixin",
     "fix_pick_key_dragging.HandledScreenMixin",
     "fix_pick_key_dragging.KeyboardMixin",
+    "fix_rebind_to_f3.KeybindsScreenMixin",
     "HandledScreenAccessor",
     "KeyBindingAccessor",
     "StickyKeyBindingAccessor"

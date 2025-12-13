@@ -5,10 +5,12 @@
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging": "Fix pick key dragging in inventory",
   "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak": "Fix toggle sneak state on dismount",
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key": "Fix toggle key state when used as a modifier",
+  "keybindbugfixes.config.bugfix.fix_rebind_to_f3": "Fix toggle debug screen when rebinding F3",
 
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging.tooltip": "Pick block changed to a keyboard key doesn't fill inventory slots when dragged",
   "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak.tooltip": "Player starts sneaking when dismounting if \"Sneak\" is set to \"Toggle\" in accessibility settings",
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key.tooltip": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles key bindings bound to Left Control",
+  "keybindbugfixes.config.bugfix.fix_rebind_to_f3.tooltip": "When rebinding a keybind to F3 debug screen is toggled",
 
   "keybindbugfixes.config.category.tweaks": "Tweaks",
   "keybindbugfixes.config.tweak.drop_when_holding_item": "Drop when holding an item",
