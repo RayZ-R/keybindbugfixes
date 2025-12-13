@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
     id 'maven-publish'
 }
 
@@ -23,8 +23,8 @@ repositories {
     }
 
     maven {
-        name "Siphalor's Maven"
-        url "https://maven.siphalor.de/"
+        name = "Siphalor's Maven"
+        url = "https://maven.siphalor.de/"
     }
 
     exclusiveContent {
@@ -65,7 +65,7 @@ dependencies {
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
     modCompileOnly "maven.modrinth:rebind-all-the-keys:${project.rebind_all_the_keys_version}"
     modCompileOnly "maven.modrinth:debugify:${project.debugify_version}"
-    modCompileOnly "de.siphalor:amecsapi-${project.amecs_api_version}"
+    modCompileOnly "de.siphalor.amecs-api:amecs-api-${project.amecs_api_version}"
 }
 
 processResources {

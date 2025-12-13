@@ -4,7 +4,6 @@ import de.siphalor.amecs.api.KeyBindingUtils;
 import de.siphalor.amecs.api.KeyModifiers;
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.Config;
-import keybindbugfixes.mixin.KeyBindingAccessor;
 import net.minecraft.client.option.KeyBinding;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
