@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.rebind_debug_keys;
+package keybindbugfixes.mixin.add_keybind_duplicates;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import keybindbugfixes.config.ConfigManager;

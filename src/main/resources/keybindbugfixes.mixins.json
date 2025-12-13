@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "keybindbugfixes.MixinPlugin",
   "mixins": [
+    "add_keybind_duplicates.KeyBindingEntryMixin",
     "drop_when_holding_item.ScreenHandlerMixin",
     "fix_dismount_toggle_sneak.ClientPlayerEntityMixin",
     "fix_modifier_sticky_key.KeyBindingMixin",
@@ -13,9 +14,6 @@
     "fix_pick_key_dragging.ElementMixin",
     "fix_pick_key_dragging.HandledScreenMixin",
     "fix_pick_key_dragging.KeyboardMixin",
-    "rebind_debug_keys.GameModeSwitcherScreenMixin",
-    "rebind_debug_keys.KeyBindingEntryMixin",
-    "rebind_debug_keys.KeyboardMixin",
     "HandledScreenAccessor",
     "KeyBindingAccessor",
     "StickyKeyBindingAccessor"

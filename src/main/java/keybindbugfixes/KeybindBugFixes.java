@@ -12,6 +12,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.SystemKeycodes;
 import net.minecraft.client.option.StickyKeyBinding;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,10 +81,6 @@ public class KeybindBugFixes implements ClientModInitializer {
 
         boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
 
-        if (IS_REBIND_ALL_THE_KEYS_MOD_LOADED) {
-            disableMixin("rebind_debug_keys");
-        }
-
         if (!isAmecsApiModLoaded) {
             DISABLED_MIXIN_NAMES.add("fix_modifier_sticky_key.KeyBindingMixin");
         }
@@ -122,8 +119,13 @@ public class KeybindBugFixes implements ClientModInitializer {
     }
 
     public static void revertControlModifier() {
-        revertStickyKeyBinding(SystemKeycodes.LEFT_CTRL);
-        revertStickyKeyBinding(SystemKeycodes.RIGHT_CTRL);
+        if (SystemKeycodes.IS_MAC_OS) {
+            revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_SUPER);
+            revertStickyKeyBinding(GLFW.GLFW_KEY_RIGHT_SUPER);
+        } else {
+            revertStickyKeyBinding(GLFW.GLFW_KEY_LEFT_CONTROL);
+            revertStickyKeyBinding(GLFW.GLFW_KEY_RIGHT_CONTROL);
+        }
     }
 
     public static void revertDropStackModifier() {

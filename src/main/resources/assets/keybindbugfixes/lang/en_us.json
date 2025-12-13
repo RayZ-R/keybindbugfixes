@@ -16,7 +16,5 @@
 
   "keybindbugfixes.config.category.keybinds": "Keybinds",
   "keybindbugfixes.config.keybinds.unknownModifier": "This key has unassigned modifier:\n%s",
-  "keybindbugfixes.config.keybinds.sameModifier": "This key is same as its modifier:\n%s",
-  "keybindbugfixes.config.key.debug": "Debug Screen",
-  "keybindbugfixes.config.key.game_mode_cycle": "Game Mode Switcher"
+  "keybindbugfixes.config.keybinds.sameModifier": "This key is same as its modifier:\n%s"
 }
