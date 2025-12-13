@@ -127,12 +127,21 @@ public class ReadMeGenerator {
         List<ConfigManager.Category> categories = ConfigManager.CATEGORIES;
         StringBuilder stringBuilder = new StringBuilder();
 
+        int categoryCount = 0;
         for (int categoryIndex = 0; categoryIndex < categories.size(); categoryIndex++) {
             ConfigManager.Category category = categories.get(categoryIndex);
-            String categoryName = getString(MOD_LANG_JSON, category.translationKey());
-            stringBuilder.append("### ").append(categoryName).append(":\n");
+            List<ConfigManager.Option<?>> options = category.options();
+            if (!options.isEmpty()) categoryCount++;
+        }
+
+        for (int categoryIndex = 0; categoryIndex < categories.size(); categoryIndex++) {
+            ConfigManager.Category category = categories.get(categoryIndex);
 
             List<ConfigManager.Option<?>> options = category.options();
+            if (options.isEmpty()) continue;
+
+            String categoryName = getString(MOD_LANG_JSON, category.translationKey());
+            stringBuilder.append("### ").append(categoryName).append(":\n");
 
             for (int optionIndex = 0; optionIndex < options.size(); optionIndex++) {
                 ConfigManager.Option<?> option = options.get(optionIndex);
@@ -160,7 +169,7 @@ public class ReadMeGenerator {
                     stringBuilder.append(optionName);
                 }
 
-                if (optionIndex < options.size() - 1 || categoryIndex < categories.size() - 1) {
+                if (optionIndex < options.size() - 1 || categoryIndex < categoryCount - 1) {
                     stringBuilder.append('\n');
                 }
             }
@@ -292,7 +301,7 @@ public class ReadMeGenerator {
             }
         });
 
-        String destinationRegex = "\\r\\n\\\\\\[([a-zA-Z0-9_-]+)]|\\\\\\[([a-zA-Z0-9_-]+)]";
+        String destinationRegex = "\\n\\\\\\[([a-zA-Z0-9_-]+)]|\\\\\\[([a-zA-Z0-9_-]+)]";
         this.separateCommonString(destinationRegex, content -> switch (content) {
             case "github-only" -> ToggleWriterAction.ToggleModrinthWriter;
             case "modrinth-only" -> ToggleWriterAction.ToggleGitHubWriter;
