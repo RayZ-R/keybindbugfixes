@@ -32,6 +32,9 @@ public class Config {
     @CategoryInfo(entryName = "tweak")
     public static class Tweaks {
         @TweakInfo
+        public static boolean DROP_WHEN_HOLDING_ITEM = true;
+
+        @TweakInfo
         public static boolean REMOVE_KEYBIND_CONFLICTS = true;
 
         @BugInfo(id = 269020)
