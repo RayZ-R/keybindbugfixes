@@ -17,9 +17,13 @@
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key.tooltip": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles key bindings bound to Left Control",
 
   "keybindbugfixes.config.category.tweaks": "Tweaks",
+
+  "keybindbugfixes.config.tweak.drop_all_crafted_items": "Drop all crafted items",
   "keybindbugfixes.config.tweak.drop_when_holding_item": "Drop when holding an item",
   "keybindbugfixes.config.tweak.reload_resources_anywhere": "Reload resources anywhere",
   "keybindbugfixes.config.tweak.remove_keybind_conflicts": "Remove keybind conflicts",
+
+  "keybindbugfixes.config.tweak.drop_all_crafted_items.tooltip": "Pressing Ctrl + Q over the crafting result doesn't craft all items",
   "keybindbugfixes.config.tweak.drop_when_holding_item.tooltip": "When holding an item, pressing Q over another item doesn't drop it",
   "keybindbugfixes.config.tweak.reload_resources_anywhere.tooltip": "The F3 + T shortcut to reload resources does not work in the main menus",
   "keybindbugfixes.config.tweak.remove_keybind_conflicts.tooltip": "Removes keybind conflicts so multiple keybinds can be bound to the same key",
@@ -27,6 +31,7 @@
   "keybindbugfixes.config.category.keybinds": "Keybinds",
   "keybindbugfixes.config.keybinds.unknownModifier": "This key has unassigned modifier:\n%s",
   "keybindbugfixes.config.keybinds.sameModifier": "This key is same as its modifier:\n%s",
+
   "keybindbugfixes.config.key.debug": "Debug Screen",
   "keybindbugfixes.config.key.game_mode_cycle": "Game Mode Switcher"
 }

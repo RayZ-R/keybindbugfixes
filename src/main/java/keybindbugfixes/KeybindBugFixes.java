@@ -82,11 +82,16 @@ public class KeybindBugFixes implements ClientModInitializer {
 
         boolean isRebindAllTheKeysModLoaded = IS_REBIND_ALL_THE_KEYS_MOD_LOADED;
         boolean isAmecsApiModLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
+        boolean isCarpetModLoaded = FABRIC_LOADER.isModLoaded("carpet");
         boolean isNmukModLoaded = FABRIC_LOADER.isModLoaded("nmuk");
         boolean isRrlsLoaded = FABRIC_LOADER.isModLoaded("rrls");
 
         if (isRebindAllTheKeysModLoaded || isAmecsApiModLoaded || isNmukModLoaded) {
             disableMixin("remove_keybind_conflicts");
+        }
+
+        if (isCarpetModLoaded) {
+            disableMixin("drop_all_crafted_items");
         }
 
         if (isRebindAllTheKeysModLoaded) {

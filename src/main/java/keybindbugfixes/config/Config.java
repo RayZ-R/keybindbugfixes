@@ -32,6 +32,9 @@ public class Config {
     @CategoryInfo(entryName = "tweak")
     public static class Tweaks {
         @TweakInfo
+        public static boolean DROP_ALL_CRAFTED_ITEMS = true;
+
+        @TweakInfo
         public static boolean DROP_WHEN_HOLDING_ITEM = true;
 
         @TweakInfo
