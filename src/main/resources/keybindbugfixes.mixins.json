@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "keybindbugfixes.MixinPlugin",
   "mixins": [
+    "drop_all_crafted_items.ScreenHandlerMixin",
     "drop_when_holding_item.ScreenHandlerMixin",
     "fix_dismount_toggle_sneak.ClientPlayerEntityMixin",
     "fix_game_mode_switcher_reset.ClientPlayNetworkHandlerMixin",
