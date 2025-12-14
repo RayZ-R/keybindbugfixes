@@ -11,6 +11,8 @@
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key.tooltip": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles key bindings bound to Left Control",
 
   "keybindbugfixes.config.category.tweaks": "Tweaks",
+  "keybindbugfixes.config.tweak.drop_when_holding_item": "Drop when holding an item",
+  "keybindbugfixes.config.tweak.drop_when_holding_item.tooltip": "When holding an item, pressing Q over another item doesn't drop it",
 
   "keybindbugfixes.config.category.keybinds": "Keybinds",
   "keybindbugfixes.config.keybinds.unknownModifier": "This key has unassigned modifier:\n%s",

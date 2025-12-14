@@ -3,6 +3,7 @@ package keybindbugfixes.config;
 import keybindbugfixes.config.annotation.BugInfo;
 import keybindbugfixes.config.annotation.CategoryInfo;
 import keybindbugfixes.config.annotation.KeybindInfo;
+import keybindbugfixes.config.annotation.TweakInfo;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
@@ -20,7 +21,10 @@ public class Config {
     }
 
     @CategoryInfo(entryName = "tweak")
-    public static class Tweaks {}
+    public static class Tweaks {
+        @TweakInfo
+        public static boolean DROP_WHEN_HOLDING_ITEM = true;
+    }
 
     @CategoryInfo(entryName = "key")
     public static class Keybinds {
