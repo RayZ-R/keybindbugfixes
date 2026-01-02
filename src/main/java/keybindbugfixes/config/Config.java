@@ -16,6 +16,9 @@ public class Config {
         @BugInfo(id = 169163)
         public static boolean FIX_DISMOUNT_TOGGLE_SNEAK = true;
 
+        @BugInfo(id = 300695)
+        public static boolean FIX_SCREEN_STICKY_KEY_RESET = true;
+
         @BugInfo
         public static boolean FIX_MODIFIER_STICKY_KEY = true;
     }

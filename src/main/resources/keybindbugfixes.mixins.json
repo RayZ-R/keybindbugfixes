@@ -13,6 +13,7 @@
     "fix_pick_key_dragging.ElementMixin",
     "fix_pick_key_dragging.HandledScreenMixin",
     "fix_pick_key_dragging.KeyboardMixin",
+    "fix_screen_sticky_key_reset.StickyKeyBindingMixin",
     "rebind_debug_keys.GameModeSwitcherScreenMixin",
     "rebind_debug_keys.KeyBindingEntryMixin",
     "rebind_debug_keys.KeyboardMixin",
