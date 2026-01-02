@@ -35,8 +35,8 @@ This will remove the feature from the config screen and its mixins won't be appl
 This can be used to hide disabled features, preventing the player from changing them in-game, or as a temporary fix to avoid crashes caused by mod conflicts.
 
 ## Downloading
-Stable releases can be downloaded from the [Modrinth](https://modrinth.com/mod/keybindbugfixes) page or the [Github](https://github.com/RayZ-R/keybindbugfixes/releases) releases page.
+Stable releases can be downloaded from the [Modrinth page](https://modrinth.com/mod/keybindbugfixes) or the [GitHub releases page](https://github.com/RayZ-R/keybindbugfixes/releases).
 You can also build the project from sources by running `./gradlew build`.
 
 ## License
-Keybind Bug Fixes is licensed under [LGPL-3.0-only license](LICENSE).
+Keybind Bug Fixes is licensed under the [LGPL-3.0-only license](LICENSE).

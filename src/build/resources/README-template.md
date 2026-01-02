@@ -23,9 +23,9 @@ This can be used to hide disabled features, preventing the player from changing 
 \[github-only]
 
 ## Downloading
-Stable releases can be downloaded from the [Modrinth](\{mod.contact.homepage}) page or the [Github](\{mod.contact.sources}/releases) releases page.
+Stable releases can be downloaded from the [Modrinth page](\{mod.contact.homepage}) or the [GitHub releases page](\{mod.contact.sources}/releases).
 You can also build the project from sources by running `./gradlew build`.
 
 ## License
-\{mod.name} is licensed under [\{mod.license} license](LICENSE).
+\{mod.name} is licensed under the [\{mod.license} license](LICENSE).
 \[github-only]
