@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.rebind_debug_keys;
+package keybindbugfixes.mixin.add_keybind_duplicates;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import keybindbugfixes.config.ConfigManager;
@@ -26,7 +26,7 @@ public abstract class KeyBindingEntryMixin {
     private boolean addModdedDuplicateKeys(ControlsListWidget.KeyBindingEntry keyBindingEntry, @Local MutableText duplicateText) {
         if (!this.binding.isUnbound()) {
             for (ConfigManager.KeybindOption option : ConfigManager.KEYBIND_OPTIONS) {
-                if (option.modifier() == null && option.value().equals(((KeyBindingAccessor) this.binding).getBoundKey())) {
+                if (!option.isDisabled() && option.modifier() == null && option.value().equals(((KeyBindingAccessor) this.binding).getBoundKey())) {
                     if (this.duplicate) {
                         duplicateText.append(", ");
                     }
