@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "keybindbugfixes.MixinPlugin",
   "mixins": [
+    "add_keybind_duplicates.KeyBindingEntryMixin",
     "drop_when_holding_item.ScreenHandlerMixin",
     "fix_dismount_toggle_sneak.ClientPlayerEntityMixin",
     "fix_game_mode_switcher_reset.ClientPlayNetworkHandlerMixin",
@@ -17,7 +18,6 @@
     "fix_pressing_f3_twice.KeyboardMixin",
     "fix_sticky_key_reset.ClientPlayerEntityMixin",
     "rebind_debug_keys.GameModeSelectionScreenMixin",
-    "rebind_debug_keys.KeyBindingEntryMixin",
     "rebind_debug_keys.KeyboardMixin",
     "reload_resources_anywhere.KeyboardMixin",
     "reload_resources_anywhere.MinecraftClientMixin",
