@@ -8,7 +8,10 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.world.ClientWorld;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -31,7 +34,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
                     shift = At.Shift.AFTER,
                     ordinal = 0))
     private void untoggleSneakKeyOnDismount(CallbackInfo callbackInfo) {
-        if (Config.BugFixes.FIX_DISMOUNT_TOGGLE_SNEAK && this.hasVehicle() && this.isSneaking()) {
+        if (Config.FIX_DISMOUNT_TOGGLE_SNEAK.value && this.hasVehicle() && this.isSneaking()) {
             KeyBinding sneakKeyBinding = this.client.options.sneakKey;
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
 

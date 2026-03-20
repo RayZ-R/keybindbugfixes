@@ -16,6 +16,6 @@ public abstract class KeyboardMixin {
 
     @ModifyVariable(method = "onKey", at = @At("STORE"), ordinal = 2)
     private boolean fixF3State(boolean original) {
-        return original || (Config.BugFixes.FIX_PRESSING_F3_TWICE && this.client.currentScreen instanceof GameModeSwitcherScreen);
+        return original || (Config.FIX_PRESSING_F3_TWICE.value && this.client.currentScreen instanceof GameModeSwitcherScreen);
     }
 }

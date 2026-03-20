@@ -11,6 +11,6 @@ public abstract class ScreenHandlerMixin {
     @ModifyExpressionValue(method = "internalOnSlotClick",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z", ordinal = 12))
     private boolean dropWhenHoldingItem(boolean original) {
-        return Config.Tweaks.DROP_WHEN_HOLDING_ITEM ? true : original;
+        return Config.DROP_WHEN_HOLDING_ITEM.value ? true : original;
     }
 }

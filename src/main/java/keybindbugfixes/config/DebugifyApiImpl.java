@@ -2,7 +2,7 @@ package keybindbugfixes.config;
 
 import com.google.common.collect.Lists;
 import dev.isxander.debugify.api.DebugifyApi;
-import keybindbugfixes.KeybindBugFixes;
+import keybindbugfixes.config.option.Option;
 
 import java.util.List;
 
@@ -11,14 +11,9 @@ public class DebugifyApiImpl implements DebugifyApi {
     public String[] getDisabledFixes() {
         List<String> disabledFixes = Lists.newArrayList();
 
-        KeybindBugFixes.preLoad();
-
-        for (ConfigManager.BugOption option : ConfigManager.BUG_OPTIONS) {
-            int id = option.id();
-
-            if (id != -1 && !option.isDisabled()) {
-                disabledFixes.add("MC-" + id);
-            }
+        for (Option<?> option : Config.OPTIONS) {
+            if (option.bugId == null || option.isDisabled) continue;
+            disabledFixes.add(option.bugId);
         }
 
         return disabledFixes.toArray(String[]::new);
