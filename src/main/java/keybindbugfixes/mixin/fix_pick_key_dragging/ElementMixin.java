@@ -14,7 +14,7 @@ public interface ElementMixin {
     @Inject(method = "mouseMoved", at = @At("HEAD"))
     default void invokePickKeyDraggingLogic(double mouseX, double mouseY, CallbackInfo callbackInfo) {
         if (this instanceof HandledScreen<?> handledScreen
-                && Config.BugFixes.FIX_PICK_KEY_DRAGGING
+                && Config.FIX_PICK_KEY_DRAGGING.value
                 && KeybindBugFixes.draggingPickKey) {
             handledScreen.mouseDragged(mouseX, mouseY, 2, 0, 0);
         }

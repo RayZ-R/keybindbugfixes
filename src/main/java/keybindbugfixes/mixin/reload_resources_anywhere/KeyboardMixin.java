@@ -31,7 +31,7 @@ public abstract class KeyboardMixin {
                                               CallbackInfo callbackInfo, @Local boolean f3Pressed) {
         InputUtil.Key key = InputUtil.fromKeyCode(keycode, scancode);
 
-        if (Config.Tweaks.RELOAD_RESOURCES_ANYWHERE
+        if (Config.RELOAD_RESOURCES_ANYWHERE.value
                 && f3Pressed
                 && action == GLFW.GLFW_PRESS
                 && key.equals(KeybindBugFixes.getReloadResourcesKey())) {
