@@ -1,7 +1,7 @@
 package keybindbugfixes.mixin.fix_modifier_sticky_key;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import keybindbugfixes.KeybindBugFixes;
+import keybindbugfixes.StickyKeyRevertMap;
 import keybindbugfixes.config.Config;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,8 +18,8 @@ public abstract class KeyboardMixin {
                     shift = At.Shift.AFTER,
                     ordinal = 1))
     private void revertNarratorModifier(CallbackInfo callbackInfo, @Local Screen screen) {
-        if (Config.BugFixes.FIX_MODIFIER_STICKY_KEY && screen == null) {
-            KeybindBugFixes.revertNarratorModifier();
+        if (Config.FIX_MODIFIER_STICKY_KEY.value && screen == null) {
+            StickyKeyRevertMap.revertNarratorModifier();
         }
     }
 }

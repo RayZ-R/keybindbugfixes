@@ -33,7 +33,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
                     shift = At.Shift.AFTER,
                     ordinal = 0))
     private void untoggleSneakKeyOnDismount(CallbackInfo callbackInfo) {
-        if (keybindbugfixes.config.Config.BugFixes.FIX_DISMOUNT_TOGGLE_SNEAK && this.hasVehicle() && this.isSneaking()) {
+        if (keybindbugfixes.config.Config.FIX_DISMOUNT_TOGGLE_SNEAK.value && this.hasVehicle() && this.isSneaking()) {
             KeyBinding sneakKeyBinding = this.client.options.sneakKey;
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
 

@@ -20,14 +20,14 @@ public abstract class KeyboardMixin {
 
     @ModifyConstant(method = "onKey", constant = @Constant(intValue = GLFW.GLFW_KEY_F3))
     private int remapF3KeyBinding(int value) {
-        return ((InputUtil.Key) Config.Keybinds.DEBUG).getCode();
+        return Config.DEBUG_KEY.value.getCode();
     }
 
     @ModifyArg(method = "onKey",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/Keyboard;processF3(Lnet/minecraft/client/input/KeyInput;)Z"))
     private KeyInput remapF4KeyBinding(KeyInput input) {
-        if (input.key() == ((InputUtil.Key) Config.Keybinds.GAME_MODE_CYCLE).getCode()) {
+        if (input.key() == Config.GAME_MODE_CYCLE_KEY.value.getCode()) {
             return new KeyInput(GLFW.GLFW_KEY_F4, GLFW.glfwGetKeyScancode(GLFW.GLFW_KEY_F4), input.modifiers());
         } else {
             return input;
