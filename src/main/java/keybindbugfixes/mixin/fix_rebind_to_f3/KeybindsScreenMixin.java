@@ -26,7 +26,7 @@ public abstract class KeybindsScreenMixin extends GameOptionsScreen {
                     target = "Lnet/minecraft/client/gui/screen/option/ControlsListWidget;update()V",
                     shift = At.Shift.AFTER))
     private void setSkipNextKeyRelease(CallbackInfoReturnable<Boolean> callbackInfo) {
-        if (Config.BugFixes.FIX_REBIND_TO_F3) {
+        if (Config.FIX_REBIND_TO_F3.value) {
             this.keybindbugfixes$skipNextKeyRelease = true;
         }
     }

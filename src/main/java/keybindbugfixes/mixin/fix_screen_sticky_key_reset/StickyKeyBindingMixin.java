@@ -14,6 +14,6 @@ public abstract class StickyKeyBindingMixin {
                     target = "Lnet/minecraft/client/util/InputUtil$Key;" +
                             "getCategory()Lnet/minecraft/client/util/InputUtil$Type;"))
     private InputUtil.Type modifyInputType(InputUtil.Type original) {
-        return Config.BugFixes.FIX_SCREEN_STICKY_KEY_RESET ? InputUtil.Type.KEYSYM : original;
+        return Config.FIX_SCREEN_STICKY_KEY_RESET.value ? InputUtil.Type.KEYSYM : original;
     }
 }

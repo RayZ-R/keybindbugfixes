@@ -13,22 +13,22 @@ import org.jetbrains.annotations.Nullable;
 
 public class ConfigScreen extends Screen {
     private static final Text TITLE_TEXT = Text.translatable(KeybindBugFixes.MOD_ID + ".config.title");
-    protected final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
-    protected OptionListWidget list;
-    protected final Screen parent;
+    private final Screen parent;
+
+    public final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+    private ConfigListWidget configListWidget;
+
+    @Nullable public ConfigListWidget.KeybindEntry selectedKeybindEntry;
     private boolean skipNextKeyRelease = false;
 
-    @Nullable public OptionListWidget.KeybindWidgetEntry selectedKeybindWidget;
-
-    protected ConfigScreen(Screen parent) {
+    public ConfigScreen(Screen parent) {
         super(TITLE_TEXT);
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        this.list = this.addDrawableChild(new OptionListWidget(this.client, this));
-        this.list.init(ConfigManager.CATEGORIES);
+        this.configListWidget = this.addDrawableChild(new ConfigListWidget(this, this.client));
 
         this.initHeader();
         this.initFooter();
@@ -51,18 +51,16 @@ public class ConfigScreen extends Screen {
     @Override
     protected void refreshWidgetPositions() {
         this.layout.refreshPositions();
-        if (this.list != null) {
-            this.list.position(this.width, this.layout);
-        }
+        this.configListWidget.position(this.width, this.layout);
     }
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        if (this.selectedKeybindWidget != null) {
-            ConfigManager.KeybindOption keybindOption = this.selectedKeybindWidget.option();
-            keybindOption.setValue(InputUtil.Type.MOUSE.createFromCode(click.button()));
-            this.selectedKeybindWidget.updateButton();
-            this.selectedKeybindWidget = null;
+        if (this.selectedKeybindEntry != null) {
+            this.selectedKeybindEntry.option.value = InputUtil.Type.MOUSE.createFromCode(click.button());
+
+            this.selectedKeybindEntry = null;
+            this.configListWidget.updateKeybindEntries();
             return true;
         } else {
             return super.mouseClicked(click, doubled);
@@ -71,17 +69,15 @@ public class ConfigScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyInput input) {
-        if (this.selectedKeybindWidget != null) {
-            ConfigManager.KeybindOption keybindOption = this.selectedKeybindWidget.option();
-
+        if (this.selectedKeybindEntry != null) {
             if (input.isEscape()) {
-                keybindOption.setValue(InputUtil.UNKNOWN_KEY);
+                this.selectedKeybindEntry.option.value = InputUtil.UNKNOWN_KEY;
             } else {
-                keybindOption.setValue(InputUtil.fromKeyCode(input));
+                this.selectedKeybindEntry.option.value = InputUtil.fromKeyCode(input);
             }
 
-            this.selectedKeybindWidget.updateButton();
-            this.selectedKeybindWidget = null;
+            this.selectedKeybindEntry = null;
+            this.configListWidget.updateKeybindEntries();
             this.skipNextKeyRelease = true;
             return true;
         } else {
@@ -101,7 +97,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void removed() {
-        ConfigManager.saveOptionValues();
+        Config.saveJson();
     }
 
     @Override
