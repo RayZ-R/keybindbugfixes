@@ -14,6 +14,6 @@ public abstract class MinecraftClientMixin {
                     target = "Lnet/minecraft/client/MinecraftClient;" +
                             "overlay:Lnet/minecraft/client/gui/screen/Overlay;"))
     public Overlay preventInfiniteLoading(Overlay original) {
-        return Config.Tweaks.RELOAD_RESOURCES_ANYWHERE ? null : original;
+        return Config.RELOAD_RESOURCES_ANYWHERE.value ? null : original;
     }
 }

@@ -23,7 +23,7 @@ public abstract class KeyboardMixin {
     private static boolean startPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers, @Local(ordinal = 2) int action) {
         boolean processed = screen.keyPressed(keyCode, scanCode, modifiers);
 
-        if (screen instanceof HandledScreen<?> handledScreen && Config.BugFixes.FIX_PICK_KEY_DRAGGING && !processed) {
+        if (screen instanceof HandledScreen<?> handledScreen && Config.FIX_PICK_KEY_DRAGGING.value && !processed) {
             MinecraftClient client = MinecraftClient.getInstance();
             boolean inCreative = client.interactionManager.hasCreativeInventory();
 
@@ -59,7 +59,7 @@ public abstract class KeyboardMixin {
     private static boolean stopPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers) {
         boolean processed = screen.keyReleased(keyCode, scanCode, modifiers);
 
-        if (screen instanceof HandledScreen<?> handledScreen && Config.BugFixes.FIX_PICK_KEY_DRAGGING) {
+        if (screen instanceof HandledScreen<?> handledScreen && Config.FIX_PICK_KEY_DRAGGING.value) {
             MinecraftClient client = MinecraftClient.getInstance();
 
             if (client.options.pickItemKey.matchesKey(keyCode, scanCode)) {
