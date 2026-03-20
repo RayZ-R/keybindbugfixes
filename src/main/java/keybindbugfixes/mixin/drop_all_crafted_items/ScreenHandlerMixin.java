@@ -24,7 +24,7 @@ public abstract class ScreenHandlerMixin {
     private void dropAllCraftedItems(int slotIndex, int button, SlotActionType actionType, PlayerEntity player,
                           CallbackInfo callbackInfo, @Local ItemStack itemStack, @Local Slot slot,
                           @Local(ordinal = 2) int min) {
-        if (Config.Tweaks.DROP_ALL_CRAFTED_ITEMS && button == GLFW.GLFW_PRESS) {
+        if (Config.DROP_ALL_CRAFTED_ITEMS.value && button == GLFW.GLFW_PRESS) {
             while (!itemStack.isEmpty() && ItemStack.areItemsEqual(slot.getStack(), itemStack)) {
                 itemStack = slot.takeStackRange(min, Integer.MAX_VALUE, player);
                 player.dropItem(itemStack, true);

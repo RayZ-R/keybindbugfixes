@@ -16,6 +16,6 @@ public abstract class ClientPlayNetworkHandlerMixin {
                             "setGameModes(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V"))
     private boolean preventGameModeSwitcherResetOnDeath(ClientPlayerInteractionManager interactionManager,
                                                         GameMode gameMode, GameMode previousGameMode) {
-        return !Config.BugFixes.FIX_GAME_MODE_SWITCHER_RESET;
+        return !Config.FIX_GAME_MODE_SWITCHER_RESET.value;
     }
 }

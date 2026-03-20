@@ -12,21 +12,21 @@ import org.lwjgl.glfw.GLFW;
 
 public class ConfigScreen extends Screen {
     private static final Text TITLE_TEXT = Text.translatable(KeybindBugFixes.MOD_ID + ".config.title");
-    protected final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
-    protected OptionListWidget list;
-    protected final Screen parent;
+    private final Screen parent;
 
-    @Nullable public OptionListWidget.KeybindWidgetEntry selectedKeybindWidget;
+    public final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+    private ConfigListWidget configListWidget;
 
-    protected ConfigScreen(Screen parent) {
+    @Nullable public ConfigListWidget.KeybindEntry selectedKeybindEntry;
+
+    public ConfigScreen(Screen parent) {
         super(TITLE_TEXT);
         this.parent = parent;
     }
 
     @Override
     protected void init() {
-        this.list = this.addDrawableChild(new OptionListWidget(this.client, this));
-        this.list.init(ConfigManager.CATEGORIES);
+        this.configListWidget = this.addDrawableChild(new ConfigListWidget(this, this.client));
 
         this.initHeader();
         this.initFooter();
@@ -49,16 +49,16 @@ public class ConfigScreen extends Screen {
     @Override
     protected void initTabNavigation() {
         this.layout.refreshPositions();
-        this.list.position(this.width, this.layout);
+        this.configListWidget.position(this.width, this.layout);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.selectedKeybindWidget != null) {
-            ConfigManager.KeybindOption keybindOption = this.selectedKeybindWidget.option();
-            keybindOption.setValue(InputUtil.Type.MOUSE.createFromCode(button));
-            this.selectedKeybindWidget.updateButton();
-            this.selectedKeybindWidget = null;
+        if (this.selectedKeybindEntry != null) {
+            this.selectedKeybindEntry.option.value = InputUtil.Type.MOUSE.createFromCode(button);
+
+            this.selectedKeybindEntry = null;
+            this.configListWidget.updateKeybindEntries();
             return true;
         } else {
             return super.mouseClicked(mouseX, mouseY, button);
@@ -67,17 +67,15 @@ public class ConfigScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (this.selectedKeybindWidget != null) {
-            ConfigManager.KeybindOption keybindOption = this.selectedKeybindWidget.option();
-
+        if (this.selectedKeybindEntry != null) {
             if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-                keybindOption.setValue(InputUtil.UNKNOWN_KEY);
+                this.selectedKeybindEntry.option.value = InputUtil.UNKNOWN_KEY;
             } else {
-                keybindOption.setValue(InputUtil.fromKeyCode(keyCode, scanCode));
+                this.selectedKeybindEntry.option.value = InputUtil.fromKeyCode(keyCode, scanCode);
             }
 
-            this.selectedKeybindWidget.updateButton();
-            this.selectedKeybindWidget = null;
+            this.selectedKeybindEntry = null;
+            this.configListWidget.updateKeybindEntries();
             return true;
         } else {
             return super.keyPressed(keyCode, scanCode, modifiers);
@@ -86,7 +84,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void removed() {
-        ConfigManager.saveOptionValues();
+        Config.saveJson();
     }
 
     @Override
