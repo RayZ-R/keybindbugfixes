@@ -13,12 +13,12 @@ public abstract class HandledScreenMixin {
     @ModifyExpressionValue(method = "keyPressed",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;matchesKey(II)Z", ordinal = 1))
     private boolean disablePickItemKeyInInventory(boolean original) {
-        return Config.BugFixes.FIX_PICK_KEY_DRAGGING ? false : original;
+        return Config.FIX_PICK_KEY_DRAGGING.value ? false : original;
     }
 
     @Inject(method = "keyPressed", at = @At("TAIL"), cancellable = true)
     private void disablePickKeyDraggingInSearch(CallbackInfoReturnable<Boolean> callbackInfo) {
-        if (Config.BugFixes.FIX_PICK_KEY_DRAGGING) {
+        if (Config.FIX_PICK_KEY_DRAGGING.value) {
             callbackInfo.setReturnValue(false);
         }
     }

@@ -1,5 +1,7 @@
 package keybindbugfixes;
 
+import com.google.common.collect.Sets;
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -8,10 +10,64 @@ import java.util.List;
 import java.util.Set;
 
 public class MixinPlugin implements IMixinConfigPlugin {
+    public static final FabricLoader FABRIC_LOADER = FabricLoader.getInstance();
+    public static final Set<String> DISABLED_MIXINS = Sets.newHashSet();
+
+    public static boolean isDisabled(String mixin) {
+        boolean isDisabled = false;
+
+        for (String disabledMixin : MixinPlugin.DISABLED_MIXINS) {
+            if (mixin.equals(disabledMixin)) {
+                isDisabled = true;
+                break;
+            }
+        }
+
+        return isDisabled;
+    }
+
+    static {
+        boolean isRebindAllTheKeysLoaded = FABRIC_LOADER.isModLoaded("rebind_all_the_keys");
+        boolean isAmecsApiLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
+        boolean isCarpetLoaded = FABRIC_LOADER.isModLoaded("carpet");
+        boolean isNmukLoaded = FABRIC_LOADER.isModLoaded("nmuk");
+        boolean isRrlsLoaded = FABRIC_LOADER.isModLoaded("rrls");
+
+        if (isRebindAllTheKeysLoaded || isAmecsApiLoaded || isNmukLoaded) {
+            DISABLED_MIXINS.add("remove_keybind_conflicts");
+        }
+
+        if (isCarpetLoaded) {
+            DISABLED_MIXINS.add("drop_all_crafted_items");
+        }
+
+        if (isRebindAllTheKeysLoaded) {
+            DISABLED_MIXINS.add("rebind_debug_keys");
+        }
+
+        if (isRrlsLoaded) {
+            DISABLED_MIXINS.add("reload_resources_anywhere.MinecraftClientMixin");
+        }
+
+        if (!isAmecsApiLoaded) {
+            DISABLED_MIXINS.add("fix_modifier_sticky_key.KeyBindingMixin");
+        }
+    }
+
+    @Override
+    public void onLoad(String mixinPackage) {
+
+    }
+
+    @Override
+    public String getRefMapperConfig() {
+        return null;
+    }
+
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        for (String disabledMixinName : KeybindBugFixes.DISABLED_MIXIN_NAMES) {
-            if (mixinClassName.startsWith(KeybindBugFixes.MOD_ID + ".mixin." + disabledMixinName)) {
+        for (String mixin : DISABLED_MIXINS) {
+            if (mixinClassName.startsWith(KeybindBugFixes.MOD_ID + ".mixin." + mixin)) {
                 return false;
             }
         }
@@ -20,26 +76,22 @@ public class MixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    public void onLoad(String mixinPackage) {
-        KeybindBugFixes.preLoad();
-    }
+    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
 
-    @Override
-    public String getRefMapperConfig() {
-        return "";
     }
-
-    @Override
-    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {}
 
     @Override
     public List<String> getMixins() {
-        return List.of();
+        return null;
     }
 
     @Override
-    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
+    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+
+    }
 
     @Override
-    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
+    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+
+    }
 }

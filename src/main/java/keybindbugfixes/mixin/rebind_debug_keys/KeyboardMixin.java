@@ -17,12 +17,12 @@ public abstract class KeyboardMixin {
 
     @ModifyConstant(method = "onKey", constant = @Constant(intValue = GLFW.GLFW_KEY_F3))
     private int remapF3KeyBinding(int value) {
-        return ((InputUtil.Key) Config.Keybinds.DEBUG).getCode();
+        return Config.DEBUG_KEY.value.getCode();
     }
 
     @ModifyArg(method = "onKey",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Keyboard;processF3(I)Z"))
     private int remapF4KeyBinding(int key) {
-        return key == ((InputUtil.Key) Config.Keybinds.GAME_MODE_CYCLE).getCode() ? GLFW.GLFW_KEY_F4 : key;
+        return key == Config.GAME_MODE_CYCLE_KEY.value.getCode() ? GLFW.GLFW_KEY_F4 : key;
     }
 }

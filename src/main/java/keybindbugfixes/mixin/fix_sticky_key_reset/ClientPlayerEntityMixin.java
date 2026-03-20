@@ -11,6 +11,6 @@ public abstract class ClientPlayerEntityMixin {
     @WrapWithCondition(method = "requestRespawn",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;untoggleStickyKeys()V"))
     private boolean preventStickyKeysResetOnDeath() {
-        return !Config.BugFixes.FIX_STICKY_KEY_RESET;
+        return !Config.FIX_STICKY_KEY_RESET.value;
     }
 }

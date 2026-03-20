@@ -1,6 +1,6 @@
 package keybindbugfixes.mixin.fix_modifier_sticky_key;
 
-import keybindbugfixes.KeybindBugFixes;
+import keybindbugfixes.StickyKeyRevertMap;
 import keybindbugfixes.config.Config;
 import keybindbugfixes.mixin.StickyKeyBindingAccessor;
 import net.minecraft.client.option.StickyKeyBinding;
@@ -13,15 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class StickyKeyBindingMixin {
     @Inject(method = "setPressed", at = @At("HEAD"))
     private void updateStickyKeyRevertMap(boolean pressed, CallbackInfo callbackInfo) {
-        if (Config.BugFixes.FIX_MODIFIER_STICKY_KEY) {
+        if (Config.FIX_MODIFIER_STICKY_KEY.value) {
             StickyKeyBinding keyBinding = (StickyKeyBinding) (Object) this;
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) keyBinding;
 
             if (accessor.getToggleGetter().getAsBoolean()) {
                 if (pressed) {
-                    KeybindBugFixes.STICKY_KEY_REVERT_MAP.put(keyBinding, keyBinding.isPressed());
+                    StickyKeyRevertMap.MAP.put(keyBinding, keyBinding.isPressed());
                 } else {
-                    KeybindBugFixes.STICKY_KEY_REVERT_MAP.remove(keyBinding);
+                    StickyKeyRevertMap.MAP.remove(keyBinding);
                 }
             }
         }
