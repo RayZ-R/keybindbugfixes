@@ -8,9 +8,14 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin {
-    @WrapWithCondition(method = "requestRespawn",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;untoggleStickyKeys()V"))
-    private boolean preventStickyKeysResetOnDeath() {
+    @WrapWithCondition(
+            method = "requestRespawn",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/option/KeyBinding;untoggleStickyKeys()V"
+            )
+    )
+    private boolean preventUntoggleStickyKeysOnRespawn() {
         return !Config.FIX_STICKY_KEY_RESET.value;
     }
 }
