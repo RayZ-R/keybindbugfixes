@@ -19,6 +19,7 @@
     "rebind_debug_keys.GameModeSwitcherScreenMixin",
     "rebind_debug_keys.KeyboardMixin",
     "HandledScreenAccessor",
+    "KeyAccessor",
     "KeyBindingAccessor",
     "StickyKeyBindingAccessor"
   ],

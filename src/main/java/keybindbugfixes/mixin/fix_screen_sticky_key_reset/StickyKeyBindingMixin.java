@@ -9,11 +9,15 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(StickyKeyBinding.class)
 public abstract class StickyKeyBindingMixin {
-    @ModifyExpressionValue(method = "shouldRestoreOnScreenClose",
-            at = @At(value = "INVOKE",
+    @ModifyExpressionValue(
+            method = "shouldRestoreOnScreenClose",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lnet/minecraft/client/util/InputUtil$Key;" +
-                            "getCategory()Lnet/minecraft/client/util/InputUtil$Type;"))
-    private InputUtil.Type modifyInputType(InputUtil.Type original) {
+                            "getCategory()Lnet/minecraft/client/util/InputUtil$Type;"
+            )
+    )
+    private InputUtil.Type skipInputTypeCondition(InputUtil.Type original) {
         return Config.FIX_SCREEN_STICKY_KEY_RESET.value ? InputUtil.Type.KEYSYM : original;
     }
 }
