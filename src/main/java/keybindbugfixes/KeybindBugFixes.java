@@ -7,7 +7,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,7 @@ public class KeybindBugFixes implements ClientModInitializer {
         if (IS_REBIND_ALL_THE_KEYS_LOADED) {
             return ((KeyBindingAccessor) RebindAllTheKeys.RELOAD_RESOURCES).getBoundKey();
         } else {
-            return InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_T);
+            return InputUtil.Type.KEYSYM.createFromCode(InputUtil.GLFW_KEY_T);
         }
     }
 

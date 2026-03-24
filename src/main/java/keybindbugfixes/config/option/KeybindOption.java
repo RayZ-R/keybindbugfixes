@@ -2,6 +2,7 @@ package keybindbugfixes.config.option;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import keybindbugfixes.mixin.KeyAccessor;
 import net.minecraft.client.util.InputUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,6 +13,10 @@ public class KeybindOption extends Option<InputUtil.Key> {
                          @Nullable Integer bugNumber, @Nullable KeybindOption modifier) {
         super(key, mixin, defaultValue, bugNumber);
         this.modifier = modifier;
+    }
+
+    public InputUtil.Type type() {
+        return ((KeyAccessor) (Object) this.value).getType();
     }
 
     public boolean isUnbound() {

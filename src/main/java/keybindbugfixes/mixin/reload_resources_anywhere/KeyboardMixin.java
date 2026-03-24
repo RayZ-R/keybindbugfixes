@@ -21,14 +21,19 @@ public abstract class KeyboardMixin {
 
     @Shadow protected abstract void debugLog(String key);
 
-    @Inject(method = "onKey",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/util/InputUtil;isKeyPressed(JI)Z",
-                    shift = At.Shift.BY, by = 2,
-                    ordinal = 0),
-            cancellable = true)
-    private void handleReloadResourcesKeybind(long window, int keycode, int scancode, int action, int modifiers,
-                                              CallbackInfo callbackInfo, @Local boolean f3Pressed) {
+    @Inject(
+            method = "onKey",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/client/MinecraftClient;" +
+                            "currentScreen:Lnet/minecraft/client/gui/screen/Screen;",
+                    shift = At.Shift.AFTER,
+                    ordinal = 0
+            ),
+            cancellable = true
+    )
+    private void handleReloadResourcesKey(long window, int keycode, int scancode, int action, int modifiers,
+                                          CallbackInfo callbackInfo, @Local boolean f3Pressed) {
         InputUtil.Key key = InputUtil.fromKeyCode(keycode, scancode);
 
         if (Config.RELOAD_RESOURCES_ANYWHERE.value

@@ -8,7 +8,6 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 public class ConfigScreen extends Screen {
     private static final Text TITLE_TEXT = Text.translatable(KeybindBugFixes.MOD_ID + ".config.title");
@@ -66,19 +65,19 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(int keycode, int scancode, int modifiers) {
         if (this.selectedKeybindEntry != null) {
-            if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            if (keycode == InputUtil.GLFW_KEY_ESCAPE) {
                 this.selectedKeybindEntry.option.value = InputUtil.UNKNOWN_KEY;
             } else {
-                this.selectedKeybindEntry.option.value = InputUtil.fromKeyCode(keyCode, scanCode);
+                this.selectedKeybindEntry.option.value = InputUtil.fromKeyCode(keycode, scancode);
             }
 
             this.selectedKeybindEntry = null;
             this.configListWidget.updateKeybindEntries();
             return true;
         } else {
-            return super.keyPressed(keyCode, scanCode, modifiers);
+            return super.keyPressed(keycode, scancode, modifiers);
         }
     }
 
