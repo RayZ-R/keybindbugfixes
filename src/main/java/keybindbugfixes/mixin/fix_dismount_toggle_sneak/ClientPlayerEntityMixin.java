@@ -21,10 +21,16 @@ public abstract class ClientPlayerEntityMixin {
 
     @Unique private boolean keybindbugfixes$overrideSneakingPacket = false;
 
-    @Inject(method = "tick",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/network/ClientPlayerEntity;" +
-                            "getRootVehicle()Lnet/minecraft/entity/Entity;"))
+    @Inject(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;" +
+                            "sendPacket(Lnet/minecraft/network/packet/Packet;)V",
+                    shift = At.Shift.AFTER,
+                    ordinal = 1
+            )
+    )
     private void untoggleSneakKeyOnDismount(CallbackInfo callbackInfo) {
         if (Config.FIX_DISMOUNT_TOGGLE_SNEAK.value && this.isSneaking()) {
             KeyBinding sneakKeyBinding = this.client.options.sneakKey;
@@ -38,14 +44,18 @@ public abstract class ClientPlayerEntityMixin {
     }
 
     @Inject(method = "dismountVehicle", at = @At("HEAD"))
-    private void dismountVehicle(CallbackInfo callbackInfo) {
+    private void stopOverridingPacket(CallbackInfo callbackInfo) {
         this.keybindbugfixes$overrideSneakingPacket = false;
     }
 
-    @ModifyArg(method = "tick",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/network/packet/c2s/play/PlayerInputC2SPacket;<init>(FFZZ)V"),
-            index = 3)
+    @ModifyArg(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/network/packet/c2s/play/PlayerInputC2SPacket;<init>(FFZZ)V"
+            ),
+            index = 3
+    )
     private boolean overrideSneakingPacket(boolean original) {
         return this.keybindbugfixes$overrideSneakingPacket ? true : original;
     }

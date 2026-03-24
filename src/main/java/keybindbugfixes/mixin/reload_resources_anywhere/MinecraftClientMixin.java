@@ -9,10 +9,14 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
-    @ModifyExpressionValue(method = "startIntegratedServer",
-            at = @At(value = "FIELD",
+    @ModifyExpressionValue(
+            method = "startIntegratedServer",
+            at = @At(
+                    value = "FIELD",
                     target = "Lnet/minecraft/client/MinecraftClient;" +
-                            "overlay:Lnet/minecraft/client/gui/screen/Overlay;"))
+                            "overlay:Lnet/minecraft/client/gui/screen/Overlay;"
+            )
+    )
     public Overlay preventInfiniteLoading(Overlay original) {
         return Config.RELOAD_RESOURCES_ANYWHERE.value ? null : original;
     }

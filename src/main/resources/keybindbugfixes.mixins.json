@@ -24,6 +24,7 @@
     "reload_resources_anywhere.MinecraftClientMixin",
     "remove_keybind_conflicts.KeyBindingMixin",
     "HandledScreenAccessor",
+    "KeyAccessor",
     "KeyBindingAccessor",
     "StickyKeyBindingAccessor"
   ],
