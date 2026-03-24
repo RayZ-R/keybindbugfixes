@@ -20,47 +20,56 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
     @Shadow @Final private MinecraftClient client;
-    @Unique private boolean keybindbugfixes$modifySneakInput = false;
+
+    @Unique private boolean keybindbugfixes$overrideInputPacket = false;
 
     public ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
     }
 
-    @Inject(method = "tick",
-            at = @At(value = "INVOKE",
+    @Inject(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;" +
                             "sendPacket(Lnet/minecraft/network/packet/Packet;)V",
                     shift = At.Shift.AFTER,
-                    ordinal = 0))
+                    ordinal = 0
+            )
+    )
     private void untoggleSneakKeyOnDismount(CallbackInfo callbackInfo) {
         if (keybindbugfixes.config.Config.FIX_DISMOUNT_TOGGLE_SNEAK.value && this.hasVehicle() && this.isSneaking()) {
             KeyBinding sneakKeyBinding = this.client.options.sneakKey;
             StickyKeyBindingAccessor accessor = (StickyKeyBindingAccessor) sneakKeyBinding;
 
             if (accessor.getToggleGetter().getAsBoolean()) {
-                this.keybindbugfixes$modifySneakInput = true;
+                this.keybindbugfixes$overrideInputPacket = true;
                 sneakKeyBinding.setPressed(true);
             }
         }
     }
 
     @Inject(method = "dismountVehicle", at = @At("HEAD"))
-    private void dismountVehicle(CallbackInfo callbackInfo) {
-        this.keybindbugfixes$modifySneakInput = false;
+    private void stopOverridingPacket(CallbackInfo callbackInfo) {
+        this.keybindbugfixes$overrideInputPacket = false;
     }
 
-    @ModifyArg(method = "tick",
-            at = @At(value = "INVOKE",
+    @ModifyArg(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lnet/minecraft/network/packet/c2s/play/PlayerInputC2SPacket;" +
-                            "<init>(Lnet/minecraft/util/PlayerInput;)V"))
-    private PlayerInput modifyInputPacket(PlayerInput input) {
+                            "<init>(Lnet/minecraft/util/PlayerInput;)V"
+            )
+    )
+    private PlayerInput overrideInputPacket(PlayerInput input) {
         return new PlayerInput(
                 input.forward(),
                 input.backward(),
                 input.left(),
                 input.right(),
                 input.jump(),
-                this.keybindbugfixes$modifySneakInput ? true : input.sneak(),
+                this.keybindbugfixes$overrideInputPacket ? true : input.sneak(),
                 input.sprint()
         );
     }
