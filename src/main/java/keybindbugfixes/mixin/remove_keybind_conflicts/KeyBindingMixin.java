@@ -70,8 +70,10 @@ public abstract class KeyBindingMixin {
         }
     }
 
-    @Inject(method = "<init>(Ljava/lang/String;Lnet/minecraft/client/util/InputUtil$Type;ILjava/lang/String;)V",
-            at = @At("RETURN"))
+    @Inject(
+            method = "<init>(Ljava/lang/String;Lnet/minecraft/client/util/InputUtil$Type;ILjava/lang/String;)V",
+            at = @At("RETURN")
+    )
     private void addKeyBinding(CallbackInfo callbackInfo) {
         KeyBinding keyBinding = (KeyBinding) (Object) this;
         keybindbugfixes$putKeyBinding(this.boundKey, keyBinding);

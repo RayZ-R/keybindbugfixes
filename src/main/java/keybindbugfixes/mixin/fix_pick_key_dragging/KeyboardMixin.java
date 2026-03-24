@@ -1,5 +1,7 @@
 package keybindbugfixes.mixin.fix_pick_key_dragging;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.Config;
@@ -14,20 +16,25 @@ import net.minecraft.screen.slot.SlotActionType;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Keyboard.class)
 public abstract class KeyboardMixin {
-    @Redirect(method = "onKey",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(III)Z"))
-    private static boolean startPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers, @Local(ordinal = 2) int action) {
-        boolean processed = screen.keyPressed(keyCode, scanCode, modifiers);
+    @WrapOperation(
+            method = "onKey",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(III)Z"
+            )
+    )
+    private static boolean startPickKeyDragging(Screen screen, int keycode, int scancode, int modifiers,
+                                                Operation<Boolean> original, @Local(ordinal = 0) int action) {
+        boolean processed = original.call(screen, keycode, scancode, modifiers);
 
         if (screen instanceof HandledScreen<?> handledScreen && Config.FIX_PICK_KEY_DRAGGING.value && !processed) {
             MinecraftClient client = MinecraftClient.getInstance();
             boolean inCreative = client.player.isInCreativeMode();
 
-            if (client.options.pickItemKey.matchesKey(keyCode, scanCode) && action == GLFW.GLFW_PRESS && inCreative) {
+            if (client.options.pickItemKey.matchesKey(keycode, scancode) && action == GLFW.GLFW_PRESS && inCreative) {
                 HandledScreenAccessor screenAccessor = ((HandledScreenAccessor) handledScreen);
 
                 screenAccessor.setCancelNextRelease(false);
@@ -54,15 +61,21 @@ public abstract class KeyboardMixin {
         return processed;
     }
 
-    @Redirect(method = "onKey",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyReleased(III)Z"))
-    private static boolean stopPickKeyDragging(Screen screen, int keyCode, int scanCode, int modifiers) {
-        boolean processed = screen.keyReleased(keyCode, scanCode, modifiers);
+    @WrapOperation(
+            method = "onKey",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/screen/Screen;keyReleased(III)Z"
+            )
+    )
+    private static boolean stopPickKeyDragging(Screen screen, int keycode, int scancode, int modifiers,
+                                               Operation<Boolean> original) {
+        boolean processed = original.call(screen, keycode, scancode, modifiers);
 
         if (screen instanceof HandledScreen<?> handledScreen && Config.FIX_PICK_KEY_DRAGGING.value) {
             MinecraftClient client = MinecraftClient.getInstance();
 
-            if (client.options.pickItemKey.matchesKey(keyCode, scanCode)) {
+            if (client.options.pickItemKey.matchesKey(keycode, scancode)) {
                 HandledScreenAccessor screenAccessor = ((HandledScreenAccessor) handledScreen);
 
                 KeybindBugFixes.draggingPickKey = false;

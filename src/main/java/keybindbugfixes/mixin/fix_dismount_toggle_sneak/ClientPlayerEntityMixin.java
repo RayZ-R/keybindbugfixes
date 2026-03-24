@@ -1,5 +1,7 @@
 package keybindbugfixes.mixin.fix_dismount_toggle_sneak;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.authlib.GameProfile;
 import keybindbugfixes.config.Config;
 import keybindbugfixes.mixin.StickyKeyBindingAccessor;
@@ -14,7 +16,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
@@ -27,12 +28,16 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         super(world, profile);
     }
 
-    @Inject(method = "tick",
-            at = @At(value = "INVOKE",
+    @Inject(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;" +
                             "sendPacket(Lnet/minecraft/network/packet/Packet;)V",
                     shift = At.Shift.AFTER,
-                    ordinal = 0))
+                    ordinal = 0
+            )
+    )
     private void untoggleSneakKeyOnDismount(CallbackInfo callbackInfo) {
         if (Config.FIX_DISMOUNT_TOGGLE_SNEAK.value && this.hasVehicle() && this.isSneaking()) {
             KeyBinding sneakKeyBinding = this.client.options.sneakKey;
@@ -46,13 +51,18 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     }
 
     @Inject(method = "dismountVehicle", at = @At("HEAD"))
-    private void dismountVehicle(CallbackInfo callbackInfo) {
+    private void stopOverridingPacket(CallbackInfo callbackInfo) {
         this.keybindbugfixes$overrideSneakingPacket = false;
     }
 
-    @Redirect(method = "sendSneakingPacket",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSneaking()Z"))
-    private boolean overrideSneakingPacket(ClientPlayerEntity clientPlayerEntity) {
-        return this.keybindbugfixes$overrideSneakingPacket ? true : this.isSneaking();
+    @WrapOperation(
+            method = "sendSneakingPacket",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSneaking()Z"
+            )
+    )
+    private boolean overrideSneakingPacket(ClientPlayerEntity clientPlayerEntity, Operation<Boolean> original) {
+        return this.keybindbugfixes$overrideSneakingPacket ? true : original.call(clientPlayerEntity);
     }
 }

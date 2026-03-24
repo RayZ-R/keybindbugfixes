@@ -10,12 +10,16 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class ClientPlayNetworkHandlerMixin {
-    @WrapWithCondition(method = "onPlayerRespawn",
-            at = @At(value = "INVOKE",
+    @WrapWithCondition(
+            method = "onPlayerRespawn",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;" +
-                            "setGameModes(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V"))
-    private boolean preventGameModeSwitcherResetOnDeath(ClientPlayerInteractionManager interactionManager,
-                                                        GameMode gameMode, GameMode previousGameMode) {
+                            "setGameModes(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V"
+            )
+    )
+    private boolean preventLastGameModeResetOnRespawn(ClientPlayerInteractionManager interactionManager,
+                                                      GameMode gameMode, GameMode lastGameMode) {
         return !Config.FIX_GAME_MODE_SWITCHER_RESET.value;
     }
 }
