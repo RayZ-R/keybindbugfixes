@@ -31,25 +31,25 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ConfigListWidget extends ElementListWidget<Entry> {
-    private static final Identifier RESET_BUTTON_ICON
-            = new Identifier(KeybindBugFixes.MOD_ID, "icon/reset");
+    private static final Identifier RESET_ICON =
+            new Identifier(KeybindBugFixes.MOD_ID, "icon/reset");
 
-    private static final Identifier LINK_BUTTON_ICON
-            = new Identifier(KeybindBugFixes.MOD_ID, "icon/link");
+    private static final Identifier LINK_ICON =
+            new Identifier(KeybindBugFixes.MOD_ID, "icon/link");
 
-    private static final Text RESET_BUTTON_TEXT =
+    private static final Text RESET_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.reset");
 
-    private static final Text LINK_BUTTON_TEXT =
+    private static final Text LINK_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.link");
 
-    private static final Text BUGFIXES_CATEGORY_TEXT =
+    private static final Text BUGFIXES_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.category.bugfixes");
 
-    private static final Text TWEAKS_CATEGORY_TEXT =
+    private static final Text TWEAKS_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.category.tweaks");
 
-    private static final Text KEYBINDS_CATEGORY_TEXT =
+    private static final Text KEYBINDS_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.category.keybinds");
 
     private final ConfigScreen parent;
@@ -78,7 +78,7 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         super(client, parent.width, parent.layout.getContentHeight(), parent.layout.getHeaderHeight(), 24);
         this.parent = parent;
 
-        this.addCategoryEntry(BUGFIXES_CATEGORY_TEXT);
+        this.addCategoryEntry(BUGFIXES_TEXT);
         this.addOptionEntry(Config.FIX_PRESSING_F3_TWICE);
         this.addOptionEntry(Config.FIX_GAME_MODE_SWITCHER_RESET);
         this.addOptionEntry(Config.FIX_STICKY_KEY_RESET);
@@ -86,13 +86,13 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         this.addOptionEntry(Config.FIX_DISMOUNT_TOGGLE_SNEAK);
         this.addOptionEntry(Config.FIX_MODIFIER_STICKY_KEY);
 
-        this.addCategoryEntry(TWEAKS_CATEGORY_TEXT);
+        this.addCategoryEntry(TWEAKS_TEXT);
         this.addOptionEntry(Config.DROP_ALL_CRAFTED_ITEMS);
         this.addOptionEntry(Config.DROP_WHEN_HOLDING_ITEM);
         this.addOptionEntry(Config.REMOVE_KEYBIND_CONFLICTS);
         this.addOptionEntry(Config.RELOAD_RESOURCES_ANYWHERE);
 
-        this.addCategoryEntry(KEYBINDS_CATEGORY_TEXT);
+        this.addCategoryEntry(KEYBINDS_TEXT);
         this.addOptionEntry(Config.DEBUG_KEY);
         this.addOptionEntry(Config.GAME_MODE_CYCLE_KEY);
     }
@@ -213,9 +213,9 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
                     .narrationSupplier(this.narrationSupplier())
                     .build();
 
-            this.resetButton = TextIconButtonWidget.builder(RESET_BUTTON_TEXT, this::resetClicked, true)
+            this.resetButton = TextIconButtonWidget.builder(RESET_TEXT, this::resetClicked, true)
                     .width(20)
-                    .texture(RESET_BUTTON_ICON, 16, 16)
+                    .texture(RESET_ICON, 16, 16)
                     .build();
 
             List<ButtonWidget> rightWidgets = Lists.newArrayList();
@@ -225,9 +225,9 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
                     ConfirmLinkScreen.open(ConfigListWidget.this.parent, this.option.link);
                 };
 
-                ButtonWidget linkButton = TextIconButtonWidget.builder(LINK_BUTTON_TEXT, onPress, true)
+                ButtonWidget linkButton = TextIconButtonWidget.builder(LINK_TEXT, onPress, true)
                         .width(20)
-                        .texture(LINK_BUTTON_ICON, 16, 16)
+                        .texture(LINK_ICON, 16, 16)
                         .build();
 
                 rightWidgets.add(linkButton);
