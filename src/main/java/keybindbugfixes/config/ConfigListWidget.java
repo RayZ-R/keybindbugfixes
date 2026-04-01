@@ -31,22 +31,22 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ConfigListWidget extends ElementListWidget<Entry> {
-    private static final Identifier RESET_BUTTON_ICON
+    private static final Identifier RESET_ICON
             = Identifier.of(KeybindBugFixes.MOD_ID, "icon/reset");
 
-    private static final Identifier LINK_BUTTON_ICON
+    private static final Identifier LINK_ICON
             = Identifier.of(KeybindBugFixes.MOD_ID, "icon/link");
 
-    private static final Text RESET_BUTTON_TEXT =
+    private static final Text RESET_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.reset");
 
-    private static final Text LINK_BUTTON_TEXT =
+    private static final Text LINK_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.link");
 
-    private static final Text BUGFIXES_CATEGORY_TEXT =
+    private static final Text BUGFIXES_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.category.bugfixes");
 
-    private static final Text TWEAKS_CATEGORY_TEXT =
+    private static final Text TWEAKS_TEXT =
             Text.translatable(KeybindBugFixes.MOD_ID + ".config.category.tweaks");
 
     private final ConfigScreen parent;
@@ -75,14 +75,14 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         super(client, parent.width, parent.layout.getContentHeight(), parent.layout.getHeaderHeight(), 24);
         this.parent = parent;
 
-        this.addCategoryEntry(BUGFIXES_CATEGORY_TEXT);
+        this.addCategoryEntry(BUGFIXES_TEXT);
         this.addOptionEntry(Config.FIX_PICK_KEY_DRAGGING);
         this.addOptionEntry(Config.FIX_DISMOUNT_TOGGLE_SNEAK);
         this.addOptionEntry(Config.FIX_SCREEN_STICKY_KEY_RESET);
         this.addOptionEntry(Config.FIX_MODIFIER_STICKY_KEY);
         this.addOptionEntry(Config.FIX_REBIND_TO_F3);
 
-        this.addCategoryEntry(TWEAKS_CATEGORY_TEXT);
+        this.addCategoryEntry(TWEAKS_TEXT);
         this.addOptionEntry(Config.DROP_WHEN_HOLDING_ITEM);
     }
 
@@ -109,7 +109,7 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         }
 
         @Override
-        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickProgress) {
             context.drawCenteredTextWithShadow(
                     ConfigListWidget.this.client.textRenderer,
                     this.label,
@@ -161,7 +161,7 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         }
 
         @Override
-        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickProgress) {
             int textWidth = this.getContentWidth() - BUTTONS_WIDTH - GAP_WIDTH;
 
             TextRenderer textRenderer = ConfigListWidget.this.client.textRenderer;
@@ -176,7 +176,7 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
             int widgetPosX = this.getContentRightEnd() - BUTTONS_WIDTH;
             for (ButtonWidget widget : this.widgets) {
                 widget.setPosition(widgetPosX, this.getContentY());
-                widget.render(context, mouseX, mouseY, deltaTicks);
+                widget.render(context, mouseX, mouseY, tickProgress);
                 widgetPosX += widget.getWidth() + GAP_WIDTH;
             }
 
@@ -221,9 +221,9 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
                     .narrationSupplier(this.narrationSupplier())
                     .build();
 
-            this.resetButton = TextIconButtonWidget.builder(RESET_BUTTON_TEXT, this::resetClicked, true)
+            this.resetButton = TextIconButtonWidget.builder(RESET_TEXT, this::resetClicked, true)
                     .width(20)
-                    .texture(RESET_BUTTON_ICON, 16, 16)
+                    .texture(RESET_ICON, 16, 16)
                     .build();
 
             List<ButtonWidget> rightWidgets = Lists.newArrayList();
@@ -233,9 +233,9 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
                     ConfirmLinkScreen.open(ConfigListWidget.this.parent, this.option.link);
                 };
 
-                ButtonWidget linkButton = TextIconButtonWidget.builder(LINK_BUTTON_TEXT, onPress, true)
+                ButtonWidget linkButton = TextIconButtonWidget.builder(LINK_TEXT, onPress, true)
                         .width(20)
-                        .texture(LINK_BUTTON_ICON, 16, 16)
+                        .texture(LINK_ICON, 16, 16)
                         .build();
 
                 rightWidgets.add(linkButton);
