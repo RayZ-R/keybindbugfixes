@@ -10,22 +10,20 @@
 
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging": "Fix pick key dragging in inventory",
   "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak": "Fix toggle sneak state on dismount",
-  "keybindbugfixes.config.bugfix.fix_modifier_sticky_key": "Fix toggle key state when used as a modifier",
   "keybindbugfixes.config.bugfix.fix_screen_sticky_key_reset": "Fix toggle key resetting when viewing any screen",
+  "keybindbugfixes.config.bugfix.fix_modifier_sticky_key": "Fix toggle key state when used as a modifier",
   "keybindbugfixes.config.bugfix.fix_rebind_to_f3": "Fix toggle debug screen when rebinding F3",
 
   "keybindbugfixes.config.tweak.drop_when_holding_item": "Drop when holding an item",
-  "keybindbugfixes.config.tweak.reload_resources_anywhere": "Reload resources anywhere",
-  "keybindbugfixes.config.tweak.remove_keybind_conflicts": "Remove keybind conflicts",
 
   "keybindbugfixes.config.key.debug": "Debug Screen",
   "keybindbugfixes.config.key.game_mode_cycle": "Game Mode Switcher",
 
   "keybindbugfixes.config.bugfix.fix_pick_key_dragging.description": "Pick block changed to a keyboard key doesn't fill inventory slots when dragged",
   "keybindbugfixes.config.bugfix.fix_dismount_toggle_sneak.description": "Player starts sneaking when dismounting if \"Sneak\" is set to \"Toggle\" in accessibility settings",
+  "keybindbugfixes.config.bugfix.fix_screen_sticky_key_reset.description": "Toggle key state resets when viewing any screen if the key is set to a mouse button",
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key.description": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles key bindings bound to Left Control",
-  "keybindbugfixes.config.bugfix.fix_screen_sticky_key_reset.tooltip": "Toggle key state resets when viewing any screen if the key is set to a mouse button",
-  "keybindbugfixes.config.bugfix.fix_rebind_to_f3.tooltip": "When rebinding a keybind to F3 debug screen is toggled",
+  "keybindbugfixes.config.bugfix.fix_rebind_to_f3.description": "When rebinding a keybind to F3 debug screen is toggled",
 
   "keybindbugfixes.config.tweak.drop_when_holding_item.description": "When holding an item, pressing Q over another item doesn't drop it",
 
