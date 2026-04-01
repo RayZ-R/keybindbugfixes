@@ -25,19 +25,22 @@ public class ConfigScreen extends Screen {
 
     @Override
     protected void init() {
-        this.configListWidget = this.addDrawableChild(new ConfigListWidget(this, this.client));
-
         this.initHeader();
+        this.initBody();
         this.initFooter();
         this.layout.forEachChild(this::addDrawableChild);
         this.refreshWidgetPositions();
     }
 
-    protected void initHeader() {
+    private void initHeader() {
         this.layout.addHeader(this.title, this.textRenderer);
     }
 
-    protected void initFooter() {
+    private void initBody() {
+        this.configListWidget = this.layout.addBody(new ConfigListWidget(this, this.client));
+    }
+
+    private void initFooter() {
         ButtonWidget buttonWidget = ButtonWidget.builder(ScreenTexts.DONE, button -> this.close())
                 .width(200)
                 .build();
