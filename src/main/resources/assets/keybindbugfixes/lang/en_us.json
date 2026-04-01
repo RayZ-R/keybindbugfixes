@@ -16,8 +16,8 @@
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key": "Fix toggle key state when used as a modifier",
 
   "keybindbugfixes.config.tweak.drop_when_holding_item": "Drop when holding an item",
-  "keybindbugfixes.config.tweak.reload_resources_anywhere": "Reload resources anywhere",
   "keybindbugfixes.config.tweak.remove_keybind_conflicts": "Remove keybind conflicts",
+  "keybindbugfixes.config.tweak.reload_resources_anywhere": "Reload resources anywhere",
 
   "keybindbugfixes.config.key.debug": "Debug Screen",
   "keybindbugfixes.config.key.game_mode_cycle": "Game Mode Switcher",
@@ -30,8 +30,8 @@
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key.description": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles key bindings bound to Left Control",
 
   "keybindbugfixes.config.tweak.drop_when_holding_item.description": "When holding an item, pressing Q over another item doesn't drop it",
-  "keybindbugfixes.config.tweak.reload_resources_anywhere.description": "The F3 + T shortcut to reload resources does not work in the main menus",
   "keybindbugfixes.config.tweak.remove_keybind_conflicts.description": "Removes keybind conflicts so multiple keybinds can be bound to the same key",
+  "keybindbugfixes.config.tweak.reload_resources_anywhere.description": "The F3 + T shortcut to reload resources does not work in the main menus",
 
   "keybindbugfixes.config.key.debug.description": "",
   "keybindbugfixes.config.key.game_mode_cycle.description": "",
