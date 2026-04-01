@@ -16,7 +16,7 @@ public interface ElementMixin {
         if (this instanceof HandledScreen<?> handledScreen
                 && Config.FIX_PICK_KEY_DRAGGING.value
                 && KeybindBugFixes.draggingPickKey) {
-            handledScreen.mouseDragged(mouseX, mouseY, 2, 0, 0);
+            handledScreen.mouseDragged(mouseX, mouseY, -1, 0, 0);
         }
     }
 }

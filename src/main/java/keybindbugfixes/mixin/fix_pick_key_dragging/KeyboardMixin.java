@@ -27,7 +27,7 @@ public abstract class KeyboardMixin {
             )
     )
     private static boolean startPickKeyDragging(Screen screen, int keycode, int scancode, int modifiers,
-                                                Operation<Boolean> original, @Local(ordinal = 0) int action) {
+                                                Operation<Boolean> original, @Local(ordinal = 2) int action) {
         boolean processed = original.call(screen, keycode, scancode, modifiers);
 
         if (screen instanceof HandledScreen<?> handledScreen && Config.FIX_PICK_KEY_DRAGGING.value && !processed) {
