@@ -28,7 +28,7 @@ public abstract class KeyboardMixin {
 
     @ModifyConstant(method = "onKey", constant = @Constant(intValue = InputUtil.GLFW_KEY_F3))
     private int remapF3Key(int value) {
-        if (Config.DEBUG_KEY.type() == InputUtil.Type.MOUSE) {
+        if (Config.DEBUG_KEY.value.getCategory() == InputUtil.Type.MOUSE) {
             return GLFW.GLFW_KEY_UNKNOWN;
         }
 

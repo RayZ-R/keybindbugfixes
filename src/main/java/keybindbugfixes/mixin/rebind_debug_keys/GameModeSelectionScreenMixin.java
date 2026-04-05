@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public abstract class GameModeSelectionScreenMixin {
     @ModifyConstant(method = "checkForClose", constant = @Constant(intValue = InputUtil.GLFW_KEY_F3))
     private int remapCloseKey(int value) {
-        if (Config.DEBUG_KEY.type() == InputUtil.Type.MOUSE) {
+        if (Config.DEBUG_KEY.value.getCategory() == InputUtil.Type.MOUSE) {
             return GLFW.GLFW_KEY_UNKNOWN;
         }
 
@@ -21,7 +21,7 @@ public abstract class GameModeSelectionScreenMixin {
 
     @ModifyConstant(method = "keyPressed", constant = @Constant(intValue = InputUtil.GLFW_KEY_F4))
     private int remapCycleKey(int value) {
-        if (Config.GAME_MODE_CYCLE_KEY.type() == InputUtil.Type.MOUSE) {
+        if (Config.GAME_MODE_CYCLE_KEY.value.getCategory() == InputUtil.Type.MOUSE) {
             return GLFW.GLFW_KEY_UNKNOWN;
         }
 
