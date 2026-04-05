@@ -17,7 +17,6 @@
     "fix_rebind_to_f3.KeybindsScreenMixin",
     "fix_screen_sticky_key_reset.StickyKeyBindingMixin",
     "HandledScreenAccessor",
-    "KeyAccessor",
     "KeyBindingAccessor",
     "StickyKeyBindingAccessor"
   ],
