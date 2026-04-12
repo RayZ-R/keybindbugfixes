@@ -3,17 +3,17 @@ package keybindbugfixes.mixin.fix_pick_key_dragging;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import keybindbugfixes.config.Config;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(HandledScreen.class)
-public abstract class HandledScreenMixin {
+@Mixin(AbstractContainerScreen.class)
+public abstract class AbstractContainerScreenMixin {
     @ModifyExpressionValue(
             method = "keyPressed",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/option/KeyBinding;matchesKey(II)Z",
+                    target = "Lnet/minecraft/client/KeyMapping;matches(II)Z",
                     ordinal = 1
             )
     )
