@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.*;
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.option.BooleanOption;
-import keybindbugfixes.config.option.KeybindOption;
+import keybindbugfixes.config.option.KeyOption;
 import keybindbugfixes.config.option.Option;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class Config {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final List<Option<?>> OPTIONS = Lists.newArrayList();
-    public static final List<KeybindOption> KEYBIND_OPTIONS = Lists.newArrayList();
+    public static final List<KeyOption> KEY_OPTIONS = Lists.newArrayList();
 
     public static final BooleanOption FIX_PICK_KEY_DRAGGING = new BooleanOption(
             "bugfix.fix_pick_key_dragging",
@@ -62,7 +62,7 @@ public class Config {
             null
     );
 
-    public static final KeybindOption DEBUG_KEY = new KeybindOption(
+    public static final KeyOption DEBUG_KEY = new KeyOption(
             "key.debug",
             "rebind_debug_keys",
             "key.keyboard.f3",
@@ -70,7 +70,7 @@ public class Config {
             null
     );
 
-    public static final KeybindOption GAME_MODE_CYCLE_KEY = new KeybindOption(
+    public static final KeyOption GAME_MODE_CYCLE_KEY = new KeyOption(
             "key.game_mode_cycle",
             "rebind_debug_keys",
             "key.keyboard.f4",
@@ -86,8 +86,8 @@ public class Config {
                 Option<?> option = (Option<?>) field.get(null);
                 OPTIONS.add(option);
 
-                if (option instanceof KeybindOption keybindOption) {
-                    KEYBIND_OPTIONS.add(keybindOption);
+                if (option instanceof KeyOption keyOption) {
+                    KEY_OPTIONS.add(keyOption);
                 }
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

@@ -1,31 +1,32 @@
 package keybindbugfixes.mixin.fix_rebind_to_f3;
 
 import keybindbugfixes.config.Config;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.text.Text;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(KeybindsScreen.class)
-public abstract class KeybindsScreenMixin extends GameOptionsScreen {
+@Mixin(KeyBindsScreen.class)
+public abstract class KeyBindsScreenMixin extends OptionsSubScreen {
     @Unique private boolean keybindbugfixes$skipNextKeyRelease = false;
 
-    public KeybindsScreenMixin(Screen parent, GameOptions gameOptions, Text title) {
-        super(parent, gameOptions, title);
+    public KeyBindsScreenMixin(Screen lastScreen, Options options, Component title) {
+        super(lastScreen, options, title);
     }
 
     @Inject(
             method = "keyPressed",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/option/ControlsListWidget;update()V",
+                    target = "Lnet/minecraft/client/gui/screens/options/controls/KeyBindsList;" +
+                            "resetMappingAndUpdateButtons()V",
                     shift = At.Shift.AFTER
             )
     )
@@ -36,12 +37,12 @@ public abstract class KeybindsScreenMixin extends GameOptionsScreen {
     }
 
     @Override
-    public boolean keyReleased(KeyInput input) {
+    public boolean keyReleased(KeyEvent event) {
         if (this.keybindbugfixes$skipNextKeyRelease) {
             this.keybindbugfixes$skipNextKeyRelease = false;
             return true;
         } else {
-            return super.keyReleased(input);
+            return super.keyReleased(event);
         }
     }
 }
