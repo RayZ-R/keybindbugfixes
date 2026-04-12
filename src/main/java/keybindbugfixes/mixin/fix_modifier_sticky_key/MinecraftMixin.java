@@ -1,33 +1,33 @@
 package keybindbugfixes.mixin.fix_modifier_sticky_key;
 
-import keybindbugfixes.StickyKeyStates;
+import keybindbugfixes.ToggleKeyStates;
 import keybindbugfixes.config.Config;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftClient.class)
-public abstract class MinecraftClientMixin {
+@Mixin(Minecraft.class)
+public abstract class MinecraftMixin {
     @Inject(
-            method = "handleInputEvents",
+            method = "handleKeybinds",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/Screen;hasControlDown()Z"
+                    target = "Lnet/minecraft/client/gui/screens/Screen;hasControlDown()Z"
             )
     )
     private void revertDropStackModifierKey(CallbackInfo callbackInfo) {
         if (Config.FIX_MODIFIER_STICKY_KEY.value) {
-            StickyKeyStates.revertDropStackModifier();
+            ToggleKeyStates.revertDropStackModifier();
         }
     }
 
-    @Inject(method = "doItemPick", at = @At(value = "HEAD"))
+    @Inject(method = "pickBlock", at = @At(value = "HEAD"))
     private void revertPickBlockWithNbtModifierKey(CallbackInfo callbackInfo) {
         if (Config.FIX_MODIFIER_STICKY_KEY.value && Screen.hasControlDown()) {
-            StickyKeyStates.revertControlModifier();
+            ToggleKeyStates.revertControl();
         }
     }
 }

@@ -2,19 +2,19 @@ package keybindbugfixes.mixin.reload_resources_anywhere;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import keybindbugfixes.config.Config;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Overlay;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Overlay;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(MinecraftClient.class)
-public abstract class MinecraftClientMixin {
+@Mixin(Minecraft.class)
+public abstract class MinecraftMixin {
     @ModifyExpressionValue(
-            method = "startIntegratedServer",
+            method = "doWorldLoad",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/MinecraftClient;" +
-                            "overlay:Lnet/minecraft/client/gui/screen/Overlay;"
+                    target = "Lnet/minecraft/client/Minecraft;" +
+                            "overlay:Lnet/minecraft/client/gui/screens/Overlay;"
             )
     )
     public Overlay preventInfiniteLoading(Overlay original) {
