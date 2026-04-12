@@ -41,11 +41,11 @@ public class MixinPlugin implements IMixinConfigPlugin {
         }
 
         if (isRrlsLoaded) {
-            DISABLED_MIXINS.add("reload_resources_anywhere.MinecraftClientMixin");
+            DISABLED_MIXINS.add("reload_resources_anywhere.MinecraftMixin");
         }
 
         if (!isAmecsApiLoaded) {
-            DISABLED_MIXINS.add("fix_modifier_sticky_key.KeyBindingMixin");
+            DISABLED_MIXINS.add("fix_modifier_sticky_key.KeyMappingMixin");
         }
     }
 

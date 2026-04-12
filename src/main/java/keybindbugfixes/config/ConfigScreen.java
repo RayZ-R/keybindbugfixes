@@ -1,66 +1,66 @@
 package keybindbugfixes.config;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import keybindbugfixes.KeybindBugFixes;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class ConfigScreen extends Screen {
-    private static final Text TITLE_TEXT = Text.translatable(KeybindBugFixes.MOD_ID + ".config.title");
-    private final Screen parent;
+    private static final Component TITLE = Component.translatable(KeybindBugFixes.MOD_ID + ".config.title");
+    private final Screen lastScreen;
 
-    public final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+    public final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     private ConfigListWidget configListWidget;
 
-    @Nullable public ConfigListWidget.KeybindEntry selectedKeybindEntry;
+    @Nullable public ConfigListWidget.KeyEntry selectedKeyEntry;
 
-    public ConfigScreen(Screen parent) {
-        super(TITLE_TEXT);
-        this.parent = parent;
+    public ConfigScreen(Screen lastScreen) {
+        super(TITLE);
+        this.lastScreen = lastScreen;
     }
 
     @Override
     protected void init() {
-        this.initHeader();
-        this.initBody();
-        this.initFooter();
-        this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.addTitle();
+        this.addContents();
+        this.addFooter();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        this.repositionElements();
     }
 
-    private void initHeader() {
-        this.layout.addHeader(this.title, this.textRenderer);
+    private void addTitle() {
+        this.layout.addTitleHeader(this.title, this.font);
     }
 
-    private void initBody() {
-        this.configListWidget = this.layout.addBody(new ConfigListWidget(this, this.client));
+    private void addContents() {
+        this.configListWidget = this.layout.addToContents(new ConfigListWidget(this, this.minecraft));
     }
 
-    private void initFooter() {
-        ButtonWidget buttonWidget = ButtonWidget.builder(ScreenTexts.DONE, button -> this.close())
+    private void addFooter() {
+        Button buttonWidget = Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
                 .width(200)
                 .build();
 
-        this.layout.addFooter(buttonWidget);
+        this.layout.addToFooter(buttonWidget);
     }
 
     @Override
-    protected void refreshWidgetPositions() {
-        this.layout.refreshPositions();
-        this.configListWidget.position(this.width, this.layout);
+    protected void repositionElements() {
+        this.layout.arrangeElements();
+        this.configListWidget.updateSize(this.width, this.layout);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.selectedKeybindEntry != null) {
-            this.selectedKeybindEntry.option.value = InputUtil.Type.MOUSE.createFromCode(button);
+        if (this.selectedKeyEntry != null) {
+            this.selectedKeyEntry.option.value = InputConstants.Type.MOUSE.getOrCreate(button);
 
-            this.selectedKeybindEntry = null;
-            this.configListWidget.updateKeybindEntries();
+            this.selectedKeyEntry = null;
+            this.configListWidget.refreshKeyEntries();
             return true;
         } else {
             return super.mouseClicked(mouseX, mouseY, button);
@@ -69,15 +69,15 @@ public class ConfigScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keycode, int scancode, int modifiers) {
-        if (this.selectedKeybindEntry != null) {
-            if (keycode == InputUtil.GLFW_KEY_ESCAPE) {
-                this.selectedKeybindEntry.option.value = InputUtil.UNKNOWN_KEY;
+        if (this.selectedKeyEntry != null) {
+            if (keycode == InputConstants.KEY_ESCAPE) {
+                this.selectedKeyEntry.option.value = InputConstants.UNKNOWN;
             } else {
-                this.selectedKeybindEntry.option.value = InputUtil.fromKeyCode(keycode, scancode);
+                this.selectedKeyEntry.option.value = InputConstants.getKey(keycode, scancode);
             }
 
-            this.selectedKeybindEntry = null;
-            this.configListWidget.updateKeybindEntries();
+            this.selectedKeyEntry = null;
+            this.configListWidget.refreshKeyEntries();
             return true;
         } else {
             return super.keyPressed(keycode, scancode, modifiers);
@@ -90,7 +90,7 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void close() {
-        this.client.setScreen(this.parent);
+    public void onClose() {
+        this.minecraft.setScreen(this.lastScreen);
     }
 }
