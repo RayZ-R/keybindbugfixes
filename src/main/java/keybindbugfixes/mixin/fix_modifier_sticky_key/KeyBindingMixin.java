@@ -1,7 +1,7 @@
 package keybindbugfixes.mixin.fix_modifier_sticky_key;
 
-import de.siphalor.amecs.api.KeyBindingUtils;
-import de.siphalor.amecs.api.KeyModifiers;
+import de.siphalor.amecs.key_modifiers.api.AmecsKeyModifierCombination;
+import de.siphalor.amecs.key_modifiers.api.AmecsKeyModifiersApi;
 import keybindbugfixes.StickyKeyStates;
 import keybindbugfixes.config.Config;
 import net.minecraft.client.option.KeyBinding;
@@ -16,7 +16,7 @@ public abstract class KeyBindingMixin {
     @Inject(method = "setPressed", at = @At("HEAD"))
     private void revertAmecsModifierKey(CallbackInfo callbackInfo) {
         if (Config.FIX_MODIFIER_STICKY_KEY.value) {
-            KeyModifiers modifiers = KeyBindingUtils.getBoundModifiers((KeyBinding) (Object) this);
+            AmecsKeyModifierCombination modifiers = AmecsKeyModifiersApi.getBoundModifiers((KeyBinding) (Object) this);
 
             if (modifiers.getAlt()) {
                 StickyKeyStates.revertStickyKeyBinding(InputUtil.GLFW_KEY_LEFT_ALT);
