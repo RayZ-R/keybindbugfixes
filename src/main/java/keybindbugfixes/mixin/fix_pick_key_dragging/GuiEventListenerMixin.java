@@ -2,21 +2,21 @@ package keybindbugfixes.mixin.fix_pick_key_dragging;
 
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.Config;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Element.class)
-public interface ElementMixin {
+@Mixin(GuiEventListener.class)
+public interface GuiEventListenerMixin {
     @Inject(method = "mouseMoved", at = @At("HEAD"))
-    default void invokePickKeyDraggingLogic(double mouseX, double mouseY, CallbackInfo callbackInfo) {
-        if (this instanceof HandledScreen<?> handledScreen
+    default void invokePickKeyDraggingLogic(double x, double y, CallbackInfo callbackInfo) {
+        if (this instanceof AbstractContainerScreen<?> containerScreen
                 && Config.FIX_PICK_KEY_DRAGGING.value
                 && KeybindBugFixes.draggingPickKey) {
-            handledScreen.mouseDragged(mouseX, mouseY, -1, 0, 0);
+            containerScreen.mouseDragged(x, y, -1, 0, 0);
         }
     }
 }

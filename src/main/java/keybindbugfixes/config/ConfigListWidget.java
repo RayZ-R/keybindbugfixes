@@ -4,81 +4,82 @@ import com.google.common.collect.Lists;
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.ConfigListWidget.Entry;
 import keybindbugfixes.config.option.BooleanOption;
-import keybindbugfixes.config.option.KeybindOption;
+import keybindbugfixes.config.option.KeyOption;
 import keybindbugfixes.config.option.Option;
-import keybindbugfixes.mixin.KeyBindingAccessor;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.gui.widget.TextIconButtonWidget;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import keybindbugfixes.mixin.KeyMappingAccessor;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.FormattedCharSequence;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ConfigListWidget extends ElementListWidget<Entry> {
-    private static final Identifier RESET_ICON =
-            new Identifier(KeybindBugFixes.MOD_ID, "icon/reset");
+public class ConfigListWidget extends ContainerObjectSelectionList<Entry> {
+    private static final ResourceLocation RESET_SPRITE =
+            new ResourceLocation(KeybindBugFixes.MOD_ID, "icon/reset");
 
-    private static final Identifier LINK_ICON =
-            new Identifier(KeybindBugFixes.MOD_ID, "icon/link");
+    private static final ResourceLocation LINK_SPRITE =
+            new ResourceLocation(KeybindBugFixes.MOD_ID, "icon/link");
 
-    private static final Text RESET_TEXT =
-            Text.translatable(KeybindBugFixes.MOD_ID + ".config.reset");
+    private static final Component RESET_LABEL =
+            Component.translatable(KeybindBugFixes.MOD_ID + ".config.reset");
 
-    private static final Text LINK_TEXT =
-            Text.translatable(KeybindBugFixes.MOD_ID + ".config.link");
+    private static final Component LINK_LABEL =
+            Component.translatable(KeybindBugFixes.MOD_ID + ".config.link");
 
-    private static final Text BUGFIXES_TEXT =
-            Text.translatable(KeybindBugFixes.MOD_ID + ".config.category.bugfixes");
+    private static final Component BUGFIXES_LABEL =
+            Component.translatable(KeybindBugFixes.MOD_ID + ".config.category.bugfixes");
 
-    private static final Text TWEAKS_TEXT =
-            Text.translatable(KeybindBugFixes.MOD_ID + ".config.category.tweaks");
+    private static final Component TWEAKS_LABEL =
+            Component.translatable(KeybindBugFixes.MOD_ID + ".config.category.tweaks");
 
-    private static final Text KEYBINDS_TEXT =
-            Text.translatable(KeybindBugFixes.MOD_ID + ".config.category.keybinds");
+    private static final Component KEYBINDS_LABEL =
+            Component.translatable(KeybindBugFixes.MOD_ID + ".config.category.keybinds");
 
-    private final ConfigScreen parent;
-    private final List<KeybindEntry> keybindEntries = Lists.newArrayList();
+    private final ConfigScreen configScreen;
+    private final List<KeyEntry> keyEntries = Lists.newArrayList();
 
-    private void addCategoryEntry(Text label) {
+    private void addCategoryEntry(Component label) {
         this.addEntry(new CategoryEntry(label));
     }
 
     private void addOptionEntry(Option<?> option) {
         if (option.isDisabled) {
-            this.addEntry(new LabeledEntry(option.label.copy().formatted(Formatting.GRAY, Formatting.STRIKETHROUGH)));
+            Component label = option.label.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.STRIKETHROUGH);
+            this.addEntry(new LabeledEntry(label));
             return;
         }
 
         if (option instanceof BooleanOption booleanOption) {
             this.addEntry(new BooleanEntry(booleanOption));
-        } else if (option instanceof KeybindOption keybindOption) {
-            KeybindEntry keybindEntry = new KeybindEntry(keybindOption);
-            this.keybindEntries.add(keybindEntry);
-            this.addEntry(keybindEntry);
+        } else if (option instanceof KeyOption keyOption) {
+            KeyEntry keyEntry = new KeyEntry(keyOption);
+            this.keyEntries.add(keyEntry);
+            this.addEntry(keyEntry);
         }
     }
 
-    public ConfigListWidget(ConfigScreen parent, MinecraftClient client) {
-        super(client, parent.width, parent.layout.getContentHeight(), parent.layout.getHeaderHeight(), 24);
-        this.parent = parent;
+    public ConfigListWidget(ConfigScreen configScreen, Minecraft minecraft) {
+        super(minecraft, configScreen.width, configScreen.layout.getContentHeight(), configScreen.layout.getHeaderHeight(), 24);
+        this.configScreen = configScreen;
 
-        this.addCategoryEntry(BUGFIXES_TEXT);
+        this.addCategoryEntry(BUGFIXES_LABEL);
         this.addOptionEntry(Config.FIX_PRESSING_F3_TWICE);
         this.addOptionEntry(Config.FIX_GAME_MODE_SWITCHER_RESET);
         this.addOptionEntry(Config.FIX_STICKY_KEY_RESET);
@@ -86,13 +87,13 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         this.addOptionEntry(Config.FIX_DISMOUNT_TOGGLE_SNEAK);
         this.addOptionEntry(Config.FIX_MODIFIER_STICKY_KEY);
 
-        this.addCategoryEntry(TWEAKS_TEXT);
+        this.addCategoryEntry(TWEAKS_LABEL);
         this.addOptionEntry(Config.DROP_ALL_CRAFTED_ITEMS);
         this.addOptionEntry(Config.DROP_WHEN_HOLDING_ITEM);
         this.addOptionEntry(Config.REMOVE_KEYBIND_CONFLICTS);
         this.addOptionEntry(Config.RELOAD_RESOURCES_ANYWHERE);
 
-        this.addCategoryEntry(KEYBINDS_TEXT);
+        this.addCategoryEntry(KEYBINDS_LABEL);
         this.addOptionEntry(Config.DEBUG_KEY);
         this.addOptionEntry(Config.GAME_MODE_CYCLE_KEY);
     }
@@ -102,150 +103,150 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         return 340;
     }
 
-    public void updateKeybindEntries() {
-        for (KeybindEntry entry : this.keybindEntries) {
-            entry.update();
+    public void refreshKeyEntries() {
+        for (KeyEntry entry : this.keyEntries) {
+            entry.refreshEntry();
         }
     }
 
-    public abstract static class Entry extends ElementListWidget.Entry<Entry> {
+    public abstract static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
 
     }
 
     public class CategoryEntry extends Entry {
-        private final Text label;
+        private final Component label;
 
-        public CategoryEntry(Text label) {
+        public CategoryEntry(Component label) {
             this.label = label;
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawCenteredTextWithShadow(
-                    ConfigListWidget.this.client.textRenderer,
+        public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float a) {
+            graphics.drawCenteredString(
+                    ConfigListWidget.this.minecraft.font,
                     this.label,
                     x + entryWidth / 2,
-                    y + entryHeight / 2 - ConfigListWidget.this.client.textRenderer.fontHeight / 2,
-                    Colors.WHITE
+                    y + entryHeight / 2 - ConfigListWidget.this.minecraft.font.lineHeight / 2,
+                    CommonColors.WHITE
             );
 
-//            context.drawBorder(x, y, entryWidth, entryHeight, Colors.LIGHT_RED);
+//            graphics.renderOutline(x, y, entryWidth, entryHeight, CommonColors.SOFT_RED);
         }
 
         @Override
-        public List<? extends Element> children() {
+        public List<? extends GuiEventListener> children() {
             return Collections.emptyList();
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
+        public List<? extends NarratableEntry> narratables() {
             return Collections.emptyList();
         }
     }
 
     public class LabeledEntry extends Entry {
-        private final List<ButtonWidget> widgets = Lists.newArrayList();
-        private final Text label;
+        private final List<Button> buttons = Lists.newArrayList();
+        private final Component label;
 
         private static final int BUTTONS_WIDTH = 150;
         private static final int GAP_WIDTH = 2;
 
-        public LabeledEntry(Text label) {
+        public LabeledEntry(Component label) {
             this.label = label;
         }
 
-        public void init(ButtonWidget centerWidget, List<ButtonWidget> leftWidgets, List<ButtonWidget> rightWidgets) {
-            int centerWidgetWidth = BUTTONS_WIDTH;
-            for (ButtonWidget widget : leftWidgets) centerWidgetWidth -= widget.getWidth() + GAP_WIDTH;
-            for (ButtonWidget widget : rightWidgets) centerWidgetWidth -= widget.getWidth() + GAP_WIDTH;
-            centerWidget.setWidth(centerWidgetWidth);
+        public void init(Button centerButton, List<Button> leftButtons, List<Button> rightButtons) {
+            int centerButtonWidth = BUTTONS_WIDTH;
+            for (Button button : leftButtons) centerButtonWidth -= button.getWidth() + GAP_WIDTH;
+            for (Button button : rightButtons) centerButtonWidth -= button.getWidth() + GAP_WIDTH;
+            centerButton.setWidth(centerButtonWidth);
 
-            this.widgets.addAll(leftWidgets);
-            this.widgets.add(centerWidget);
-            this.widgets.addAll(rightWidgets);
+            this.buttons.addAll(leftButtons);
+            this.buttons.add(centerButton);
+            this.buttons.addAll(rightButtons);
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            int textWidth = entryWidth - BUTTONS_WIDTH - GAP_WIDTH;
+        public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float a) {
+            int labelWidth = entryWidth - BUTTONS_WIDTH - GAP_WIDTH;
 
-            TextRenderer textRenderer = ConfigListWidget.this.client.textRenderer;
-            List<OrderedText> textLines = textRenderer.wrapLines(this.label, textWidth);
+            Font font = ConfigListWidget.this.minecraft.font;
+            List<FormattedCharSequence> lines = font.split(this.label, labelWidth);
 
-            int textPosY = y + entryHeight / 2 - textLines.size() * textRenderer.fontHeight / 2;
-            for (OrderedText line : textLines) {
-                context.drawText(textRenderer, line, x, textPosY, Colors.WHITE, true);
-                textPosY += textRenderer.fontHeight;
+            int lineY = y + entryHeight / 2 - lines.size() * font.lineHeight / 2;
+            for (FormattedCharSequence line : lines) {
+                graphics.drawString(font, line, x, lineY, CommonColors.WHITE, true);
+                lineY += font.lineHeight;
             }
 
-            int widgetPosX = x + entryWidth - BUTTONS_WIDTH;
-            for (ButtonWidget widget : this.widgets) {
-                widget.setPosition(widgetPosX, y);
-                widget.render(context, mouseX, mouseY, tickDelta);
-                widgetPosX += widget.getWidth() + GAP_WIDTH;
+            int buttonX = x + entryWidth - BUTTONS_WIDTH;
+            for (Button button : this.buttons) {
+                button.setPosition(buttonX, y);
+                button.render(graphics, mouseX, mouseY, a);
+                buttonX += button.getWidth() + GAP_WIDTH;
             }
 
-//            context.drawBorder(x, y, textWidth, entryHeight, Colors.LIGHT_RED);
-//            context.drawBorder(x + entryWidth - BUTTONS_WIDTH, y, BUTTONS_WIDTH, entryHeight, Colors.LIGHT_RED);
+//            graphics.renderOutline(x, y, labelWidth, entryHeight, CommonColors.SOFT_RED);
+//            graphics.renderOutline(x + entryWidth - BUTTONS_WIDTH, y, BUTTONS_WIDTH, entryHeight, CommonColors.SOFT_RED);
         }
 
         @Override
-        public List<? extends Element> children() {
-            return this.widgets;
+        public List<? extends GuiEventListener> children() {
+            return this.buttons;
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
-            return this.widgets;
+        public List<? extends NarratableEntry> narratables() {
+            return this.buttons;
         }
     }
 
     public abstract class OptionEntry<T extends Option<?>> extends LabeledEntry {
-        protected final ButtonWidget editButton;
-        protected final ButtonWidget resetButton;
+        protected final Button editButton;
+        protected final Button resetButton;
         public final T option;
 
         public OptionEntry(T option) {
             super(option.label);
             this.option = option;
 
-            this.editButton = ButtonWidget.builder(ScreenTexts.EMPTY, this::editClicked)
-                    .narrationSupplier(this.narrationSupplier())
+            this.editButton = Button.builder(CommonComponents.EMPTY, this::editClicked)
+                    .createNarration(this.narrationSupplier())
                     .build();
 
-            this.resetButton = TextIconButtonWidget.builder(RESET_TEXT, this::resetClicked, true)
+            this.resetButton = SpriteIconButton.builder(RESET_LABEL, this::resetClicked, true)
                     .width(20)
-                    .texture(RESET_ICON, 16, 16)
+                    .sprite(RESET_SPRITE, 16, 16)
                     .build();
 
-            List<ButtonWidget> rightWidgets = Lists.newArrayList();
+            List<Button> rightButtons = Lists.newArrayList();
 
             if (this.option.link != null) {
-                ButtonWidget.PressAction onPress = button -> {
-                    ConfirmLinkScreen.open(ConfigListWidget.this.parent, this.option.link);
+                Button.OnPress onPress = button -> {
+                    ConfirmLinkScreen.confirmLinkNow(ConfigListWidget.this.configScreen, this.option.link);
                 };
 
-                ButtonWidget linkButton = TextIconButtonWidget.builder(LINK_TEXT, onPress, true)
+                Button linkButton = SpriteIconButton.builder(LINK_LABEL, onPress, true)
                         .width(20)
-                        .texture(LINK_ICON, 16, 16)
+                        .sprite(LINK_SPRITE, 16, 16)
                         .build();
 
-                rightWidgets.add(linkButton);
+                rightButtons.add(linkButton);
             }
 
-            this.init(this.editButton, List.of(this.resetButton), rightWidgets);
-            this.update();
+            this.init(this.editButton, List.of(this.resetButton), rightButtons);
+            this.refreshEntry();
         }
 
-        protected ButtonWidget.NarrationSupplier narrationSupplier() {
+        protected Button.CreateNarration narrationSupplier() {
             return Supplier::get;
         }
 
-        protected abstract void editClicked(ButtonWidget button);
+        protected abstract void editClicked(Button button);
 
-        protected abstract void resetClicked(ButtonWidget button);
+        protected abstract void resetClicked(Button button);
 
-        public abstract void update();
+        public abstract void refreshEntry();
     }
 
     public class BooleanEntry extends OptionEntry<BooleanOption> {
@@ -254,29 +255,29 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         }
 
         @Override
-        protected ButtonWidget.NarrationSupplier narrationSupplier() {
-            return textSupplier ->
-                    this.option.label.copy().append(": ").append(textSupplier.get());
+        protected Button.CreateNarration narrationSupplier() {
+            return supplier ->
+                    this.option.label.copy().append(": ").append(supplier.get());
         }
 
         @Override
-        protected void editClicked(ButtonWidget button) {
+        protected void editClicked(Button button) {
             this.option.toggle();
-            this.update();
+            this.refreshEntry();
         }
 
         @Override
-        protected void resetClicked(ButtonWidget button) {
+        protected void resetClicked(Button button) {
             this.option.reset();
-            this.update();
+            this.refreshEntry();
         }
 
         @Override
-        public void update() {
-            Text message = (this.option.value ? ScreenTexts.YES : ScreenTexts.NO)
-                    .copy().formatted(this.option.value ? Formatting.GREEN : Formatting.RED);
+        public void refreshEntry() {
+            Component message = (this.option.value ? CommonComponents.GUI_YES : CommonComponents.GUI_NO)
+                    .copy().withStyle(this.option.value ? ChatFormatting.GREEN : ChatFormatting.RED);
 
-            Tooltip tooltip = Tooltip.of(this.option.description);
+            Tooltip tooltip = Tooltip.create(this.option.description);
 
             this.editButton.setMessage(message);
             this.editButton.setTooltip(tooltip);
@@ -284,52 +285,52 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
         }
     }
 
-    public class KeybindEntry extends OptionEntry<KeybindOption> {
-        public KeybindEntry(KeybindOption option) {
+    public class KeyEntry extends OptionEntry<KeyOption> {
+        public KeyEntry(KeyOption option) {
             super(option);
         }
 
         @Override
-        protected ButtonWidget.NarrationSupplier narrationSupplier() {
-            return textSupplier -> this.option.isUnbound()
-                    ? Text.translatable("narrator.controls.unbound", this.option.label)
-                    : Text.translatable("narrator.controls.bound", this.option.label, textSupplier.get());
+        protected Button.CreateNarration narrationSupplier() {
+            return supplier -> this.option.isUnbound()
+                    ? Component.translatable("narrator.controls.unbound", this.option.label)
+                    : Component.translatable("narrator.controls.bound", this.option.label, supplier.get());
         }
 
         @Override
-        protected void editClicked(ButtonWidget button) {
-            ConfigListWidget.this.parent.selectedKeybindEntry = this;
-            this.update();
+        protected void editClicked(Button button) {
+            ConfigListWidget.this.configScreen.selectedKeyEntry = this;
+            this.refreshEntry();
         }
 
         @Override
-        protected void resetClicked(ButtonWidget button) {
+        protected void resetClicked(Button button) {
             this.option.reset();
-            ConfigListWidget.this.updateKeybindEntries();
+            ConfigListWidget.this.refreshKeyEntries();
         }
 
-        private Text duplicateText() {
-            MutableText duplicateText = Text.empty();
+        private Component duplicateComponent() {
+            MutableComponent duplicateComponent = Component.empty();
             boolean duplicate = false;
 
             if (this.option.isUnbound()) {
-                return duplicateText;
+                return duplicateComponent;
             }
 
             if (this.option.modifier == null) {
-                for (KeyBinding keyBinding : ConfigListWidget.this.client.options.allKeys) {
-                    if (((KeyBindingAccessor) keyBinding).getBoundKey().equals(this.option.value)) {
+                for (KeyMapping keyMapping : ConfigListWidget.this.minecraft.options.keyMappings) {
+                    if (((KeyMappingAccessor) keyMapping).getKey().equals(this.option.value)) {
                         if (duplicate) {
-                            duplicateText.append(", ");
+                            duplicateComponent.append(", ");
                         }
 
                         duplicate = true;
-                        duplicateText.append(Text.translatable(keyBinding.getTranslationKey()));
+                        duplicateComponent.append(Component.translatable(keyMapping.getName()));
                     }
                 }
             }
 
-            for (KeybindOption option : Config.KEYBIND_OPTIONS) {
+            for (KeyOption option : Config.KEY_OPTIONS) {
                 if (option == this.option) continue;
 
                 boolean sameModifiers = option.modifier != null && option.modifier.value != null
@@ -340,24 +341,24 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
 
                 if (option.value.equals(this.option.value) && (sameModifiers || noModifiers)) {
                     if (duplicate) {
-                        duplicateText.append(", ");
+                        duplicateComponent.append(", ");
                     }
 
                     duplicate = true;
-                    duplicateText.append(option.label);
+                    duplicateComponent.append(option.label);
                 }
             }
 
-            return duplicateText;
+            return duplicateComponent;
         }
 
         @Override
-        public void update() {
-            Text message = this.option.value.getLocalizedText();
-            Tooltip tooltip = Tooltip.of(this.option.description);
+        public void refreshEntry() {
+            Component message = this.option.value.getDisplayName();
+            Tooltip tooltip = Tooltip.create(this.option.description);
 
-            Text duplicateText = this.duplicateText();
-            boolean duplicate = !duplicateText.equals(Text.empty());
+            Component duplicateComponent = this.duplicateComponent();
+            boolean duplicate = !duplicateComponent.equals(Component.empty());
 
             boolean unboundModifier = !this.option.isUnbound()
                     && this.option.modifier != null
@@ -368,27 +369,29 @@ public class ConfigListWidget extends ElementListWidget<Entry> {
                     && this.option.modifier.value.equals(this.option.value);
 
             if (duplicate || unboundModifier || sameModifier) {
-                message = Text.literal("[ ")
-                        .append(message.copy().formatted(Formatting.WHITE))
+                message = Component.literal("[ ")
+                        .append(message.copy().withStyle(ChatFormatting.WHITE))
                         .append(" ]")
-                        .formatted(Formatting.RED);
+                        .withStyle(ChatFormatting.RED);
             }
 
-            if (ConfigListWidget.this.parent.selectedKeybindEntry == this) {
-                message = Text.literal("> ")
-                        .append(message.copy().formatted(Formatting.WHITE, Formatting.UNDERLINE))
+            if (ConfigListWidget.this.configScreen.selectedKeyEntry == this) {
+                message = Component.literal("> ")
+                        .append(message.copy().withStyle(ChatFormatting.WHITE, ChatFormatting.UNDERLINE))
                         .append(" <")
-                        .formatted(Formatting.YELLOW);
+                        .withStyle(ChatFormatting.YELLOW);
             }
 
             if (duplicate) {
-                tooltip = Tooltip.of(Text.translatable("controls.keybinds.duplicateKeybinds", duplicateText));
+                tooltip = Tooltip.create(Component.translatable(
+                        "controls.keybinds.duplicateKeybinds",
+                        duplicateComponent));
             } else if (unboundModifier) {
-                tooltip = Tooltip.of(Text.translatable(
+                tooltip = Tooltip.create(Component.translatable(
                         KeybindBugFixes.MOD_ID + ".config.keybinds.unboundModifier",
                         this.option.modifier.label));
             } else if (sameModifier) {
-                tooltip = Tooltip.of(Text.translatable(
+                tooltip = Tooltip.create(Component.translatable(
                         KeybindBugFixes.MOD_ID + ".config.keybinds.sameModifier",
                         this.option.modifier.label));
             }

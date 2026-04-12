@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.MixinPlugin;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Option<T> {
@@ -18,8 +18,8 @@ public abstract class Option<T> {
     @Nullable public final String bugId;
     @Nullable public final String link;
 
-    public Text label;
-    public Text description;
+    public Component label;
+    public Component description;
 
     public T defaultValue;
     public T value;
@@ -38,8 +38,8 @@ public abstract class Option<T> {
     }
 
     public void init() {
-        this.label = (Text) (Object) Text.translatable(Option.this.labelKey);
-        this.description = (Text) (Object) Text.translatable(Option.this.descriptionKey);
+        this.label = (Component) (Object) Component.translatable(Option.this.labelKey);
+        this.description = (Component) (Object) Component.translatable(Option.this.descriptionKey);
 
         this.defaultValue = this.parse(this.defaultValueString);
         this.value = this.defaultValue;
