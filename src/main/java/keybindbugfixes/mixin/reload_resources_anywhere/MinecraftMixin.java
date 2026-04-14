@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import keybindbugfixes.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Overlay;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -14,7 +15,8 @@ public abstract class MinecraftMixin {
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/client/Minecraft;" +
-                            "overlay:Lnet/minecraft/client/gui/screens/Overlay;"
+                            "overlay:Lnet/minecraft/client/gui/screens/Overlay;",
+                    opcode = Opcodes.GETFIELD
             )
     )
     public Overlay preventInfiniteLoading(Overlay original) {
