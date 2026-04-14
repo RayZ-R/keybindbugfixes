@@ -2,32 +2,32 @@ package keybindbugfixes.config.option;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.client.util.InputUtil;
+import com.mojang.blaze3d.platform.InputConstants;
 import org.jetbrains.annotations.Nullable;
 
-public class KeybindOption extends Option<InputUtil.Key> {
-    @Nullable public final KeybindOption modifier;
+public class KeyOption extends Option<InputConstants.Key> {
+    @Nullable public final KeyOption modifier;
 
-    public KeybindOption(String key, String mixin, String defaultValue,
-                         @Nullable Integer bugNumber, @Nullable KeybindOption modifier) {
+    public KeyOption(String key, String mixin, String defaultValue,
+                     @Nullable Integer bugNumber, @Nullable KeyOption modifier) {
         super(key, mixin, defaultValue, bugNumber);
         this.modifier = modifier;
     }
 
     public boolean isUnbound() {
-        return this.value.equals(InputUtil.UNKNOWN_KEY);
+        return this.value.equals(InputConstants.UNKNOWN);
     }
 
     @Override
-    public InputUtil.Key parse(String string) {
-        return InputUtil.fromTranslationKey(string);
+    public InputConstants.Key parse(String string) {
+        return InputConstants.getKey(string);
     }
 
     @Override
     public boolean fromJson(JsonElement jsonElement) {
         if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString()) {
             try {
-                this.value = InputUtil.fromTranslationKey(jsonElement.getAsString());
+                this.value = InputConstants.getKey(jsonElement.getAsString());
                 return true;
             } catch (Throwable e) {
                 return false;
@@ -39,6 +39,6 @@ public class KeybindOption extends Option<InputUtil.Key> {
 
     @Override
     public void toJson(JsonObject json) {
-        json.addProperty(this.key, this.value.getTranslationKey());
+        json.addProperty(this.key, this.value.getName());
     }
 }

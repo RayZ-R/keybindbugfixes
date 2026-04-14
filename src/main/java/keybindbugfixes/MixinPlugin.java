@@ -30,7 +30,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
         boolean isAmecsApiLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
 
         if (!isAmecsApiLoaded) {
-            DISABLED_MIXINS.add("fix_modifier_sticky_key.KeyBindingMixin");
+            DISABLED_MIXINS.add("fix_modifier_sticky_key.KeyMappingMixin");
         }
     }
 
