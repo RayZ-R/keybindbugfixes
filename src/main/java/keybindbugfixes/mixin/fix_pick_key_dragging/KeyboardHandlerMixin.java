@@ -3,6 +3,7 @@ package keybindbugfixes.mixin.fix_pick_key_dragging;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.platform.InputConstants;
 import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.Config;
 import keybindbugfixes.mixin.AbstractContainerScreenAccessor;
@@ -12,7 +13,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -26,12 +26,13 @@ public abstract class KeyboardHandlerMixin {
             )
     )
     private static boolean startPickKeyDragging(Screen screen, int keycode, int scancode, int modifiers,
-                                                Operation<Boolean> original, @Local(ordinal = 0) int action) {
+                                                Operation<Boolean> original,
+                                                @Local(ordinal = 0, argsOnly = true) int action) {
         boolean processed = original.call(screen, keycode, scancode, modifiers);
 
         if (screen instanceof AbstractContainerScreen<?> containerScreen
                 && Config.FIX_PICK_KEY_DRAGGING.value
-                && action == GLFW.GLFW_PRESS
+                && action == InputConstants.PRESS
                 && !processed) {
             AbstractContainerScreenAccessor accessor = (AbstractContainerScreenAccessor) containerScreen;
             Slot slot = accessor.getHoveredSlot();

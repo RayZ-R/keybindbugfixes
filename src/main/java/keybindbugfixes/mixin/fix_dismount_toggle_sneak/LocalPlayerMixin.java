@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin {
-    @Shadow @Final private Minecraft minecraft;
-    @Shadow protected abstract boolean isShiftKeyDown();
+    @Shadow @Final protected Minecraft minecraft;
+    @Shadow public abstract boolean isShiftKeyDown();
 
     @Unique private boolean keybindbugfixes$overrideShiftingPacket = false;
 
