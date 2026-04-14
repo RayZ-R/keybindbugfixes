@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin extends AbstractClientPlayer {
-    @Shadow @Final private Minecraft minecraft;
+    @Shadow @Final protected Minecraft minecraft;
 
     @Unique private boolean keybindbugfixes$overrideShiftingPacket = false;
 
