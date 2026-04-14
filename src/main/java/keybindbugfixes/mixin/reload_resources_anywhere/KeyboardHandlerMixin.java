@@ -6,7 +6,7 @@ import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.Config;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.glfw.GLFW;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,6 +26,7 @@ public abstract class KeyboardHandlerMixin {
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;",
+                    opcode = Opcodes.GETFIELD,
                     shift = At.Shift.AFTER,
                     ordinal = 0
             ),
@@ -37,7 +38,7 @@ public abstract class KeyboardHandlerMixin {
 
         if (Config.RELOAD_RESOURCES_ANYWHERE.value
                 && f3Pressed
-                && action == GLFW.GLFW_PRESS
+                && action == InputConstants.PRESS
                 && key.equals(KeybindBugFixes.getReloadResourcesKey())) {
             if (this.minecraft.getOverlay() == null) {
                 if (this.minecraft.screen == null) {

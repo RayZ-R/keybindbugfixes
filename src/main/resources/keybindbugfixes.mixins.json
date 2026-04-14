@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "keybindbugfixes.MixinPlugin",
   "mixins": [
+    "AbstractContainerScreenAccessor",
+    "KeyMappingAccessor",
+    "ToggleKeyMappingAccessor",
     "add_keybind_duplicates.KeyEntryMixin",
     "drop_all_crafted_items.AbstractContainerMenuMixin",
     "drop_when_holding_item.AbstractContainerMenuMixin",
@@ -22,10 +25,7 @@
     "rebind_debug_keys.KeyboardHandlerMixin",
     "reload_resources_anywhere.KeyboardHandlerMixin",
     "reload_resources_anywhere.MinecraftMixin",
-    "remove_keybind_conflicts.KeyMappingMixin",
-    "AbstractContainerScreenAccessor",
-    "KeyMappingAccessor",
-    "ToggleKeyMappingAccessor"
+    "remove_keybind_conflicts.KeyMappingMixin"
   ],
   "injectors": {
     "defaultRequire": 1
