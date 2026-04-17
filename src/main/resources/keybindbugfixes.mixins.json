@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "keybindbugfixes.MixinPlugin",
   "mixins": [
+    "AbstractContainerScreenAccessor",
+    "KeyMappingAccessor",
+    "ToggleKeyMappingAccessor",
     "add_keybind_duplicates.KeyEntryMixin",
     "drop_when_holding_item.AbstractContainerMenuMixin",
     "fix_dismount_toggle_sneak.LocalPlayerMixin",
@@ -15,10 +18,7 @@
     "fix_pick_key_dragging.GuiEventListenerMixin",
     "fix_pick_key_dragging.KeyboardHandlerMixin",
     "fix_rebind_to_f3.KeyBindsScreenMixin",
-    "fix_screen_sticky_key_reset.ToggleKeyMappingMixin",
-    "AbstractContainerScreenAccessor",
-    "KeyMappingAccessor",
-    "ToggleKeyMappingAccessor"
+    "fix_screen_sticky_key_reset.ToggleKeyMappingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

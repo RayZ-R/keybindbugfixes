@@ -1,10 +1,9 @@
 package keybindbugfixes;
 
 import com.minenash.rebind_all_the_keys.RebindAllTheKeys;
+import com.mojang.blaze3d.platform.InputConstants;
 import keybindbugfixes.mixin.KeyMappingAccessor;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.input.InputQuirks;
-import org.lwjgl.glfw.GLFW;
 
 public class ToggleKeyStates {
     public static Boolean sprintToggleState = null;
@@ -33,13 +32,8 @@ public class ToggleKeyStates {
     }
 
     public static void revertControl() {
-        if (InputQuirks.REPLACE_CTRL_KEY_WITH_CMD_KEY) {
-            revert(GLFW.GLFW_KEY_LEFT_SUPER);
-            revert(GLFW.GLFW_KEY_RIGHT_SUPER);
-        } else {
-            revert(GLFW.GLFW_KEY_LEFT_CONTROL);
-            revert(GLFW.GLFW_KEY_RIGHT_CONTROL);
-        }
+        revert(InputConstants.KEY_LCONTROL);
+        revert(InputConstants.KEY_RCONTROL);
     }
 
     public static void revertDropStackModifier() {
