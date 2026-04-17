@@ -4,6 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "keybindbugfixes.MixinPlugin",
   "mixins": [
+    "AbstractContainerScreenAccessor",
+    "KeyMappingAccessor",
+    "ToggleKeyMappingAccessor",
     "add_keybind_duplicates.KeyEntryMixin",
     "drop_when_holding_item.AbstractContainerMenuMixin",
     "fix_dismount_toggle_sneak.LocalPlayerMixin",
@@ -17,10 +20,7 @@
     "fix_rebind_to_f3.KeyBindsScreenMixin",
     "fix_screen_sticky_key_reset.ToggleKeyMappingMixin",
     "rebind_debug_keys.GameModeSwitcherScreenMixin",
-    "rebind_debug_keys.KeyboardHandlerMixin",
-    "AbstractContainerScreenAccessor",
-    "KeyMappingAccessor",
-    "ToggleKeyMappingAccessor"
+    "rebind_debug_keys.KeyboardHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

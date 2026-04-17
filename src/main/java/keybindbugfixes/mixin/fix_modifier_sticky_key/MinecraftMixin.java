@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
-    @Shadow protected abstract boolean hasControlDown();
+    @Shadow public abstract boolean hasControlDown();
 
     @Inject(
             method = "handleKeybinds",

@@ -48,9 +48,13 @@ public abstract class KeyboardHandlerMixin {
     )
     private KeyEvent remapF4Key(KeyEvent event) {
         if (event.key() == Config.GAME_MODE_CYCLE_KEY.value.getValue()) {
-            return new KeyEvent(InputConstants.KEY_F4, GLFW.glfwGetKeyScancode(GLFW.GLFW_KEY_F4), event.modifiers());
+            int keycode = InputConstants.KEY_F4;
+            int scancode = GLFW.glfwGetKeyScancode(keycode);
+            return new KeyEvent(keycode, scancode, event.modifiers());
         } else if (event.key() == InputConstants.KEY_F4) {
-            return new KeyEvent(GLFW.GLFW_KEY_UNKNOWN, GLFW.glfwGetKeyScancode(GLFW.GLFW_KEY_UNKNOWN), event.modifiers());
+            int keycode = GLFW.GLFW_KEY_UNKNOWN;
+            int scancode = GLFW.glfwGetKeyScancode(keycode);
+            return new KeyEvent(keycode, scancode, event.modifiers());
         } else {
             return event;
         }
