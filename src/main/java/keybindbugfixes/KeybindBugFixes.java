@@ -2,7 +2,6 @@ package keybindbugfixes;
 
 import keybindbugfixes.config.Config;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +13,6 @@ public class KeybindBugFixes implements ClientModInitializer {
     public static Minecraft minecraft;
 
     public static boolean draggingPickKey = false;
-
-    public static final boolean IS_REBIND_ALL_THE_KEYS_LOADED
-            = FabricLoader.getInstance().isModLoaded("rebind_all_the_keys");
 
     @Override
     public void onInitializeClient() {

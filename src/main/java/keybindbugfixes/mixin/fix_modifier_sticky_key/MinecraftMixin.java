@@ -21,8 +21,8 @@ public abstract class MinecraftMixin {
             )
     )
     private void revertDropStackModifierKey(CallbackInfo callbackInfo) {
-        if (Config.FIX_MODIFIER_STICKY_KEY.value) {
-            ToggleKeyStates.revertDropStackModifier();
+        if (Config.FIX_MODIFIER_STICKY_KEY.value && this.hasControlDown()) {
+            ToggleKeyStates.revertControl();
         }
     }
 

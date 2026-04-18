@@ -1,6 +1,5 @@
 package keybindbugfixes;
 
-import com.minenash.rebind_all_the_keys.RebindAllTheKeys;
 import com.mojang.blaze3d.platform.InputConstants;
 import keybindbugfixes.mixin.KeyMappingAccessor;
 import net.minecraft.client.KeyMapping;
@@ -34,24 +33,5 @@ public class ToggleKeyStates {
     public static void revertControl() {
         revert(InputConstants.KEY_LCONTROL);
         revert(InputConstants.KEY_RCONTROL);
-    }
-
-    public static void revertDropStackModifier() {
-        boolean isModifierPressed;
-
-        if (KeybindBugFixes.IS_REBIND_ALL_THE_KEYS_LOADED) {
-            isModifierPressed = RebindAllTheKeys.DROP_STACK_MODIFIER.isDown();
-        } else {
-            isModifierPressed = KeybindBugFixes.minecraft.hasControlDown();
-        }
-
-        if (isModifierPressed) {
-            if (KeybindBugFixes.IS_REBIND_ALL_THE_KEYS_LOADED) {
-                KeyMappingAccessor accessor = (KeyMappingAccessor) RebindAllTheKeys.DROP_STACK_MODIFIER;
-                revert(accessor.getKey().getValue());
-            } else {
-                revertControl();
-            }
-        }
     }
 }
