@@ -20,8 +20,8 @@ public abstract class AbstractContainerMenuMixin {
             slice = @Slice(
                     from = @At(
                             value = "FIELD",
-                            target = "Lnet/minecraft/world/inventory/ClickType;" +
-                                    "THROW:Lnet/minecraft/world/inventory/ClickType;",
+                            target = "Lnet/minecraft/world/inventory/ContainerInput;" +
+                                    "THROW:Lnet/minecraft/world/inventory/ContainerInput;",
                             opcode = Opcodes.GETSTATIC
                     )
             )

@@ -11,7 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.SpriteIconButton;
@@ -110,8 +110,8 @@ public class ConfigListWidget extends ContainerObjectSelectionList<Entry> {
         }
 
         @Override
-        public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float a) {
-            graphics.drawCenteredString(
+        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
+            graphics.centeredText(
                     ConfigListWidget.this.minecraft.font,
                     this.label,
                     this.getContentXMiddle(),
@@ -119,7 +119,7 @@ public class ConfigListWidget extends ContainerObjectSelectionList<Entry> {
                     CommonColors.WHITE
             );
 
-//            graphics.renderOutline(
+//            graphics.outline(
 //                    this.getContentX(),
 //                    this.getContentY(),
 //                    this.getContentWidth(),
@@ -162,7 +162,7 @@ public class ConfigListWidget extends ContainerObjectSelectionList<Entry> {
         }
 
         @Override
-        public void renderContent(GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float a) {
+        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float a) {
             int labelWidth = this.getContentWidth() - BUTTONS_WIDTH - GAP_WIDTH;
 
             Font font = ConfigListWidget.this.minecraft.font;
@@ -170,18 +170,18 @@ public class ConfigListWidget extends ContainerObjectSelectionList<Entry> {
 
             int lineY = this.getContentYMiddle() - lines.size() * font.lineHeight / 2;
             for (FormattedCharSequence line : lines) {
-                graphics.drawString(font, line, this.getContentX(), lineY, CommonColors.WHITE, true);
+                graphics.text(font, line, this.getContentX(), lineY, CommonColors.WHITE, true);
                 lineY += font.lineHeight;
             }
 
             int buttonX = this.getContentRight() - BUTTONS_WIDTH;
             for (Button button : this.buttons) {
                 button.setPosition(buttonX, this.getContentY());
-                button.render(graphics, mouseX, mouseY, a);
+                button.extractRenderState(graphics, mouseX, mouseY, a);
                 buttonX += button.getWidth() + GAP_WIDTH;
             }
 
-//            graphics.renderOutline(
+//            graphics.outline(
 //                    this.getContentX(),
 //                    this.getContentY(),
 //                    labelWidth,
@@ -189,7 +189,7 @@ public class ConfigListWidget extends ContainerObjectSelectionList<Entry> {
 //                    CommonColors.SOFT_RED
 //            );
 
-//            graphics.renderOutline(
+//            graphics.outline(
 //                    this.getContentRight() - BUTTONS_WIDTH,
 //                    this.getContentY(),
 //                    BUTTONS_WIDTH,

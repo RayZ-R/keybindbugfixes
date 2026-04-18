@@ -21,7 +21,7 @@ public abstract class KeyboardHandlerMixin {
                     ordinal = 0
             )
     )
-    private void revertNarratorModifierKey(CallbackInfo callbackInfo, @Local Screen screen) {
+    private void revertNarratorModifierKey(CallbackInfo callbackInfo, @Local(name = "screen") Screen screen) {
         if (Config.FIX_MODIFIER_STICKY_KEY.value && screen == null) {
             ToggleKeyStates.revertControl();
         }

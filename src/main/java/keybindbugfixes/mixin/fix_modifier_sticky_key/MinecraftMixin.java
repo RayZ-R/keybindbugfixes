@@ -26,7 +26,7 @@ public abstract class MinecraftMixin {
         }
     }
 
-    @Inject(method = "pickBlock", at = @At(value = "HEAD"))
+    @Inject(method = "pickBlockOrEntity", at = @At(value = "HEAD"))
     private void revertPickBlockWithNbtModifierKey(CallbackInfo callbackInfo) {
         if (Config.FIX_MODIFIER_STICKY_KEY.value && this.hasControlDown()) {
             ToggleKeyStates.revertControl();

@@ -30,18 +30,19 @@ public abstract class KeyEntryMixin {
                     ordinal = 1
             )
     )
-    private void handleModdedDuplicates(CallbackInfo callbackInfo, @Local MutableComponent mutableComponent) {
+    private void handleModdedDuplicates(CallbackInfo callbackInfo,
+                                        @Local(name = "tooltip") MutableComponent tooltip) {
         InputConstants.Key key = ((KeyMappingAccessor) this.key).getKey();
 
         if (!this.key.isUnbound()) {
             for (KeyOption option : Config.KEY_OPTIONS) {
                 if (!option.isDisabled && option.modifier == null && key.equals(option.value)) {
                     if (this.hasCollision) {
-                        mutableComponent.append(", ");
+                        tooltip.append(", ");
                     }
 
                     this.hasCollision = true;
-                    mutableComponent.append(option.label);
+                    tooltip.append(option.label);
                 }
             }
         }
