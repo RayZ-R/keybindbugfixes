@@ -73,7 +73,6 @@ public abstract class KeyboardHandlerMixin {
                 && Config.FIX_PICK_KEY_DRAGGING.value
                 && !processed) {
             AbstractContainerScreenAccessor accessor = (AbstractContainerScreenAccessor) containerScreen;
-            Slot slot = accessor.getHoveredSlot();
 
             if (accessor.isIsQuickCrafting() && accessor.getQuickCraftingButton() != -1) {
                 accessor.setIsQuickCrafting(false);
@@ -95,9 +94,6 @@ public abstract class KeyboardHandlerMixin {
                 }
 
                 accessor.invokeSlotClicked(null, -999, AbstractContainerMenu.getQuickcraftMask(2, accessor.getQuickCraftingType()), ClickType.QUICK_CRAFT);
-            } else if (!containerScreen.getMenu().getCarried().isEmpty()
-                    && KeybindBugFixes.minecraft.options.keyPickItem.matches(keycode, scancode)) {
-                accessor.invokeSlotClicked(slot, slot.index, 0, ClickType.CLONE);
             }
 
             accessor.setIsQuickCrafting(false);
