@@ -25,7 +25,8 @@ public abstract class KeyboardHandlerMixin {
             method = "keyPress",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;",
+                    target = "Lnet/minecraft/client/Minecraft;" +
+                            "screen:Lnet/minecraft/client/gui/screens/Screen;",
                     opcode = Opcodes.GETFIELD,
                     shift = At.Shift.AFTER,
                     ordinal = 0
@@ -41,7 +42,7 @@ public abstract class KeyboardHandlerMixin {
                 && action == InputConstants.PRESS
                 && key.equals(KeybindBugFixes.getReloadResourcesKey())) {
             if (this.minecraft.getOverlay() == null) {
-                if (this.minecraft.screen == null) {
+                if (this.minecraft.player != null) {
                     this.debugFeedbackTranslated("debug.reload_resourcepacks.message");
                 }
 
