@@ -14,6 +14,7 @@
     "fix_game_mode_switcher_reset.ClientPacketListenerMixin",
     "fix_modifier_sticky_key.KeyboardHandlerMixin",
     "fix_modifier_sticky_key.KeyMappingMixin",
+    "fix_modifier_sticky_key.LocalPlayerMixin",
     "fix_modifier_sticky_key.MinecraftMixin",
     "fix_modifier_sticky_key.ToggleKeyMappingMixin",
     "fix_pick_key_dragging.AbstractContainerScreenMixin",
