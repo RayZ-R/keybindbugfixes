@@ -55,7 +55,7 @@ public abstract class KeyboardHandlerMixin {
             }
         }
 
-        return true;
+        return processed;
     }
 
     @WrapOperation(
@@ -70,20 +70,19 @@ public abstract class KeyboardHandlerMixin {
         boolean processed = original.call(screen, keycode, scancode, modifiers);
 
         if (screen instanceof AbstractContainerScreen<?> containerScreen
-                && Config.FIX_PICK_KEY_DRAGGING.value
-                && !processed) {
+                && Config.FIX_PICK_KEY_DRAGGING.value) {
             AbstractContainerScreenAccessor accessor = (AbstractContainerScreenAccessor) containerScreen;
 
             if (accessor.isIsQuickCrafting() && accessor.getQuickCraftingButton() != -1) {
                 accessor.setIsQuickCrafting(false);
                 accessor.getQuickCraftSlots().clear();
                 accessor.setSkipNextRelease(true);
-                return true;
+                return processed;
             }
 
             if (accessor.getSkipNextRelease()) {
                 accessor.setSkipNextRelease(false);
-                return true;
+                return processed;
             }
 
             if (accessor.isIsQuickCrafting() && !accessor.getQuickCraftSlots().isEmpty()) {
