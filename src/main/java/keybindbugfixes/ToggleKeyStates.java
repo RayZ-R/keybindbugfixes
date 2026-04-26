@@ -37,21 +37,11 @@ public class ToggleKeyStates {
     }
 
     public static void revertDropStackModifier() {
-        boolean isModifierPressed;
-
         if (KeybindBugFixes.IS_REBIND_ALL_THE_KEYS_LOADED) {
-            isModifierPressed = RebindAllTheKeys.DROP_STACK_MODIFIER.isDown();
+            KeyMappingAccessor accessor = (KeyMappingAccessor) RebindAllTheKeys.DROP_STACK_MODIFIER;
+            revert(accessor.getKey().getValue());
         } else {
-            isModifierPressed = KeybindBugFixes.minecraft.hasControlDown();
-        }
-
-        if (isModifierPressed) {
-            if (KeybindBugFixes.IS_REBIND_ALL_THE_KEYS_LOADED) {
-                KeyMappingAccessor accessor = (KeyMappingAccessor) RebindAllTheKeys.DROP_STACK_MODIFIER;
-                revert(accessor.getKey().getValue());
-            } else {
-                revertControl();
-            }
+            revertControl();
         }
     }
 }
