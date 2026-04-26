@@ -11,19 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
-    @Inject(
-            method = "handleKeybinds",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screens/Screen;hasControlDown()Z"
-            )
-    )
-    private void revertDropStackModifierKey(CallbackInfo callbackInfo) {
-        if (Config.FIX_MODIFIER_STICKY_KEY.value) {
-            ToggleKeyStates.revertDropStackModifier();
-        }
-    }
-
     @Inject(method = "pickBlock", at = @At(value = "HEAD"))
     private void revertPickBlockWithNbtModifierKey(CallbackInfo callbackInfo) {
         if (Config.FIX_MODIFIER_STICKY_KEY.value && Screen.hasControlDown()) {

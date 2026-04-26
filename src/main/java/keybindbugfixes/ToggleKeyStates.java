@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import keybindbugfixes.mixin.KeyMappingAccessor;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 
 public class ToggleKeyStates {
     public static Boolean sprintToggleState = null;
@@ -44,21 +43,11 @@ public class ToggleKeyStates {
     }
 
     public static void revertDropStackModifier() {
-        boolean isModifierPressed;
-
         if (KeybindBugFixes.IS_REBIND_ALL_THE_KEYS_LOADED) {
-            isModifierPressed = RebindAllTheKeys.DROP_STACK_MODIFIER.isDown();
+            KeyMappingAccessor accessor = (KeyMappingAccessor) RebindAllTheKeys.DROP_STACK_MODIFIER;
+            revert(accessor.getKey().getValue());
         } else {
-            isModifierPressed = Screen.hasControlDown();
-        }
-
-        if (isModifierPressed) {
-            if (KeybindBugFixes.IS_REBIND_ALL_THE_KEYS_LOADED) {
-                KeyMappingAccessor accessor = (KeyMappingAccessor) RebindAllTheKeys.DROP_STACK_MODIFIER;
-                revert(accessor.getKey().getValue());
-            } else {
-                revertControl();
-            }
+            revertControl();
         }
     }
 }
