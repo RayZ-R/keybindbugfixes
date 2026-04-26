@@ -19,7 +19,7 @@ public abstract class MinecraftMixin {
                     opcode = Opcodes.GETFIELD
             )
     )
-    public Overlay preventInfiniteLoading(Overlay original) {
+    private Overlay preventInfiniteLoading(Overlay original) {
         return Config.RELOAD_RESOURCES_ANYWHERE.value ? null : original;
     }
 }
