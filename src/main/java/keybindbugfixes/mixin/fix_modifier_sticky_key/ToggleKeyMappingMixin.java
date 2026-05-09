@@ -16,15 +16,15 @@ public abstract class ToggleKeyMappingMixin {
     private void updateToggleKeyStates(boolean down, CallbackInfo callbackInfo) {
         if (Config.FIX_MODIFIER_STICKY_KEY.value) {
             ToggleKeyMapping keyMapping = (ToggleKeyMapping) (Object) this;
-            ToggleKeyMappingAccessor accessor = (ToggleKeyMappingAccessor) keyMapping;
 
-            if (accessor.getNeedsToggle().getAsBoolean()) {
+            if (((ToggleKeyMappingAccessor) keyMapping).getNeedsToggle().getAsBoolean()) {
                 if (keyMapping.same(KeybindBugFixes.minecraft.options.keySprint)) {
                     if (down) {
                         ToggleKeyStates.sprintToggleState = keyMapping.isDown();
                         ToggleKeyStates.sprintingState = KeybindBugFixes.minecraft.player.isSprinting();
                     } else {
                         ToggleKeyStates.sprintToggleState = null;
+                        ToggleKeyStates.sprintingState = null;
                     }
                 } else if (keyMapping.same(KeybindBugFixes.minecraft.options.keyShift)) {
                     if (down) {

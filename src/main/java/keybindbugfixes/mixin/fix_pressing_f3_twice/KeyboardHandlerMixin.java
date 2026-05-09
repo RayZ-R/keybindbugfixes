@@ -27,7 +27,7 @@ public abstract class KeyboardHandlerMixin {
             ),
             ordinal = 2
     )
-    private boolean fixF3State(boolean original) {
+    private boolean fixHandledDebugKey(boolean original) {
         boolean isGameModeSwitcherScreen = this.minecraft.screen instanceof GameModeSwitcherScreen;
         return original || (Config.FIX_PRESSING_F3_TWICE.value && isGameModeSwitcherScreen);
     }
