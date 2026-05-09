@@ -15,7 +15,7 @@ public abstract class LocalPlayerMixin {
                     target = "Lnet/minecraft/client/KeyMapping;resetToggleKeys()V"
             )
     )
-    private boolean preventToggleKeyResetOnRespawn() {
+    private boolean skipResetToggleKeys() {
         return !Config.FIX_STICKY_KEY_RESET.value;
     }
 }
