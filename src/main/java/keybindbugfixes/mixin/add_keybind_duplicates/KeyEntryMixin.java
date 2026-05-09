@@ -32,17 +32,16 @@ public abstract class KeyEntryMixin {
     )
     private void handleModdedDuplicates(CallbackInfo callbackInfo, @Local MutableComponent mutableComponent) {
         InputConstants.Key key = ((KeyMappingAccessor) this.key).getKey();
+        if (this.key.isUnbound()) return;
 
-        if (!this.key.isUnbound()) {
-            for (KeyOption option : Config.KEY_OPTIONS) {
-                if (!option.isDisabled && option.modifier == null && key.equals(option.value)) {
-                    if (this.hasCollision) {
-                        mutableComponent.append(", ");
-                    }
-
-                    this.hasCollision = true;
-                    mutableComponent.append(option.label);
+        for (KeyOption option : Config.KEY_OPTIONS) {
+            if (!option.isDisabled && option.modifier == null && key.equals(option.value)) {
+                if (this.hasCollision) {
+                    mutableComponent.append(", ");
                 }
+
+                this.hasCollision = true;
+                mutableComponent.append(option.label);
             }
         }
     }

@@ -18,8 +18,8 @@ public abstract class ClientPacketListenerMixin {
                             "setLocalMode(Lnet/minecraft/world/level/GameType;Lnet/minecraft/world/level/GameType;)V"
             )
     )
-    private boolean preventLastGameModeResetOnRespawn(MultiPlayerGameMode gameMode,
-                                                      GameType gameType, GameType previousGameType) {
+    private boolean skipLastGameModeReset(MultiPlayerGameMode gameMode,
+                                          GameType gameType, GameType previousGameType) {
         return !Config.FIX_GAME_MODE_SWITCHER_RESET.value;
     }
 }

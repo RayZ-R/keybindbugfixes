@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(KeyMapping.class)
 public abstract class KeyMappingMixin {
     @Inject(method = "setDown", at = @At("HEAD"))
-    private void revertAmecsModifierKey(CallbackInfo callbackInfo) {
-        if (Config.FIX_MODIFIER_STICKY_KEY.value) {
+    private void revertAmecsModifierKey(boolean down, CallbackInfo callbackInfo) {
+        if (Config.FIX_MODIFIER_STICKY_KEY.value && down) {
             KeyModifiers modifiers = KeyBindingUtils.getBoundModifiers((KeyMapping) (Object) this);
 
             if (modifiers.getAlt()) {
