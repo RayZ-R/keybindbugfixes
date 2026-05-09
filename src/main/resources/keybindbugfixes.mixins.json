@@ -10,7 +10,7 @@
     "add_keybind_duplicates.KeyEntryMixin",
     "drop_all_crafted_items.AbstractContainerMenuMixin",
     "drop_when_holding_item.AbstractContainerMenuMixin",
-    "fix_dismount_toggle_sneak.LocalPlayerMixin",
+    "fix_dismount_toggle_sneak.EntityMixin",
     "fix_game_mode_switcher_reset.ClientPacketListenerMixin",
     "fix_modifier_sticky_key.KeyboardHandlerMixin",
     "fix_modifier_sticky_key.KeyMappingMixin",
