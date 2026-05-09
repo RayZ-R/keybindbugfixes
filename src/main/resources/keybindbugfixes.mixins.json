@@ -3,7 +3,7 @@
   "package": "keybindbugfixes.mixin",
   "compatibilityLevel": "JAVA_21",
   "plugin": "keybindbugfixes.MixinPlugin",
-  "mixins": [
+  "client": [
     "AbstractContainerScreenAccessor",
     "KeyMappingAccessor",
     "ToggleKeyMappingAccessor",
