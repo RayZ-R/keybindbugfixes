@@ -11,7 +11,7 @@ fixes keybind-related bugs, adds keybind-related tweaks, and adds new keybinds.
 
 - Fix pick key dragging in inventory [[MC-117771]](https://bugs.mojang.com/browse/MC-117771)
 - Fix toggle sneak state on dismount [[MC-169163]](https://bugs.mojang.com/browse/MC-169163)
-- Fix toggle key resetting when viewing any screen [[MC-300695]](https://bugs.mojang.com/browse/MC-300695)
+- Fix toggle key resetting when viewing any screen [[MC-301281]](https://bugs.mojang.com/browse/MC-301281)
 - Fix toggle key state when used as a modifier
 - Fix toggle debug screen when rebinding F3
 
