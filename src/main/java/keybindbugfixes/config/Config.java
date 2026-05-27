@@ -38,7 +38,7 @@ public class Config {
             "bugfix.fix_screen_sticky_key_reset",
             "fix_screen_sticky_key_reset",
             true,
-            300695
+            301281
     );
 
     public static final BooleanOption FIX_MODIFIER_STICKY_KEY = new BooleanOption(
