@@ -1,10 +1,8 @@
 package keybindbugfixes.mixin.add_keybind_duplicates;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.platform.InputConstants;
 import keybindbugfixes.config.Config;
 import keybindbugfixes.config.option.KeyOption;
-import keybindbugfixes.mixin.KeyMappingAccessor;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsList;
 import net.minecraft.network.chat.MutableComponent;
@@ -32,11 +30,9 @@ public abstract class KeyEntryMixin {
     )
     private void handleModdedDuplicates(CallbackInfo callbackInfo,
                                         @Local(name = "tooltip") MutableComponent tooltip) {
-        InputConstants.Key key = ((KeyMappingAccessor) this.key).getKey();
-
         if (!this.key.isUnbound()) {
             for (KeyOption option : Config.KEY_OPTIONS) {
-                if (!option.isDisabled && option.modifier == null && key.equals(option.value)) {
+                if (!option.isDisabled && option.modifier == null && this.key.matches(option.value)) {
                     if (this.hasCollision) {
                         tooltip.append(", ");
                     }

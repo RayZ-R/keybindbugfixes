@@ -6,7 +6,6 @@ import keybindbugfixes.config.ConfigListWidget.Entry;
 import keybindbugfixes.config.option.BooleanOption;
 import keybindbugfixes.config.option.KeyOption;
 import keybindbugfixes.config.option.Option;
-import keybindbugfixes.mixin.KeyMappingAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -327,7 +326,7 @@ public class ConfigListWidget extends ContainerObjectSelectionList<Entry> {
 
             if (this.option.modifier == null) {
                 for (KeyMapping keyMapping : ConfigListWidget.this.minecraft.options.keyMappings) {
-                    if (((KeyMappingAccessor) keyMapping).getKey().equals(this.option.value)) {
+                    if (keyMapping.matches(this.option.value)) {
                         if (duplicate) {
                             duplicateComponent.append(", ");
                         }
