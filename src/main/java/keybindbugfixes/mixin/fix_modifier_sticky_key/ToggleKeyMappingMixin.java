@@ -18,7 +18,7 @@ public abstract class ToggleKeyMappingMixin {
             ToggleKeyMapping keyMapping = (ToggleKeyMapping) (Object) this;
 
             if (((ToggleKeyMappingAccessor) keyMapping).getNeedsToggle().getAsBoolean()) {
-                if (keyMapping.same(KeybindBugFixes.minecraft.options.keySprint)) {
+                if (keyMapping == KeybindBugFixes.minecraft.options.keySprint) {
                     if (down) {
                         ToggleKeyStates.sprintToggleState = keyMapping.isDown();
                         ToggleKeyStates.sprintingState = KeybindBugFixes.minecraft.player.isSprinting();
@@ -26,7 +26,7 @@ public abstract class ToggleKeyMappingMixin {
                         ToggleKeyStates.sprintToggleState = null;
                         ToggleKeyStates.sprintingState = null;
                     }
-                } else if (keyMapping.same(KeybindBugFixes.minecraft.options.keyShift)) {
+                } else if (keyMapping == KeybindBugFixes.minecraft.options.keyShift) {
                     if (down) {
                         ToggleKeyStates.shiftToggleState = keyMapping.isDown();
                     } else {
