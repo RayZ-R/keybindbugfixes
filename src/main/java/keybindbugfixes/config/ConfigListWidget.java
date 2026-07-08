@@ -81,6 +81,7 @@ public class ConfigListWidget extends ContainerObjectSelectionList<Entry> {
         this.addOptionEntry(Config.FIX_SCREEN_STICKY_KEY_RESET);
         this.addOptionEntry(Config.FIX_MODIFIER_STICKY_KEY);
         this.addOptionEntry(Config.FIX_REBIND_TO_F3);
+        this.addOptionEntry(Config.FIX_DEBUG_CONFLICTS);
 
         this.addCategoryEntry(TWEAKS_LABEL);
         this.addOptionEntry(Config.DROP_WHEN_HOLDING_ITEM);

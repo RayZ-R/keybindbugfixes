@@ -12,6 +12,7 @@
   "keybindbugfixes.config.bugfix.fix_screen_sticky_key_reset": "Fix toggle key resetting when viewing any screen",
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key": "Fix toggle key state when used as a modifier",
   "keybindbugfixes.config.bugfix.fix_rebind_to_f3": "Fix toggle debug screen when rebinding F3",
+  "keybindbugfixes.config.bugfix.fix_debug_conflicts": "Fix debug keybind conflicts",
 
   "keybindbugfixes.config.tweak.drop_when_holding_item": "Drop when holding an item",
 
@@ -20,6 +21,7 @@
   "keybindbugfixes.config.bugfix.fix_screen_sticky_key_reset.description": "Toggle key state resets when viewing any screen if the key is set to a mouse button",
   "keybindbugfixes.config.bugfix.fix_modifier_sticky_key.description": "Pressing Ctrl + Q / Ctrl + MMB / Ctrl + B toggles key bindings bound to Left Control",
   "keybindbugfixes.config.bugfix.fix_rebind_to_f3.description": "When rebinding a keybind to F3 debug screen is toggled",
+  "keybindbugfixes.config.bugfix.fix_debug_conflicts.description": "Debug keys can conflict with other keybinds, even though they require a modifier",
 
   "keybindbugfixes.config.tweak.drop_when_holding_item.description": "When holding an item, pressing Q over another item doesn't drop it",
 
