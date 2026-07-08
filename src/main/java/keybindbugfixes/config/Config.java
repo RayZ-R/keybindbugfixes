@@ -55,6 +55,13 @@ public class Config {
             null
     );
 
+    public static final BooleanOption FIX_DEBUG_CONFLICTS = new BooleanOption(
+            "bugfix.fix_debug_conflicts",
+            "fix_debug_conflicts",
+            true,
+            null
+    );
+
     public static final BooleanOption DROP_WHEN_HOLDING_ITEM = new BooleanOption(
             "tweak.drop_when_holding_item",
             "drop_when_holding_item",
