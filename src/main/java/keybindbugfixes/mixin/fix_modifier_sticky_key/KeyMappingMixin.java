@@ -1,8 +1,8 @@
 package keybindbugfixes.mixin.fix_modifier_sticky_key;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import de.siphalor.amecs.api.KeyBindingUtils;
-import de.siphalor.amecs.api.KeyModifiers;
+import de.siphalor.amecs.key_modifiers.api.AmecsKeyModifierCombination;
+import de.siphalor.amecs.key_modifiers.api.AmecsKeyModifiersApi;
 import keybindbugfixes.ToggleKeyStates;
 import keybindbugfixes.config.Config;
 import net.minecraft.client.KeyMapping;
@@ -16,7 +16,7 @@ public abstract class KeyMappingMixin {
     @Inject(method = "setDown", at = @At("HEAD"))
     private void revertAmecsModifierKey(boolean down, CallbackInfo callbackInfo) {
         if (Config.FIX_MODIFIER_STICKY_KEY.value && down) {
-            KeyModifiers modifiers = KeyBindingUtils.getBoundModifiers((KeyMapping) (Object) this);
+            AmecsKeyModifierCombination modifiers = AmecsKeyModifiersApi.getBoundModifiers((KeyMapping) (Object) this);
 
             if (modifiers.getAlt()) {
                 ToggleKeyStates.revert(InputConstants.KEY_LALT);

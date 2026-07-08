@@ -47,7 +47,7 @@ dependencies {
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
     modCompileOnly "maven.modrinth:rebind-all-the-keys:${project.rebind_all_the_keys_version}"
     modCompileOnly "maven.modrinth:debugify:${project.debugify_version}"
-    modCompileOnly "de.siphalor.amecs.amecs-api-legacy:amecs-api-legacy-${project.amecs_api_legacy_version}"
+    modCompileOnly "de.siphalor.amecs.amecs-key-modifiers:amecs-key-modifiers-${project.amecs_key_modifiers_version}"
 }
 
 processResources {
