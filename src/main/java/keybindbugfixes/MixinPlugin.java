@@ -35,7 +35,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
         }
 
         if (!isAmecsApiLoaded) {
-            DISABLED_MIXINS.add("fix_modifier_sticky_key.KeyMappingMixin");
+            DISABLED_MIXINS.add("fix_modifier_sticky_key.amecsapi");
         }
     }
 
