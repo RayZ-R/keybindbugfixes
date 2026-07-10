@@ -1,4 +1,4 @@
-package keybindbugfixes.mixin.fix_modifier_sticky_key;
+package keybindbugfixes.mixin.fix_modifier_sticky_key.amecsapi;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import de.siphalor.amecs.key_modifiers.api.AmecsKeyModifierCombination;
