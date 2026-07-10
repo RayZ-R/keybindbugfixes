@@ -27,7 +27,12 @@ public class MixinPlugin implements IMixinConfigPlugin {
     }
 
     static {
+        boolean isControllingLoaded = FABRIC_LOADER.isModLoaded("controlling");
         boolean isAmecsApiLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
+
+        if (!isControllingLoaded) {
+            DISABLED_MIXINS.add("add_keybind_duplicates.controlling");
+        }
 
         if (!isAmecsApiLoaded) {
             DISABLED_MIXINS.add("fix_modifier_sticky_key.amecsapi");

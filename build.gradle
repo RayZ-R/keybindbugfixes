@@ -19,6 +19,11 @@ repositories {
     }
 
     maven {
+        name = "BlameJared Maven"
+        url = "https://maven.blamejared.com"
+    }
+
+    maven {
         name = "Siphalor's Maven"
         url = "https://maven.siphalor.de/"
     }
@@ -46,6 +51,7 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
     implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
     compileOnly "maven.modrinth:debugify:${project.debugify_version}"
+    compileOnly "com.blamejared.controlling:Controlling-fabric-${project.controlling_version}"
     compileOnly "de.siphalor.amecs.amecs-key-modifiers:amecs-key-modifiers-${project.amecs_key_modifiers_version}"
 }
 
