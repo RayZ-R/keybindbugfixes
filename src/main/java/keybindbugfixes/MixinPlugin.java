@@ -28,10 +28,15 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     static {
         boolean isRebindAllTheKeysLoaded = FABRIC_LOADER.isModLoaded("rebind_all_the_keys");
+        boolean isControllingLoaded = FABRIC_LOADER.isModLoaded("controlling");
         boolean isAmecsApiLoaded = FABRIC_LOADER.isModLoaded("amecsapi");
 
         if (isRebindAllTheKeysLoaded) {
             DISABLED_MIXINS.add("rebind_debug_keys");
+        }
+
+        if (!isControllingLoaded) {
+            DISABLED_MIXINS.add("add_keybind_duplicates.controlling");
         }
 
         if (!isAmecsApiLoaded) {
