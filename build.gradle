@@ -15,7 +15,7 @@ repositories {
 
     maven {
         name = "Terraformers"
-        url = "https://maven.terraformersmc.com/"
+        url = "https://maven.terraformersmc.com"
     }
 
     maven {
@@ -25,7 +25,7 @@ repositories {
 
     maven {
         name = "Siphalor's Maven"
-        url = "https://maven.siphalor.de/"
+        url = "https://maven.siphalor.de"
     }
 
     exclusiveContent {
