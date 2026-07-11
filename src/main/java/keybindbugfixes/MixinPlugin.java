@@ -32,6 +32,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
         if (!isControllingLoaded) {
             DISABLED_MIXINS.add("add_keybind_duplicates.controlling");
+            DISABLED_MIXINS.add("fix_rebind_to_f3.controlling");
         }
 
         if (!isAmecsApiLoaded) {
