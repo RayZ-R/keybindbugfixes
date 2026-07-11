@@ -1,5 +1,6 @@
-package keybindbugfixes.mixin.fix_debug_conflicts;
+package keybindbugfixes.mixin.fix_debug_conflicts.controlling;
 
+import com.blamejared.controlling.client.NewKeyBindsList;
 import com.google.common.collect.Sets;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -7,7 +8,6 @@ import keybindbugfixes.KeybindBugFixes;
 import keybindbugfixes.config.Config;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.screens.options.controls.KeyBindsList;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.Set;
 
-@Mixin(KeyBindsList.KeyEntry.class)
-public class KeyEntryMixin {
+@Mixin(NewKeyBindsList.KeyEntry.class)
+public abstract class NewKeyEntryMixin {
     @Shadow @Final private KeyMapping key;
 
     @WrapOperation(
@@ -36,7 +36,7 @@ public class KeyEntryMixin {
                 return options.debugKeys;
             } else {
                 Set<KeyMapping> allKeys = Sets.newHashSet(options.keyMappings);
-                return Sets.difference(allKeys, debugKeys).toArray(new KeyMapping[0]);
+                return Sets.difference(allKeys, debugKeys).toArray(KeyMapping[]::new);
             }
         } else {
             return original.call(options);
