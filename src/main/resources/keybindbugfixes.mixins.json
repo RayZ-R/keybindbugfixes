@@ -22,6 +22,7 @@
     "fix_pick_key_dragging.GuiEventListenerMixin",
     "fix_pick_key_dragging.KeyboardHandlerMixin",
     "fix_rebind_to_f3.KeyBindsScreenMixin",
+    "fix_rebind_to_f3.controlling.NewKeyBindsScreenMixin",
     "fix_screen_sticky_key_reset.ToggleKeyMappingMixin",
     "rebind_debug_keys.GameModeSwitcherScreenMixin",
     "rebind_debug_keys.KeyboardHandlerMixin"
