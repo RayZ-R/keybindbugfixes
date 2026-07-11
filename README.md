@@ -14,6 +14,7 @@ fixes keybind-related bugs, adds keybind-related tweaks, and adds new keybinds.
 - Fix toggle key resetting when viewing any screen [[MC-301281]](https://bugs.mojang.com/browse/MC-301281)
 - Fix toggle key state when used as a modifier
 - Fix toggle debug screen when rebinding F3
+- Fix debug keybind conflicts
 
 ### Tweaks:
 
